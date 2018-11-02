@@ -1,0 +1,115 @@
+commit 215d00e7d8c99fa2bde195aa3e0997d7e0b98f85
+Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+Date:   Fri Nov 2 11:50:51 2018 +0200
+
+    Vempulointi
+
+     tiedostoja/file2             | 0
+      tiedostoja/{file1 => file22} | 0
+       tiedostoja/file3             | 1 +
+        3 files changed, 1 insertion(+)
+
+	commit f2244b2155fb7b9d480bce1f508c4c28c333ddae
+	Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+	Date:   Fri Nov 2 11:48:20 2018 +0200
+
+	    Alihakemiston tiedostot
+
+	     tiedostoja/file1 | 0
+	      tiedostoja/file2 | 0
+	       tiedostoja/file3 | 0
+	        3 files changed, 0 insertions(+), 0 deletions(-)
+
+		commit 7cf39139d640e2897b34eb915d9f31776137974e
+		Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+		Date:   Fri Nov 2 11:36:16 2018 +0200
+
+		    asd, git add -p
+
+		     eka.txt    | 5 +++--
+		      kolmas.txt | 2 +-
+		       2 files changed, 4 insertions(+), 3 deletions(-)
+
+		       commit d7a88f9fe6e1ce9379e33b92313bfdb3fd47cdda
+		       Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+		       Date:   Fri Nov 2 11:30:28 2018 +0200
+
+		           Uudelleennimentä
+
+			    tiedosto.txt => eka.txt | 0
+			     1 file changed, 0 insertions(+), 0 deletions(-)
+
+			     commit 1f4cc29f0e2d73cd74c7bd2d229dc8afeecedd3d
+			     Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+			     Date:   Fri Nov 2 11:26:40 2018 +0200
+
+			         Toinen poistettu
+
+				  toinen.txt | 1 -
+				   1 file changed, 1 deletion(-)
+
+				   commit ed48d335f9917facf332e198ab8e5af5d04946b0
+				   Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+				   Date:   Fri Nov 2 11:24:47 2018 +0200
+
+				       Peruna ipsum tekstiä muokattu
+
+				        tiedosto.txt | 17 ++++++-----------
+					 1 file changed, 6 insertions(+), 11 deletions(-)
+
+					 commit 697ea284843d3e6a7224cea14ca104eb91b7912f
+					 Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+					 Date:   Fri Nov 2 11:13:39 2018 +0200
+
+					     Peruna ipsum teksti
+
+					      tiedosto.txt | 106 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+					       1 file changed, 105 insertions(+), 1 deletion(-)
+
+					       commit ae4027e90ba68b795fab081a3afd2f17cdf4bafb
+					       Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+					       Date:   Mon Oct 29 12:53:18 2018 +0200
+
+					           Hakemisto
+
+						    stuff/jokinTiedosto.txt | 0
+						     1 file changed, 0 insertions(+), 0 deletions(-)
+
+						     commit 6b8e5571057461f8704f20c22c51a6bd3d6cd722
+						     Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+						     Date:   Mon Oct 29 12:52:09 2018 +0200
+
+						         Viieisetkin kommitit
+
+							  kolmas.txt | 1 +
+							   toinen.txt | 1 +
+							    2 files changed, 2 insertions(+)
+
+							    commit 61911d35060ef32a5b32728e75b244646de7f33a
+							    Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+							    Date:   Mon Oct 29 12:49:15 2018 +0200
+
+							        kolmas mukana
+
+								 kolmas.txt | 0
+								  1 file changed, 0 insertions(+), 0 deletions(-)
+
+								  commit 13fcdbea398947b8910827eb1bcacb1306ae8396
+								  Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+								  Date:   Mon Oct 29 12:46:57 2018 +0200
+
+								      muuto ja lisäys
+
+								       tiedosto.txt | 1 +
+								        toinen.txt   | 0
+									 2 files changed, 1 insertion(+)
+
+									 commit 1c1cba7ca178dc0308c7ddb37f96fd43057d006b
+									 Author: Riku-Laine <28960190+Riku-Laine@users.noreply.github.com>
+									 Date:   Mon Oct 29 12:12:35 2018 +0200
+
+									     tiedosto.txt luotu
+
+									      tiedosto.txt | 0
+									       1 file changed, 0 insertions(+), 0 deletions(-)
+
