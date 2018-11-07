@@ -2,7 +2,7 @@
 
 Tämä on kurssin `Ohjelmistotekniikka` harjoitusrepositorio. Tämä sisältää *luonnoksia ja tehtäviä*. Palautukset **tiistaisin**, myöhässä olevia ei sallita.  
 
-Linkki harjoitustyöhön [tähän]().
+Linkki harjoitustyön [dokumentaatioon](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/dokumentointi).
 
 ## Viikko 1
 
