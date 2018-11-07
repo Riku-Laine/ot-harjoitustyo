@@ -1,8 +1,8 @@
 # Ohjelmistotekniikka
 
-Tämä on kurssin `Ohjelmistotekniikka` harjoitusrepositorio. Tämä sisältää *luonnoksia ja tehtäviä*. Palautkset **tiistaisin**, myöhässä olevia ei sallita.  
+Tämä on kurssin `Ohjelmistotekniikka` harjoitusrepositorio. Tämä sisältää *luonnoksia ja tehtäviä*. Palautukset **tiistaisin**, myöhässä olevia ei sallita.  
 
-Tämä kurssi on hauska.
+Linkki harjoitustyöhön [tähän]().
 
 ## Viikko 1
 
