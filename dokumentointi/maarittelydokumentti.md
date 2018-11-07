@@ -1,4 +1,4 @@
-# Määrittelydokumentti
+# Määrittelydokumentti (alustava)
 
 **Sisällysluettelo**
 
