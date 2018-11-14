@@ -20,12 +20,11 @@ import yatzy.domain.YatzyService;
  * @author Riku_L
  */
 public class YatzyUi extends Application {
-    
-    private YatzyService yatzyservice;
-    
+        
     @Override
     public void start(Stage window) {
         
+        YatzyService game = new YatzyService();
         
         window.setTitle("Play Yatzy!");
         
@@ -41,13 +40,13 @@ public class YatzyUi extends Application {
         twoPlayers.setFont(Font.font("Monospaced", 20));
         
         singlePlayer.setOnAction((event) -> {
-            // Start one player game
-            yatzyservice.startOnePlayerGame();
+            // Start one player game and move to "game arena"
+            game.startOnePlayerGame();
             System.out.println("One player!");
         });
         
         twoPlayers.setOnAction((event) -> {
-            // Start two player game
+            // Start two player game and move to "game arena"
             System.out.println("Two players!");
         });
         
