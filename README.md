@@ -1,11 +1,6 @@
 # Ohjelmistotekniikka
 
-Tämä on kurssin `Ohjelmistotekniikka` harjoitusrepositorio. Tämä sisältää *luonnoksia ja tehtäviä*. Palautukset **tiistaisin**, myöhässä olevia ei sallita.  
-
-## Harjoitustyön dokumentaation linkit
-
-* [Vaatimusmäärittelyt](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/dokumentointi/maarittelydokumentti.md)
-* [Tuntikirjanpito](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/dokumentointi/tuntikirjanpito.md)
+Tämä on kurssin `Ohjelmistotekniikka` harjoitusrepositorio. Palautukset tiistaisin, myöhässä olevia ei sallita.
 
 ## Viikko 1
 
