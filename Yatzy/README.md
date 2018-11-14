@@ -6,17 +6,17 @@
 * [Releaset](#releaset)
 * [Komentorivitoiminnot](#komentorivitoiminnot)
 
-## Dokumentaatio
+## <a href="dokumentaatio"></a> Dokumentaatio
 
-* Käyttöohje
-* Vaatimusmäärittelyt
-* Arkkitehtuurikuvaus
-* Testausdokumentti
-* Työaikakirjanpito
+* [Käyttöohje TBA]()
+* [Vaatimusmäärittelyt](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/maarittelydokumentti.md)
+* [Arkkitehtuurikuvaus TBA]()
+* [Testausdokumentti TBA]()
+* [Työaikakirjanpito](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/tuntikirjanpito.md)
 
-## Releaset
+## <a href="releaset"></a> Releaset
 
-## Komentorivitoiminnot
+## <a href="komentorivitoiminnot"></a> Komentorivitoiminnot
 
 ### Testaus
 
