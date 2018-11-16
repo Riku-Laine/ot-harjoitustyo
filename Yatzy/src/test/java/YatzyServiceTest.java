@@ -15,9 +15,9 @@ import static org.junit.Assert.*;
  *
  * @author Riku_L
  */
-public class YatzyTest {
+public class YatzyServiceTest {
     
-    public YatzyTest() {
+    public YatzyServiceTest() {
     }
     
     @BeforeClass

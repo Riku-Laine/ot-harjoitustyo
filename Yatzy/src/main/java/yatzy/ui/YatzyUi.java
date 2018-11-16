@@ -20,50 +20,51 @@ import yatzy.domain.YatzyService;
  * @author Riku_L
  */
 public class YatzyUi extends Application {
-        
+
     @Override
     public void start(Stage window) {
-        
+
         YatzyService game = new YatzyService();
-        
+
         window.setTitle("Play Yatzy!");
-        
-        BorderPane windowLayout = new BorderPane(); 
-        
+
+        BorderPane windowLayout = new BorderPane();
+
         VBox playerButtons = new VBox();
         playerButtons.setSpacing(10);
-        
+
         Button singlePlayer = new Button("1 player ");
         Button twoPlayers = new Button("2 players");
-        
+
         singlePlayer.setFont(Font.font("Monospaced", 20));
         twoPlayers.setFont(Font.font("Monospaced", 20));
-        
+
         singlePlayer.setOnAction((event) -> {
             // Start one player game and move to "game arena"
-            game.startOnePlayerGame();
+            // game.startOnePlayerGame();
             System.out.println("One player!");
         });
-        
+
         twoPlayers.setOnAction((event) -> {
             // Start two player game and move to "game arena"
+            // game.startTwoPlayerGame();
             System.out.println("Two players!");
         });
-        
+
         playerButtons.getChildren().add(singlePlayer);
         playerButtons.getChildren().add(twoPlayers);
-        
+
         windowLayout.setTop(playerButtons);
         windowLayout.setPadding(new Insets(10));
-        
+
         Scene scene = new Scene(windowLayout);
 
-	window.setScene(scene);
-        
+        window.setScene(scene);
+
         window.show();
     }
-    
-    public static void main(String[] args) {
-        launch(YatzyUi.class);
-    }
+
+//    public static void main(String[] args) {
+//        launch(YatzyUi.class);
+//    }
 }

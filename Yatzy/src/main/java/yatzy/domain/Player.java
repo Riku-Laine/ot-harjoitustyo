@@ -10,12 +10,26 @@ package yatzy.domain;
  * @author Riku_L
  */
 public class Player {
+
     public String name;
     public boolean isTurn;
-    
-    public Player(String name){
+
+    public Player() {
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
-    
-    
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setTurn(boolean turn) {
+        this.isTurn = turn;
+    }
+
+    public boolean getTurn() {
+        return this.isTurn;
+    }
 }

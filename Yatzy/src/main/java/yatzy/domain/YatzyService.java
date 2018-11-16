@@ -5,24 +5,43 @@
  */
 package yatzy.domain;
 
-import java.util.Random;
+import java.util.Arrays;
+import java.util.Scanner;
 
 /**
  *
  * @author Riku_L
  */
 public class YatzyService {
-    
-    public void startOnePlayerGame(){
-        Player player = new Player("ShouldThisBeHere"); // pelaajaluokka pois? Ei, koska kaksi pelaajaa
-        
+
+    public static void startOnePlayerGame() {
+
+        Scanner reader = new Scanner(System.in);
         System.out.println("Peli alkaa");
-                
-        Random random = new Random();
-        
-        int nmbrs = (int) Math.round(random.nextDouble()*6+0.5);
-        
-        System.out.println(nmbrs);
+
+        Turn turns = new Turn();
+        Scorecard scorecard = new Scorecard();
+
+        System.out.println(turns.rollDices(5).toString());
+        while (true) {
+            System.out.println("Heitä noppaa painamalla enter!");
+            reader.nextLine();
+            int[] taul = turns.rollDices(5);
+            for (int i = 0; i < 5; i++) {
+                System.out.print(taul[i] + " ");
+            }
+            System.out.println("\nKirjoita yhdistelmä:");
+            String combination = reader.nextLine();
+            System.out.print("Saamasi pisteet: " + scorecard.getScore(combination, taul) + "\n");
+//            for(int i=0; i< selections.length; i++){
+//                int[] choices = selections[i];
+//            }
+//            System.out.println(selections);
+        }
     }
-    
+
+    public static void main(String[] args) {
+        startOnePlayerGame();
+    }
+
 }
