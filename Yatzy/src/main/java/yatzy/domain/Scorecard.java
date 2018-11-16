@@ -5,25 +5,29 @@
  */
 package yatzy.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-
 
 /**
  *
  * @author Riku_L
  */
 public class Scorecard {
-    
-    private Player player;
+
+    private ArrayList<Player> playerList;
     private HashMap<String, Integer> scoretable;
-    
-    public Scorecard(Player player){
-        this.player = player;
+
+    public Scorecard() {
+        this.playerList = new ArrayList<>();
         this.scoretable = new HashMap<>();
         initializeScoretable();
     }
 
-    public int getScore(String combination, int[] dies) {
+    public void setPlayers(ArrayList players) {
+        this.playerList = players;
+    }
+
+    public int getPointsForCombination(String combination, int[] dies) {
 
         if (null != combination) {
             switch (combination) {
@@ -40,17 +44,17 @@ public class Scorecard {
                 case "sixes":
                     return checkForPointValues(dies, 6);
                 case "one pair":
-                    return checkForNPairs(dies, 1);
+                    return checkForMultiplesOfSizeN(dies, 1, 2);
                 case "two pairs":
-                    return checkForNPairs(dies, 2);
+                    return checkForMultiplesOfSizeN(dies, 2, 2);
                 case "triplet":     // Three Of A Kind
-                    return checkForTriplet(dies);
+                    return checkForMultiplesOfSizeN(dies, 1, 3);
                 case "quadruplet":  // Four Of A Kind
-                    return checkForQuadruplet(dies);
+                    return checkForMultiplesOfSizeN(dies, 1, 4);
                 case "small straight":
-                    return checkForSmallStraight(dies);
+                    return checkForStraight(dies, "small");
                 case "big straight":
-                    return checkForBigStraight(dies);
+                    return checkForStraight(dies, "big");
                 case "full house":
                     return checkForFullHouse(dies);
                 case "chance":
@@ -76,7 +80,16 @@ public class Scorecard {
         return score;
     }
 
-    public int checkForNPairs(int[] dies, int numberOfPairs) {
+    /**
+     * This method counts multiples (pairs, triples, quadruplets etc.) from an
+     * integer array.
+     *
+     * @param dies The eyes of the dies.
+     * @param howManyMultiples How many multiples? (e.g. 2 or 7 pairs)
+     * @param whatMultiple Pair (2), triplet (3) quadruplet(4) etc.
+     * @return Number of points.
+     */
+    public int checkForMultiplesOfSizeN(int[] dies, int howManyMultiples, int whatMultiple) {
 
         int[] freqs = new int[6]; // could be generalised max number of eye
         for (int i = 0; i < dies.length; i++) {
@@ -84,30 +97,22 @@ public class Scorecard {
         }
 
         int score = 0;
-        int pairsFound = 0;
+        int multiplesFound = 0;
         for (int i = 5; i >= 0; i--) {
-            if (freqs[i] >= 2 & pairsFound < numberOfPairs) {
-                score += 2 * (i + 1);
-                pairsFound++;
+            if (freqs[i] >= whatMultiple & multiplesFound < howManyMultiples) {
+                score += whatMultiple * (i + 1);
+                multiplesFound++;
             }
         }
 
-        return score;
+        if (multiplesFound == howManyMultiples) // have all multiples been found
+        {
+            return score;
+        }
+        return 0;
     }
 
-    private int checkForTriplet(int[] dies) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private int checkForQuadruplet(int[] dies) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private int checkForSmallStraight(int[] dies) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private int checkForBigStraight(int[] dies) {
+    private int checkForStraight(int[] dies, String type) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -129,31 +134,17 @@ public class Scorecard {
     }
 
     private void initializeScoretable() {
-        String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives", 
-                                "Sixes", "One pair", "Two pairs", "Three of a kind",
-                                "Four of a kind", "Small straight", "Big straight",
-                                "Full house", "Chance", "Yatzy", "Total"};
-        
+        String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives",
+            "Sixes", "One pair", "Two pairs", "Three of a kind",
+            "Four of a kind", "Small straight", "Big straight",
+            "Full house", "Chance", "Yatzy", "Total"};
+
         for (String combination : combinations) {
             // initialize with -1 to differentiate between zero score and score
             // not set
             this.scoretable.put(combination, -1);
         }
-        
+
     }
-    
-    public void printScoretable(){
-        System.out.println("|----------------------|");
-        System.out.println("Player: " + player.getName());
-        System.out.println("|----------------------|");
-        System.out.println("| Combination | Score  |");
-        scoretable.keySet().iterator().forEachRemaining(key -> {
-            if(scoretable.get(key)==-1)
-                System.out.println("| " + key + " | " + " - |" );
-            else {
-                System.out.println("| " + key + " | " + scoretable.get(key) + " |" );
-            }
-        });
-        System.out.println("|----------------------|");
-    }
+
 }

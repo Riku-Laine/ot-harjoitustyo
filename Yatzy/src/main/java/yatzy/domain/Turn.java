@@ -20,26 +20,31 @@ public class Turn {
         this.random = new Random();
     }
 
-    public void playTurn(Player player, Scanner reader) {
+    /**
+     * This method plays a turn. Rolls dies.
+     *
+     * @param player
+     * @param reader To be deprecated??
+     * @return
+     */
+    public int[] playTurn(Player player, Scanner reader) {
 
-        Scorecard scorecard = new Scorecard(player);
         System.out.println("Heitä noppaa painamalla enter!");
+        reader.nextLine();
 
         while (true) {
 
-            reader.nextLine();
             int[] taul = rollDies(5);
             printDies(taul);
             System.out.println("\nKirjoita 'heitto' valitaksesi uudelleen heitettävät nopat, "
-                    + "'merkitse' valitaksesi yhdistelmä merkattavaksi pöytäkirjaan "
-                    + "tai paina Enter lopettaaksesi vuoron:");
+                    + "'merkitse' valitaksesi yhdistelmä merkattavaksi pöytäkirjaan ");
 
             String command = reader.nextLine();
 
-            if (command.equals("")) {
-                break;
-            } else if (command.equals("")) {
-                System.out.print("Saamasi pisteet: " + scorecard.getScore(command, taul) + "\n");
+            if (command.equals("merkitse")) {
+                return taul;
+            } else if (command.equals("heitto")) {
+
             }
 //            for(int i=0; i< selections.length; i++){
 //                int[] choices = selections[i];

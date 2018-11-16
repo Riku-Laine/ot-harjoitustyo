@@ -12,9 +12,10 @@ package yatzy.domain;
 public class Player {
 
     public String name;
-    public boolean isTurn;
+    public boolean hasTurn;
 
     public Player() {
+        this.hasTurn = false;
     }
 
     public void setName(String name) {
@@ -26,10 +27,10 @@ public class Player {
     }
 
     public void setTurn(boolean turn) {
-        this.isTurn = turn;
+        this.hasTurn = turn;
     }
 
     public boolean getTurn() {
-        return this.isTurn;
+        return this.hasTurn;
     }
 }

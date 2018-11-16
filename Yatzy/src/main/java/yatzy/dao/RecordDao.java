@@ -23,8 +23,8 @@ public class RecordDao implements Dao<Player, Integer> {
 
     @Override
     public List<Player> findAll() throws SQLException {
-	// ei toteutettu
-	return null;
+        // ei toteutettu
+        return null;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class RecordDao implements Dao<Player, Integer> {
         // ei toteutettu
         return null;
     }
-  
+
     @Override
     public void delete(Integer key) throws SQLException {
         // ei toteutettu
