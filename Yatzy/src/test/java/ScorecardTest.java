@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import yatzy.domain.Player;
 import yatzy.domain.Scorecard;
 
 /**
@@ -33,7 +34,8 @@ public class ScorecardTest {
 
     @Before
     public void setUp() {
-        sc = new Scorecard();
+        Player nullPlayer = new Player();
+        sc = new Scorecard(nullPlayer);
     }
 
     @After
@@ -47,5 +49,17 @@ public class ScorecardTest {
     public void findsPair() {
         int[] dies = {1, 2, 3, 3, 4};
         assertEquals(6, sc.getScore("one pair", dies));
+    }
+    
+    @Test
+    public void findsTwoPairs() {
+        int[] dies = {1, 4, 3, 3, 4};
+        assertEquals(14, sc.getScore("two pairs", dies));
+    }
+    
+    @Test
+    public void chanceIsRight() {
+        int[] dies = {1, 4, 3, 3, 4};
+        assertEquals(15, sc.getScore("chance", dies));
     }
 }

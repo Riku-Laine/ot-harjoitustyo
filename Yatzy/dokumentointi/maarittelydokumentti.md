@@ -11,6 +11,8 @@
 
 Sovelluksessa on tarkoitus pelata noppapeliä [Yatzy](https://fi.wikipedia.org/wiki/Yatzy) yhdellä tai kahdella pelaajalla. Yksin pelatessa oman tuloksensa voi tallentaa ennätyslistaan omalla nimimerkillä.
 
+Tulosten kirjaamisessa noudatetaan suomalaisia yhdistelmiä, jotka löytyvät pelin Wikipedia-sivulta. Tällöin esimerkiksi pieni suora tarkoittaa noppayhdistelmää 1, 2, 3, 4 ja 5.
+
 ## <a name="kayttajat"></a>Käyttäjät ja käyttöroolit
 
 Sovelluksessa on roolit *pelaajalle* ja myöhemmin lisättävälle *moderaattorille*.  
@@ -23,9 +25,13 @@ Moderaattorilla on pääsy ennätystauluun ja hän voi poistaa nimimerkkejä ja 
 
 ### Perusversio
 
-* Pelaaja voi pelata Yatzya
+* Pelaaja voi pelata Yatzya, sisältäen
+	* noppien heiton, eli viiden numeron generoinnin
+	* noppien valinnan, eli heiton rajauksen
+	* kirjanpitoon kirjattavan yhdistelmän valinnan
 * Pelaaja näkee koko ajan oman pistetilanteensa
-* Klikkaamalla voi valita nopat ja poistaa valinnan(noppien kuvat)
+	* Graafisessa käyttöliittymässä toteutetaan taulukolla
+* Klikkaamalla voi valita nopat ja poistaa valinnan (noppien kuvat)
 * Jos pelaaja yksinpelatessaan ylittää ennätyksen, ennätystulos päivittyy vastaamaan tulosta.
 	* *Miten toteutus? Kirjautuminen / Ylikirjoitus / Ei samoja nimimerkkejä*
 * Kaksinpeluussa peliä pelataan vuorotellen, pelinäkymä erilainen
@@ -39,7 +45,11 @@ Moderaattorilla on pääsy ennätystauluun ja hän voi poistaa nimimerkkejä ja 
 	* Asiattomien nimimerkkien poisto
 * Nopan silmäluvun muodostumisen animointi
 * Noppien heiton animointi
+* Mielivaltainen määrä pelaajia
+* Mielivaltainen määrä noppia
+* Erikoisnopat (N-sivuinen)
 * Vaihtoehtojen (täyskäsi, viitoset jne.) viereen tulostuu tuloksen todennäköisyys
 * Pistetaulukossa reaaliaikaisesti tulos, joka vahvistetaan vuoron päätyttyä
-* Kaksinpeluuseen mahdollisuus pelata paras N:stä
+* Moninpeluuseen mahdollisuus pelata paras N:stä
 
+*Perusversion vaatimusmäärittelyjä tarkennettu 16.11. alakohdilla ja kuvaukseen lisätty maininta suomalaisista säännöistä.*
