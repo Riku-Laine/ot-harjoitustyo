@@ -14,35 +14,30 @@ import java.util.ArrayList;
 public class YatzyService {
 
     public ArrayList<Player> playerList;
-
+    private final Scorecard scorecard;
+    private final DiceCollection dices;
+    
     public YatzyService() {
         this.playerList = new ArrayList<>();
+        this.scorecard = new Scorecard();
+        this.scorecard.setPlayers(playerList);
+        this.dices = new DiceCollection();
+        
     }
 
-    public void startOnePlayerGame() {
-
-        Turn turns = new Turn();
-        this.playerList.add(new Player());
-
-        Scorecard scorecard = new Scorecard();
-
-        while (true) {
-            int[] dies = turns.rollDies(5);
-            break;
-        }
-
-    }
-
-    public void setPlayerName(Player player, String name) {
-        if (!name.isEmpty()) {
-            playerList.get(0).setName(name);
-        } else {
-            throw new IllegalArgumentException("Empty name not allowed!");
-        }
+    public void setPlayerToBegin(Player player) {
+        player.setTurn(true);
     }
 
     public ArrayList<Player> getPlayers() {
         return this.playerList;
+    }
+    
+    public void addPlayer(String name) {
+        Player p = new Player(name);
+        if(this.playerList.isEmpty())
+            p.setTurn(true);
+        this.playerList.add(p);
     }
 
     public Player getPlayerWithTurn() {
@@ -56,11 +51,11 @@ public class YatzyService {
     }
 
     public String getDiceValues() {
-        return "9 9 9 9 9";
+        return this.dices.toString();
     }
 
     public void throwDies(boolean[] selected) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.dices.rollDies(selected);
     }
 
 }

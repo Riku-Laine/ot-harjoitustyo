@@ -5,6 +5,7 @@
  */
 package yatzy.ui;
 
+import java.util.Arrays;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,8 +17,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import yatzy.domain.Player;
 import yatzy.domain.YatzyService;
 
 /**
@@ -59,9 +62,34 @@ public class YatzyUi extends Application {
 
         Scene startScene = new Scene(startLayout);
 
+        Button exitButton = new Button("Exit to start screen");
+
+        // one player name scene
+        Label onePlayerGiveNameLabel = new Label(" Give your name!\n Name can't be empty.");
+        TextField onePlayerNameText = new TextField();
+        Button onePlayerPlayButton = new Button("Begin");
+        
+        VBox onePlayerElements = new VBox();
+        onePlayerElements.getChildren().addAll(onePlayerGiveNameLabel, 
+                onePlayerNameText, onePlayerPlayButton, exitButton);
+        
+        Scene onePlayerBeginScene = new Scene(onePlayerElements);
+        
+        // two player name scene
+        Label twoPlayerGiveNameLabel = new Label(" Give your names!\n Names can't be empty.");
+        TextField twoPlayerNameOneText = new TextField();
+        TextField twoPlayerNameTwoText = new TextField();
+        Button twoPlayerPlayButton = new Button("Begin");
+        
+        VBox twoPlayerElements = new VBox();
+        twoPlayerElements.getChildren().addAll(twoPlayerGiveNameLabel, 
+                twoPlayerNameOneText, twoPlayerNameTwoText, twoPlayerPlayButton, exitButton);
+        
+        Scene twoPlayerBeginScene = new Scene(twoPlayerElements);
+        
         // Game scene
         Label title = new Label("YATZY!");
-        Label playerName = new Label("TBA"); // Generize to N players
+        Label playerWithTurn = new Label(null);
         Label diceValues = new Label(game.getDiceValues());
         CheckBox dice1 = new CheckBox("Dice 1");
         CheckBox dice2 = new CheckBox("Dice 2");
@@ -69,7 +97,6 @@ public class YatzyUi extends Application {
         CheckBox dice4 = new CheckBox("Dice 4");
         CheckBox dice5 = new CheckBox("Dice 5");
         Button throwButton = new Button("Throw!");
-        Button exitButton = new Button("Exit");
 
         HBox diceButtons = new HBox();
         diceButtons.getChildren().addAll(dice1, dice2, dice3, dice4, dice5);
@@ -81,7 +108,10 @@ public class YatzyUi extends Application {
         TableColumn combinationsCol = new TableColumn("Combinations");
         TableColumn pointsCol = new TableColumn("Points");
 
-        pointsCol.getColumns().add(new TableColumn("TBA")); // Generize to N players
+        // Create column in the scoretable for each player
+        game.getPlayers().forEach((player) -> {
+            pointsCol.getColumns().add(new TableColumn(player.getName()));
+        });
 
         scoreTable.getColumns().addAll(combinationsCol, pointsCol);
 
@@ -91,11 +121,11 @@ public class YatzyUi extends Application {
         dice3.setIndeterminate(false);
         dice4.setIndeterminate(false);
         dice5.setIndeterminate(false);
-
+        
         GridPane gameButtonArea = new GridPane();
 
         gameButtonArea.add(title, 0, 0);
-        gameButtonArea.add(playerName, 0, 1);
+        gameButtonArea.add(playerWithTurn, 0, 1);
         gameButtonArea.add(diceValues, 0, 2);
         gameButtonArea.add(diceButtons, 0, 3);
         gameButtonArea.add(throwButton, 0, 4);
@@ -110,15 +140,13 @@ public class YatzyUi extends Application {
         // Button events
         singlePlayerButton.setOnAction((event) -> {
             // Start one player game and move to "game arena"
-            window.setScene(gameScene);
-            game.startOnePlayerGame();
+            window.setScene(onePlayerBeginScene);
             System.out.println("One player game initiated.");
         });
 
         twoPlayerButton.setOnAction((event) -> {
             // Start two player game and move to "game arena"
-            // game.startTwoPlayerGame();
-            window.setScene(gameScene);
+            window.setScene(twoPlayerBeginScene);
             System.out.println("Two player game initiated.");
         });
 
@@ -129,12 +157,37 @@ public class YatzyUi extends Application {
                 // window.setScene(adminScene);
             }
         });
+        
+        onePlayerPlayButton.setOnAction((event) -> {
+            // Ei asserttaa tyhjää nimeä
+            String name = onePlayerNameText.getText();
+            if(!name.isEmpty()){
+                game.addPlayer(name);
+                playerWithTurn.setText(name);
+                window.setScene(gameScene);
+            }
+
+        });
+        
+        twoPlayerPlayButton.setOnAction((event) -> {
+            // Ei asserttaa tyhjää nimeä
+            if(!twoPlayerNameOneText.getText().isEmpty() & !twoPlayerNameTwoText.getText().isEmpty()){
+                game.addPlayer(twoPlayerNameOneText.getText());
+                game.addPlayer(twoPlayerNameTwoText.getText());
+                playerWithTurn.setText(twoPlayerNameOneText.getText());
+                window.setScene(gameScene);
+            }
+
+        });
 
         throwButton.setOnAction((event) -> {
 
-            boolean[] selected = {dice1.isPressed()};
+            boolean[] selected = {dice1.isSelected(), dice2.isSelected(), 
+                dice3.isSelected(), dice4.isSelected(), dice5.isSelected()};
 
             game.throwDies(selected);
+            diceValues.setText(game.getDiceValues());
+            scoreTable.refresh();
             window.setScene(gameScene);
         });
 

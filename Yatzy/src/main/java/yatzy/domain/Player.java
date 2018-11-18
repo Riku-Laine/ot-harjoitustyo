@@ -17,6 +17,11 @@ public class Player {
     public Player() {
         this.hasTurn = false;
     }
+    
+    public Player(String name) {
+        this.name = name;
+        this.hasTurn = false;
+    }
 
     public void setName(String name) {
         this.name = name;
