@@ -8,4 +8,5 @@
 |        | 1    | Testien luominen, koodin stilisointi, yleinen refaktorointi |
 |        | 1    | Ulkoasun suunnittelu ja suunnitelman päivittäminen |
 |        | 3    | Ohjelmalliset muokkaukset graafisen käyttöliittymän komentojen vastaanottamiseksi |
+| 18.11. | 1    | UIn rakenteen korjausta, noppaluokan muokkaus. |
 | **Yht.**| **13** ||
