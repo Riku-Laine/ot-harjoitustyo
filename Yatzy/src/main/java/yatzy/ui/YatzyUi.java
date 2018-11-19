@@ -20,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import yatzy.domain.Player;
 import yatzy.domain.YatzyService;
 
 /**
@@ -158,6 +157,7 @@ public class YatzyUi extends Application {
             }
         });
         
+        // Add player(s) and set beginning player
         onePlayerPlayButton.setOnAction((event) -> {
             // Ei asserttaa tyhjää nimeä
             String name = onePlayerNameText.getText();
@@ -170,7 +170,6 @@ public class YatzyUi extends Application {
         });
         
         twoPlayerPlayButton.setOnAction((event) -> {
-            // Ei asserttaa tyhjää nimeä
             if(!twoPlayerNameOneText.getText().isEmpty() & !twoPlayerNameTwoText.getText().isEmpty()){
                 game.addPlayer(twoPlayerNameOneText.getText());
                 game.addPlayer(twoPlayerNameTwoText.getText());
@@ -185,10 +184,17 @@ public class YatzyUi extends Application {
             boolean[] selected = {dice1.isSelected(), dice2.isSelected(), 
                 dice3.isSelected(), dice4.isSelected(), dice5.isSelected()};
 
-            game.throwDies(selected);
-            diceValues.setText(game.getDiceValues());
-            scoreTable.refresh();
-            window.setScene(gameScene);
+            if(!areAllFalse(selected)){
+                dice1.setSelected(false);
+                dice2.setSelected(false);
+                dice3.setSelected(false);
+                dice4.setSelected(false);
+                dice5.setSelected(false);
+                game.throwDies(selected);
+                diceValues.setText(game.getDiceValues());
+                scoreTable.refresh();
+                window.setScene(gameScene);
+            }
         });
 
         exitButton.setOnAction((event) -> {
@@ -198,5 +204,15 @@ public class YatzyUi extends Application {
         window.setScene(startScene);
         window.show();
     }
+    
+    public static boolean areAllFalse(boolean[] array){
+        for(boolean b : array){
+            if(b)
+                return false;
+        }
+        return true;
+    }
+
+
 
 }
