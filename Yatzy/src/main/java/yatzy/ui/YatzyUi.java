@@ -107,13 +107,10 @@ public class YatzyUi extends Application {
         TableColumn combinationsCol = new TableColumn("Combinations");
         TableColumn pointsCol = new TableColumn("Points");
 
-        // Create column in the scoretable for each player
-        game.getPlayers().forEach((player) -> {
-            pointsCol.getColumns().add(new TableColumn(player.getName()));
-        });
-
         scoreTable.getColumns().addAll(combinationsCol, pointsCol);
-
+        
+        //String tulos = game.playerList.stream().map(p-> p.getName());
+        
         // Disable indeterminate choice for dies.
         dice1.setIndeterminate(false);
         dice2.setIndeterminate(false);
@@ -158,11 +155,18 @@ public class YatzyUi extends Application {
         });
         
         // Add player(s) and set beginning player
+        // TODO: for N players
         onePlayerPlayButton.setOnAction((event) -> {
             // Ei asserttaa tyhjää nimeä
             String name = onePlayerNameText.getText();
             if(!name.isEmpty()){
                 game.addPlayer(name);
+                // Create column in the scoretable for each player
+                game.getPlayers().forEach((player) -> {
+                    pointsCol.getColumns().add(new TableColumn(player.getName()));
+                });
+                
+                
                 playerWithTurn.setText(name);
                 window.setScene(gameScene);
             }
@@ -173,12 +177,17 @@ public class YatzyUi extends Application {
             if(!twoPlayerNameOneText.getText().isEmpty() & !twoPlayerNameTwoText.getText().isEmpty()){
                 game.addPlayer(twoPlayerNameOneText.getText());
                 game.addPlayer(twoPlayerNameTwoText.getText());
+                // Create column in the scoretable for each player
+                game.getPlayers().forEach((player) -> {
+                    pointsCol.getColumns().add(new TableColumn(player.getName()));
+                });
                 playerWithTurn.setText(twoPlayerNameOneText.getText());
                 window.setScene(gameScene);
             }
 
         });
-
+        
+        
         throwButton.setOnAction((event) -> {
 
             boolean[] selected = {dice1.isSelected(), dice2.isSelected(), 

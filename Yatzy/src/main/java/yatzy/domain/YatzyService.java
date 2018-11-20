@@ -14,15 +14,11 @@ import java.util.ArrayList;
 public class YatzyService {
 
     public ArrayList<Player> playerList;
-    private final Scorecard scorecard;
     private final DiceCollection dices;
     
     public YatzyService() {
         this.playerList = new ArrayList<>();
-        this.scorecard = new Scorecard();
-        this.scorecard.setPlayers(playerList);
         this.dices = new DiceCollection();
-        
     }
 
     public void setPlayerToBegin(Player player) {

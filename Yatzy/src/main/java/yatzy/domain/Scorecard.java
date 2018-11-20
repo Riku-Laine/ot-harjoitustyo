@@ -6,7 +6,9 @@
 package yatzy.domain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  *
@@ -14,60 +16,61 @@ import java.util.HashMap;
  */
 public class Scorecard {
 
-    private ArrayList<Player> playerList;
+    private Player player;
     private HashMap<String, Integer> scoretable;
 
-    public Scorecard() {
-        this.playerList = new ArrayList<>();
+    public Scorecard(Player player) {
+        this.player = player;
         this.scoretable = new HashMap<>();
         initializeScoretable();
     }
-
-    public void setPlayers(ArrayList players) {
-        this.playerList = players;
+    
+    public HashMap getPlayersScoretable(){
+        getTotal();
+        return this.scoretable;
     }
 
-    public int getPointsForCombination(String combination, int[] dies) {
-
+    public void setPointsForCombination(String combination, int[] dies) {
+ 
         if (null != combination) {
             switch (combination) {
                 case "ones":
-                    return checkForPointValues(dies, 1);
+                    this.scoretable.replace(combination, checkForPointValues(dies, 1));
                 case "twos":
-                    return checkForPointValues(dies, 2);
+                    this.scoretable.replace(combination, checkForPointValues(dies, 2));
                 case "threes":
-                    return checkForPointValues(dies, 3);
+                    this.scoretable.replace(combination, checkForPointValues(dies, 3));
                 case "fours":
-                    return checkForPointValues(dies, 4);
+                    this.scoretable.replace(combination, checkForPointValues(dies, 4));
                 case "fives":
-                    return checkForPointValues(dies, 5);
+                    this.scoretable.replace(combination, checkForPointValues(dies, 5));
                 case "sixes":
-                    return checkForPointValues(dies, 6);
+                    this.scoretable.replace(combination, checkForPointValues(dies, 6));
                 case "one pair":
-                    return checkForMultiplesOfSizeN(dies, 1, 2);
+                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 1, 2));
                 case "two pairs":
-                    return checkForMultiplesOfSizeN(dies, 2, 2);
+                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 2, 2));
                 case "triplet":     // Three Of A Kind
-                    return checkForMultiplesOfSizeN(dies, 1, 3);
+                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 1, 3));
                 case "quadruplet":  // Four Of A Kind
-                    return checkForMultiplesOfSizeN(dies, 1, 4);
+                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 1, 4));
                 case "small straight":
-                    return checkForStraight(dies, "small");
+                    this.scoretable.replace(combination, checkForStraight(dies, "small"));
                 case "big straight":
-                    return checkForStraight(dies, "big");
+                    this.scoretable.replace(combination, checkForStraight(dies, "big"));
                 case "full house":
-                    return checkForFullHouse(dies);
+                    this.scoretable.replace(combination, checkForFullHouse(dies));
                 case "chance":
-                    return checkForChance(dies);
+                    this.scoretable.replace(combination, checkForChance(dies));
                 case "yatzy":  // Yahtzee??
-                    return checkForYatzy(dies);
+                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 1, 5));
                 default:
                     break;
             }
         }
 
-        // No match, return -1
-        return -1;
+        // No match, return error
+        throw new IllegalArgumentException("No such combination!");
     }
 
     public int checkForPointValues(int[] dies, int which) {
@@ -112,25 +115,37 @@ public class Scorecard {
         return 0;
     }
 
-    private int checkForStraight(int[] dies, String type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int checkForStraight(int[] dies, String type) {
+        Arrays.sort(dies);
+        for(int i = 0; i < dies.length; i++){
+            if(dies[i] != i+1 & type.equals("small"))
+                return 0;
+            if(dies[i] != i+2 & type.equals("big"))
+                return 0;
+        }
+        if(type.equals("small"))
+            return 15;
+        if(type.equals("big"))
+            return 20;
+        
+        throw new IllegalArgumentException("Type wrong");
     }
 
-    private int checkForFullHouse(int[] dies) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int checkForFullHouse(int[] dies) {
+        int pair = checkForMultiplesOfSizeN(dies, 1, 2);
+        int triplet = checkForMultiplesOfSizeN(dies, 1, 3);
+        if(pair != 0 & triplet != 0)
+            return pair + triplet;
+        return 0;
     }
 
-    private int checkForChance(int[] dies) {
+    public int checkForChance(int[] dies) {
         int score = 0;
         for (int i = 0; i < dies.length; i++) {
             score += dies[i];
         }
 
         return score;
-    }
-
-    private int checkForYatzy(int[] dies) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void initializeScoretable() {
@@ -144,7 +159,16 @@ public class Scorecard {
             // not set
             this.scoretable.put(combination, -1);
         }
-
+    }
+    
+    private void getTotal(){
+        int total = this.scoretable.keySet().stream().mapToInt((key) -> {
+            if(scoretable.get(key) != -1)
+                return scoretable.get(key);
+            else
+                return 0;
+        }).sum();
+        this.scoretable.replace("Total", total);
     }
 
 }

@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import yatzy.domain.Player;
 import yatzy.domain.Scorecard;
 
 /**
@@ -33,10 +34,10 @@ public class ScorecardTest {
 
     @Before
     public void setUp() {
-//        Player nullPlayer = new Player();
+        Player nullPlayer = new Player();
 //        ArrayList players = new ArrayList();
 //        players.add(nullPlayer);
-        sc = new Scorecard();
+        sc = new Scorecard(nullPlayer);
     }
 
     @After
@@ -49,18 +50,36 @@ public class ScorecardTest {
     @Test
     public void findsPair() {
         int[] dies = {1, 2, 3, 3, 4};
-        assertEquals(6, sc.getPointsForCombination("one pair", dies));
+        assertEquals(6, sc.checkForMultiplesOfSizeN(dies, 1, 2));
+    }
+
+    @Test
+    public void findsBiggestPair() {    
+        int[] dies = {1, 3, 3, 4, 4};
+        assertEquals(8, sc.checkForMultiplesOfSizeN(dies, 1, 2));
+     }
+
+    @Test
+    public void returnsZeroWhenNoPairs() {   
+        int[] dies = {1, 2, 3, 4, 6};
+        assertEquals(0, sc.checkForMultiplesOfSizeN(dies, 1, 2));
+    }
+    
+    @Test
+    public void findsPairWhenTriplet() {   
+        int[] dies = {3, 4, 4, 6, 4};
+        assertEquals(8, sc.checkForMultiplesOfSizeN(dies, 1, 2));
     }
 
     @Test
     public void findsTwoPairs() {
-        int[] dies = {1, 4, 3, 3, 4};
-        assertEquals(14, sc.getPointsForCombination("two pairs", dies));
+        int[] dies = {3, 4, 3, 1, 4};
+        assertEquals(14, sc.checkForMultiplesOfSizeN(dies, 2, 2));
     }
 
     @Test
     public void chanceIsRight() {
         int[] dies = {1, 4, 3, 3, 4};
-        assertEquals(15, sc.getPointsForCombination("chance", dies));
+        assertEquals(15, sc.checkForChance(dies));
     }
 }
