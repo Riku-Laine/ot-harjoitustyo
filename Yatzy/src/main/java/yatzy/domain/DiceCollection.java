@@ -15,50 +15,54 @@ import java.util.Random;
 public class DiceCollection {
 
     private final Random random;
-    private final int[] dies;
+    private int[] dies;
 
+    /**
+     * Create new dice collection of size 5.
+     */
     public DiceCollection() {
         this.random = new Random();
         this.dies = new int[5];
     }
-    
+
+    /**
+     * Create new dice collection of given size.
+     *
+     * @param sizeOfCollection Size of dice collection, number of dies.
+     */
     public DiceCollection(int sizeOfCollection) {
         this.random = new Random();
         this.dies = new int[sizeOfCollection];
     }
 
     /**
-     * Rolls all dies. 
+     * Rolls all dies.
      */
     public void rollAllDies() {
         boolean[] bools = new boolean[this.dies.length];
         Arrays.fill(bools, true);
         rollDies(bools);
     }
-    
+
     /**
-     * Roll specified dies. Speciify with boolean array.
+     * Roll specified dies. Specify with boolean array.
+     *
      * @param diesToThrow Boolean array to specify which dies to throw.
      */
     public void rollDies(boolean[] diesToThrow) {
         for (int i = 0; i < dies.length; i++) {
-            if(diesToThrow[i]){
+            if (diesToThrow[i]) {
                 this.dies[i] = (int) Math.round(random.nextDouble() * 6 + 0.5);
             }
         }
     }
-    
-    public int[] getDies(){
+
+    public int[] getDies() {
         return this.dies;
     }
 
-    @Override
-    public String toString() {
-        String str = "" + dies[0];
-        for (int i = 1; i < dies.length; i++) {
-            str += " " + dies[i];
-        }
-        return str;
+    public void setDies(int[] dies) {
+        this.dies = dies;
     }
 
 }

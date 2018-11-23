@@ -5,26 +5,22 @@
  */
 package yatzy.domain;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Riku_L
  */
 public class Player {
 
-    public String name;
-    public boolean hasTurn;
+    private final String name;
+    private boolean hasTurn;
+    private final Scorecard scorecard;
 
-    public Player() {
-        this.hasTurn = false;
-    }
-    
     public Player(String name) {
         this.name = name;
+        this.scorecard = new Scorecard();
         this.hasTurn = false;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getName() {
@@ -37,5 +33,13 @@ public class Player {
 
     public boolean getTurn() {
         return this.hasTurn;
+    }
+
+    public void setPoints(String combination, int[] dies) {
+        this.scorecard.setPointsForCombination(combination, dies);
+    }
+
+    public HashMap<String, Integer> getScorecard() {
+        return this.scorecard.getPlayersScoretable();
     }
 }

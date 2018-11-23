@@ -5,10 +5,8 @@
  */
 package yatzy.domain;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  *
@@ -16,63 +14,75 @@ import java.util.HashSet;
  */
 public class Scorecard {
 
-    private Player player;
-    private HashMap<String, Integer> scoretable;
+    private final HashMap<String, Integer> scoretable;
 
-    public Scorecard(Player player) {
-        this.player = player;
+    public Scorecard() {
         this.scoretable = new HashMap<>();
         initializeScoretable();
     }
-    
-    public HashMap getPlayersScoretable(){
+
+    public HashMap<String, Integer> getPlayersScoretable() {
         getTotal();
         return this.scoretable;
     }
 
+    /**
+     * Set points for a combination in the scorecard.
+     *
+     * @param combination Name of the combination. If name is not valid,
+     * IllegalArgumentException is thrown.
+     * @param dies Integeer array of dies.
+     */
     public void setPointsForCombination(String combination, int[] dies) {
- 
+        int score = 0;
         if (null != combination) {
-            switch (combination) {
-                case "ones":
-                    this.scoretable.replace(combination, checkForPointValues(dies, 1));
-                case "twos":
-                    this.scoretable.replace(combination, checkForPointValues(dies, 2));
-                case "threes":
-                    this.scoretable.replace(combination, checkForPointValues(dies, 3));
-                case "fours":
-                    this.scoretable.replace(combination, checkForPointValues(dies, 4));
-                case "fives":
-                    this.scoretable.replace(combination, checkForPointValues(dies, 5));
-                case "sixes":
-                    this.scoretable.replace(combination, checkForPointValues(dies, 6));
-                case "one pair":
-                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 1, 2));
-                case "two pairs":
-                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 2, 2));
-                case "triplet":     // Three Of A Kind
-                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 1, 3));
-                case "quadruplet":  // Four Of A Kind
-                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 1, 4));
-                case "small straight":
-                    this.scoretable.replace(combination, checkForStraight(dies, "small"));
-                case "big straight":
-                    this.scoretable.replace(combination, checkForStraight(dies, "big"));
-                case "full house":
-                    this.scoretable.replace(combination, checkForFullHouse(dies));
-                case "chance":
-                    this.scoretable.replace(combination, checkForChance(dies));
-                case "yatzy":  // Yahtzee??
-                    this.scoretable.replace(combination, checkForMultiplesOfSizeN(dies, 1, 5));
-                default:
-                    break;
+            if (combination.equals("Ones")) {
+                score = checkForPointValues(dies, 1);
+            } else if (combination.equals("Twos")) {
+                score = checkForPointValues(dies, 2);
+            } else if (combination.equals("Threes")) {
+                score = checkForPointValues(dies, 3);
+            } else if (combination.equals("Fours")) {
+                score = checkForPointValues(dies, 4);
+            } else if (combination.equals("Fives")) {
+                score = checkForPointValues(dies, 5);
+            } else if (combination.equals("Sixes")) {
+                score = checkForPointValues(dies, 6);
+            } else if (combination.equals("One pair")) {
+                score = checkForMultiplesOfSizeN(dies, 1, 2);
+            } else if (combination.equals("Two pairs")) {
+                score = checkForMultiplesOfSizeN(dies, 2, 2);
+            } else if (combination.equals("Three of a kind")) {
+                score = checkForMultiplesOfSizeN(dies, 1, 3);
+            } else if (combination.equals("Four of a kind")) {
+                score = checkForMultiplesOfSizeN(dies, 1, 4);
+            } else if (combination.equals("Small straight")) {
+                score = checkForStraight(dies, "small");
+            } else if (combination.equals("Big straight")) {
+                score = checkForStraight(dies, "big");
+            } else if (combination.equals("Full house")) {
+                score = checkForFullHouse(dies);
+            } else if (combination.equals("Chance")) {
+                score = checkForChance(dies);
+            } else if (combination.equals("Yatzy")) {  // Yahtzee??
+                score = checkForYatzy(dies);
+            } else {
+                throw new IllegalArgumentException("Invalid combination argument!");
             }
+        } else {
+            throw new IllegalArgumentException("Null Argument!");
         }
 
-        // No match, return error
-        throw new IllegalArgumentException("No such combination!");
+        this.scoretable.replace(combination, score);
     }
 
+    /**
+     * Check for single point values, e.g. ones, twos, threes etc.
+     *
+     * @param dies Integer array of dice values
+     * @param which Integer of which single point to inspect for.
+     * @return Points for this combination.
+     */
     public int checkForPointValues(int[] dies, int which) {
         int score = 0;
         for (int i = 0; i < dies.length; i++) {
@@ -85,7 +95,7 @@ public class Scorecard {
 
     /**
      * This method counts multiples (pairs, triples, quadruplets etc.) from an
-     * integer array.
+     * integer array and return the corresponding score (their sum).
      *
      * @param dies The eyes of the dies.
      * @param howManyMultiples How many multiples? (e.g. 2 or 7 pairs)
@@ -108,37 +118,67 @@ public class Scorecard {
             }
         }
 
-        if (multiplesFound == howManyMultiples) // have all multiples been found
-        {
+        // Check that all multiples have been found
+        if (multiplesFound == howManyMultiples) {
             return score;
         }
         return 0;
     }
 
+    /**
+     * Returns points for big or small straight. Defined as (2, 3, 4, 5 and 6)
+     * and (1, 2, 3, 4 and 5) correspondingly.
+     *
+     * @param dies Integer array of dies.
+     * @param type String; "big" for big straight, "small" for small straight.
+     * @return If straight is found, returns (int) 20 for big straight and 15
+     * for small straight.
+     */
     public int checkForStraight(int[] dies, String type) {
         Arrays.sort(dies);
-        for(int i = 0; i < dies.length; i++){
-            if(dies[i] != i+1 & type.equals("small"))
+        for (int i = 0; i < dies.length; i++) {
+            if (dies[i] != i + 1 & type.equals("small")) {
                 return 0;
-            if(dies[i] != i+2 & type.equals("big"))
+            }
+            if (dies[i] != i + 2 & type.equals("big")) {
                 return 0;
+            }
         }
-        if(type.equals("small"))
+        if (type.equals("small")) {
             return 15;
-        if(type.equals("big"))
+        }
+        if (type.equals("big")) {
             return 20;
-        
+        }
+
         throw new IllegalArgumentException("Type wrong");
     }
 
+    /**
+     * Calculate points for full house (a pair and a triplet).
+     *
+     * @param dies Integer array of dies.
+     * @return
+     */
     public int checkForFullHouse(int[] dies) {
         int pair = checkForMultiplesOfSizeN(dies, 1, 2);
         int triplet = checkForMultiplesOfSizeN(dies, 1, 3);
-        if(pair != 0 & triplet != 0)
+
+        // TODO Make better fix
+        int four = checkForMultiplesOfSizeN(dies, 1, 4);
+
+        if (pair != 0 & triplet != 0 & four == 0) {
             return pair + triplet;
+        }
         return 0;
     }
 
+    /**
+     * Calculate points for chance (sum of eyes).
+     *
+     * @param dies Integer array of dice values.
+     * @return Points for chance.
+     */
     public int checkForChance(int[] dies) {
         int score = 0;
         for (int i = 0; i < dies.length; i++) {
@@ -148,6 +188,10 @@ public class Scorecard {
         return score;
     }
 
+    /**
+     * Initialize scorecard's HashMap with scores of -1 to differentiate between
+     * zero score and score not set.
+     */
     private void initializeScoretable() {
         String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives",
             "Sixes", "One pair", "Two pairs", "Three of a kind",
@@ -155,20 +199,38 @@ public class Scorecard {
             "Full house", "Chance", "Yatzy", "Total"};
 
         for (String combination : combinations) {
-            // initialize with -1 to differentiate between zero score and score
-            // not set
             this.scoretable.put(combination, -1);
         }
     }
-    
-    private void getTotal(){
+
+    /**
+     * Calculates total of points for the scorecard.
+     */
+    private void getTotal() {
         int total = this.scoretable.keySet().stream().mapToInt((key) -> {
-            if(scoretable.get(key) != -1)
+            if (scoretable.get(key) != -1) {
                 return scoretable.get(key);
-            else
+            } else {
                 return 0;
+            }
         }).sum();
         this.scoretable.replace("Total", total);
+    }
+
+    /**
+     * Calculates points for Yatzy (five same).
+     *
+     * @param dies Integer array of dies.
+     * @return 0 for no Yatzy 50 if there is Yatzy.
+     */
+    private Integer checkForYatzy(int[] dies) {
+        int eye = dies[0];
+        for (int i = 0; i < dies.length; i++) {
+            if (dies[i] != eye) {
+                return 0;
+            }
+        }
+        return 50;
     }
 
 }
