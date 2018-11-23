@@ -9,4 +9,8 @@
 |        | 1    | Ulkoasun suunnittelu ja suunnitelman päivittäminen |
 |        | 3    | Ohjelmalliset muokkaukset graafisen käyttöliittymän komentojen vastaanottamiseksi |
 | 18.11. | 1    | UIn rakenteen korjausta, noppaluokan muokkaus. |
-| **Yht.**| **13** ||
+| 23.11. | 1    | Rajapintojen dokumentaatioiden lukua. |
+|        | 1,5  | Testien luominen ja päivittäminen. |
+|        | 2    | Luokkarakenteen ja riippuvuuksien parantaminen. |
+|        | 2,5  | Ulkoasumuutokset. |
+|**Yht.**| **20** ||
