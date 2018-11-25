@@ -13,4 +13,5 @@
 |        | 1,5  | Testien luominen ja päivittäminen. |
 |        | 2    | Luokkarakenteen ja riippuvuuksien parantaminen. |
 |        | 2,5  | Ulkoasumuutokset. |
-|**Yht.**| **20** ||
+| 24.11. | 2    | UI-parannuksia. |
+|**Yht.**| **22** ||
