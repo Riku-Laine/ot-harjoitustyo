@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 public class YatzyService {
 
-    private ArrayList<Player> playerList;
+    private final ArrayList<Player> playerList;
     private final DiceCollection dices;
     private int throwsUsed;
 
@@ -41,7 +41,7 @@ public class YatzyService {
 
     /**
      * Add player to player list. If playerlist is empty, added player will be
-     * set tot start the game.
+     * set to start the game.
      *
      * @param name Name of the player.
      */
@@ -133,5 +133,24 @@ public class YatzyService {
     public int[] getDies() {
         return this.dices.getDies();
     }
+    
+    public void setDies(int[] set) {
+        this.dices.setDies(set);
+    }
 
+    public void throwAllDies() {
+        if (this.throwsUsed < 3)
+            this.dices.rollAllDies();
+        
+        this.throwsUsed++;
+    }
+
+    public void setScore(Player playerWithTurn, String combination) {
+        playerWithTurn.setPoints(combination, getDies());
+        changeTurn();
+    }
+
+    public int getScore(Player playerWithTurn, String combination) {
+        return playerWithTurn.getScorecard().get(combination);
+    }
 }

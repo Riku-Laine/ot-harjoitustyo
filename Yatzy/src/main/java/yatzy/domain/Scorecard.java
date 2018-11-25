@@ -6,7 +6,7 @@
 package yatzy.domain;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  *
@@ -14,14 +14,18 @@ import java.util.HashMap;
  */
 public class Scorecard {
 
-    private final HashMap<String, Integer> scoretable;
+    private final LinkedHashMap<String, Integer> scoretable;
+    private final String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives",
+            "Sixes", "One pair", "Two pairs", "Three of a kind",
+            "Four of a kind", "Small straight", "Big straight",
+            "Full house", "Chance", "Yatzy"};
 
     public Scorecard() {
-        this.scoretable = new HashMap<>();
+        this.scoretable = new LinkedHashMap<>();
         initializeScoretable();
     }
 
-    public HashMap<String, Integer> getPlayersScoretable() {
+    public LinkedHashMap<String, Integer> getPlayersScoretable() {
         getTotal();
         return this.scoretable;
     }
@@ -69,11 +73,15 @@ public class Scorecard {
             } else {
                 throw new IllegalArgumentException("Invalid combination argument!");
             }
-        } else {
-            throw new IllegalArgumentException("Null Argument!");
         }
 
-        this.scoretable.replace(combination, score);
+        // TODO Make these to errors
+        if (this.scoretable.get(combination) == -1) {
+            this.scoretable.replace(combination, score);
+            System.out.println("Score of " + score + " was put for combination " + combination);
+        } else {
+            System.out.println("Score for combination " + combination + " was already found on scoreboard.");
+        }
     }
 
     /**
@@ -189,32 +197,30 @@ public class Scorecard {
     }
 
     /**
-     * Initialize scorecard's HashMap with scores of -1 to differentiate between
-     * zero score and score not set.
+     * Initialize scorecard's LinkedHashMap with scores of -1 to differentiate
+     * between zero score and score not set.
      */
     private void initializeScoretable() {
-        String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives",
-            "Sixes", "One pair", "Two pairs", "Three of a kind",
-            "Four of a kind", "Small straight", "Big straight",
-            "Full house", "Chance", "Yatzy", "Total"};
-
         for (String combination : combinations) {
             this.scoretable.put(combination, -1);
         }
+
+        this.scoretable.put("Total", 0);
     }
 
     /**
      * Calculates total of points for the scorecard.
      */
     private void getTotal() {
-        int total = this.scoretable.keySet().stream().mapToInt((key) -> {
-            if (scoretable.get(key) != -1) {
-                return scoretable.get(key);
-            } else {
-                return 0;
+        int total = this.scoretable.keySet().stream().mapToInt(key -> {
+            if (this.scoretable.get(key) >= 0 & !key.equals("Total")) {
+                return this.scoretable.get(key);
             }
+            return 0;
         }).sum();
+
         this.scoretable.replace("Total", total);
+
     }
 
     /**
@@ -231,6 +237,10 @@ public class Scorecard {
             }
         }
         return 50;
+    }
+    
+    public String[] getCombinations(){
+        return this.combinations;
     }
 
 }

@@ -44,7 +44,7 @@ public class ScorecardTest {
     }
 
     @Test
-    public void errorIfInvalidCommand() {
+    public void throwsErrorIfInvalidCommand() {
         try {
             sc.setPointsForCombination("non_existing", new int[1]);
             fail("IllegalArgumentException was expected");
@@ -150,4 +150,16 @@ public class ScorecardTest {
         assertEquals(5, score);
     }
     
+    @Test
+    public void totalIsRight() {
+        int[] dies = {1, 1, 1, 1, 1};
+        sc.setPointsForCombination("Ones", dies);
+        int total = sc.getPlayersScoretable().get("Total");
+        assertEquals(5, total);
+        
+        int[] dies2 = {1, 1, 1, 1, 1};
+        sc.setPointsForCombination("Yatzy", dies2);
+        int total2 = sc.getPlayersScoretable().get("Total");
+        assertEquals(5 + 50, total2);
+    }
 }
