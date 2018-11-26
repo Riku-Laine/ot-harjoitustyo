@@ -19,4 +19,4 @@ Pakkauksista
 ## Sovelluslogiikka
 
 
-![Sovelluslogiikka](/kuvat/luokkakaavio.png)
+![Sovelluslogiikka](Yatzy/dokumentointi/kuvat/luokkakaavio.png)
