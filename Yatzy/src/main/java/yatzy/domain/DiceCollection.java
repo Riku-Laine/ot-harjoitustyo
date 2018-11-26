@@ -16,6 +16,7 @@ public class DiceCollection {
 
     private final Random random;
     private int[] dies;
+    private final int biggestEyeNumber;
 
     /**
      * Create new dice collection of size 5.
@@ -23,16 +24,20 @@ public class DiceCollection {
     public DiceCollection() {
         this.random = new Random();
         this.dies = new int[5];
+        this.biggestEyeNumber = 6;
     }
 
     /**
      * Create new dice collection of given size.
      *
      * @param sizeOfCollection Size of dice collection, number of dies.
+     * @param biggestEyeNumber Biggest eye number, biggest number you can get
+     * from a dice.
      */
-    public DiceCollection(int sizeOfCollection) {
+    public DiceCollection(int sizeOfCollection, int biggestEyeNumber) {
         this.random = new Random();
         this.dies = new int[sizeOfCollection];
+        this.biggestEyeNumber = biggestEyeNumber;
     }
 
     /**
@@ -45,14 +50,14 @@ public class DiceCollection {
     }
 
     /**
-     * Roll specified dies. Specify with boolean array.
+     * Roll specified dies. Specify which with boolean array.
      *
      * @param diesToThrow Boolean array to specify which dies to throw.
      */
     public void rollDies(boolean[] diesToThrow) {
         for (int i = 0; i < dies.length; i++) {
             if (diesToThrow[i]) {
-                this.dies[i] = (int) Math.round(random.nextDouble() * 6 + 0.5);
+                this.dies[i] = (int) Math.round(random.nextDouble() * this.biggestEyeNumber + 0.5);
             }
         }
     }

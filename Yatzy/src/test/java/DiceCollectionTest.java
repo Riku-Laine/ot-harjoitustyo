@@ -35,7 +35,7 @@ public class DiceCollectionTest {
     @Before
     public void setUp() {
         dc = new DiceCollection();
-        dc2 = new DiceCollection(20);
+        dc2 = new DiceCollection(20, 6);
     }
     
     @Test

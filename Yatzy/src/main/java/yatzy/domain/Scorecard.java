@@ -16,9 +16,9 @@ public class Scorecard {
 
     private final LinkedHashMap<String, Integer> scoretable;
     private final String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives",
-            "Sixes", "One pair", "Two pairs", "Three of a kind",
-            "Four of a kind", "Small straight", "Big straight",
-            "Full house", "Chance", "Yatzy"};
+        "Sixes", "One pair", "Two pairs", "Three of a kind",
+        "Four of a kind", "Small straight", "Big straight",
+        "Full house", "Chance", "Yatzy"};
 
     public Scorecard() {
         this.scoretable = new LinkedHashMap<>();
@@ -75,12 +75,11 @@ public class Scorecard {
             }
         }
 
-        // TODO Make these to errors
+        // TODO Should this return err
         if (this.scoretable.get(combination) == -1) {
             this.scoretable.replace(combination, score);
-            System.out.println("Score of " + score + " was put for combination " + combination);
         } else {
-            System.out.println("Score for combination " + combination + " was already found on scoreboard.");
+            throw new Error("Combination valid, score already in scorecard!");
         }
     }
 
@@ -238,8 +237,8 @@ public class Scorecard {
         }
         return 50;
     }
-    
-    public String[] getCombinations(){
+
+    public String[] getCombinations() {
         return this.combinations;
     }
 

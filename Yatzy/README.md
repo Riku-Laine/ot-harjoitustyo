@@ -8,9 +8,9 @@
 
 ## <a href="dokumentaatio"></a> Dokumentaatio
 
-* [Käyttöohje TBA]()
+* [Käyttöohje TBA](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kayttoohje.md)
 * [Vaatimusmäärittelyt](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/maarittelydokumentti.md)
-* [Arkkitehtuurikuvaus TBA]()
+* [Arkkitehtuurikuvaus TBA](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/arkkitehtuuri.md)
 * [Testausdokumentti TBA]()
 * [Työaikakirjanpito](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/tuntikirjanpito.md)
 

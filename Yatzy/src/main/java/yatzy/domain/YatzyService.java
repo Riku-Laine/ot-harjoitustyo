@@ -24,9 +24,9 @@ public class YatzyService {
         this.throwsUsed = 0;
     }
 
-    public YatzyService(int nDies) {
+    public YatzyService(int nDies, int biggestEye) {
         this.playerList = new ArrayList<>();
-        this.dices = new DiceCollection(nDies);
+        this.dices = new DiceCollection(nDies, biggestEye);
         this.throwsUsed = 0;
     }
 
@@ -68,25 +68,46 @@ public class YatzyService {
         return null;
     }
 
+    /**
+     * 
+     * @param i
+     * @return 
+     */
     public int getDice(int i) {
         return this.dices.getDies()[i];
     }
 
+    /**
+     * 
+     * @return 
+     */
     public int getThrowsUsed() {
         return this.throwsUsed;
     }
-    
+
+    /**
+     * 
+     * @param number 
+     */
     public void setThrowsUsed(int number) {
         this.throwsUsed = number;
     }
 
+    /**
+     * 
+     * @param selected 
+     */
     public void throwDies(boolean[] selected) {
-        if (this.throwsUsed < 3)
+        if (this.throwsUsed < 3) {
             this.dices.rollDies(selected);
-        
+        }
+
         this.throwsUsed++;
     }
 
+    /**
+     * 
+     */
     public void changeTurn() {
 
         Player p = getPlayerWithTurn();
@@ -101,10 +122,13 @@ public class YatzyService {
         this.throwsUsed = 0;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public String getScoreboard() {
 
         String spaces = "              ";
-
         String scoreBoard = "Combinations    | " + this.playerList.stream()
                 .map(p -> (p.getName() + spaces).substring(0, p.getName().length() + 2)).collect(Collectors.joining(" | ")) + " |\n\n";
 
@@ -116,7 +140,6 @@ public class YatzyService {
         for (String comb : combinations) {
             String row = (comb + spaces).substring(0, 16) + "| ";
             for (Player p : this.playerList) {
-
                 int score = p.getScorecard().get(comb);
                 if (score == -1) {
                     row += (" " + "-" + spaces).substring(0, p.getName().length() + 2) + " | ";
@@ -130,26 +153,49 @@ public class YatzyService {
         return scoreBoard;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public int[] getDies() {
         return this.dices.getDies();
     }
-    
+
+    /**
+     * 
+     * @param set 
+     */
     public void setDies(int[] set) {
         this.dices.setDies(set);
     }
 
+    /**
+     * 
+     */
     public void throwAllDies() {
-        if (this.throwsUsed < 3)
+        if (this.throwsUsed < 3) {
             this.dices.rollAllDies();
-        
+        }
+
         this.throwsUsed++;
     }
 
+    /**
+     * 
+     * @param playerWithTurn
+     * @param combination 
+     */
     public void setScore(Player playerWithTurn, String combination) {
         playerWithTurn.setPoints(combination, getDies());
         changeTurn();
     }
 
+    /**
+     * 
+     * @param playerWithTurn
+     * @param combination
+     * @return 
+     */
     public int getScore(Player playerWithTurn, String combination) {
         return playerWithTurn.getScorecard().get(combination);
     }

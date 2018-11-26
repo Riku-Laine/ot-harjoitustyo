@@ -17,24 +17,24 @@ public class RecordDao implements Dao<Player, Integer> {
 
     @Override
     public Player findOne(Integer key) throws SQLException {
-        // ei toteutettu
+        // not implemented
         return null;
     }
 
     @Override
     public List<Player> findAll() throws SQLException {
-        // ei toteutettu
+        // not implemented
         return null;
     }
 
     @Override
     public Player saveOrUpdate(Player object) throws SQLException {
-        // ei toteutettu
+        // not implemented
         return null;
     }
 
     @Override
     public void delete(Integer key) throws SQLException {
-        // ei toteutettu
+        // not implemented
     }
 }

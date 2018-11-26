@@ -6,11 +6,9 @@
 package yatzy.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,7 +32,6 @@ public class YatzyUi extends Application {
 
     private YatzyService game;
     private HashMap<Integer, ImageView> eyeImageViews;
-    private HBox diceButtonBox;
     private Label scoreTable;
     private Label playerWithTurn;
     private Label numberOfThrows;
@@ -159,7 +156,7 @@ public class YatzyUi extends Application {
         throwSelectedButton.setDisable(true);
         Button throwAllButton = new Button("Throw all!");
 
-        diceButtonBox = new HBox();
+        HBox diceButtonBox = new HBox();
 
         diceButtonList.stream().forEach(btn -> diceButtonBox.getChildren().add((ToggleButton) btn));
 
