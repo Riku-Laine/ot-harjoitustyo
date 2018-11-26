@@ -19,4 +19,4 @@ Pakkauksista
 ## Sovelluslogiikka
 
 
-![Sovelluslogiikka](Yatzy/dokumentointi/kuvat/luokkakaavio.png)
+![Sovelluslogiikka](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/luokkakaavio.png)
