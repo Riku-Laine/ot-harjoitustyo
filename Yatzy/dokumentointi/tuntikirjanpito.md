@@ -14,4 +14,5 @@
 |        | 2    | Luokkarakenteen ja riippuvuuksien parantaminen. |
 |        | 2,5  | Ulkoasumuutokset. |
 | 24.11. | 2    | UI-parannuksia. |
-|**Yht.**| **22** ||
+| 25.11. | 2    | Dokumentaation päivittäminen, CheckStylen vaatimuksiin mukauttaminen. |
+|**Yht.**| **24** ||
