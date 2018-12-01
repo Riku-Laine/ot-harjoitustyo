@@ -9,14 +9,13 @@ package yatzy.dao;
  *
  * @author Riku_L
  */
-
 import java.sql.*;
 
-public class RecordDatabase {
-    
+public class Database {
+
     private final String dbAddress;
 
-    public RecordDatabase(String databaseAddress) throws ClassNotFoundException {
+    public Database(String databaseAddress) throws ClassNotFoundException {
         this.dbAddress = databaseAddress;
     }
 

@@ -5,6 +5,7 @@
  */
 package yatzy.ui;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.application.Application;
@@ -33,31 +34,57 @@ public class YatzyUi extends Application {
     private YatzyService game;
     private HashMap<Integer, ImageView> eyeImageViews;
     private Label scoreTable;
+    private Label recordTable;
     private Label playerWithTurn;
     private Label numberOfThrows;
     private ArrayList<ToggleButton> diceButtonList;
+    private ArrayList<Button> combinationButtonList;
 
+    /**
+     * Redraw game area: update scoreboard, recordboard, name of player throwing
+     * and number of throws used. Additionally if the first throw of the turn is
+     * not yet thrown, disable combination selection buttons.
+     */
     private void reDrawGameArea() {
 
+        // Update scoreboard text.
         scoreTable.setText(game.getScoreboard());
 
+        // Update records.
+        recordTable.setText(game.getRecordboard());
+
+        // Update text for player in turn.
         if (game.getPlayerWithTurn() != null) {
             playerWithTurn.setText("Throwing: " + game.getPlayerWithTurn().getName());
         }
 
+        // Update text for throws used
         numberOfThrows.setText("Throws used: " + game.getThrowsUsed());
 
         for (int i = 0; i < diceButtonList.size(); i++) {
             diceButtonList.get(i).setSelected(false);
-            diceButtonList.get(i).setText(game.getDice(i) + "");
+            diceButtonList.get(i).setText(game.getDies()[i] + "");
+        }
+
+        // If first throw not thrown, disable combination selection buttons.
+        if (game.getThrowsUsed() == 0) {
+            this.combinationButtonList.stream().forEach(btn -> {
+                btn.setDisable(true);
+            });
+        } else {
+            this.combinationButtonList.stream().forEach(btn -> {
+                btn.setDisable(false);
+            });
         }
     }
 
     @Override
-    public void init() {
+    public void init() throws SQLException, ClassNotFoundException {
 
         eyeImageViews = new HashMap<>();
         diceButtonList = new ArrayList<>();
+        combinationButtonList = new ArrayList<>();
+        game = new YatzyService();
 
         ImageView oneEye = new ImageView(new Image("file:dice-1.png"));
         ImageView twoEye = new ImageView(new Image("file:dice-2.png"));
@@ -72,11 +99,12 @@ public class YatzyUi extends Application {
         eyeImageViews.put(4, fourEye);
         eyeImageViews.put(5, fiveEye);
         eyeImageViews.put(6, sixEye);
+
     }
 
     @Override
-    public void start(Stage window) {
-        game = new YatzyService();
+    public void start(Stage window) throws SQLException {
+
         window.setTitle("Play Yatzy!");
 
         //**************
@@ -106,10 +134,10 @@ public class YatzyUi extends Application {
         startLayout.setPadding(new Insets(10, 10, 10, 10));
         Scene startScene = new Scene(startLayout);
 
-        Button exitButton = new Button("Exit to start screen");
-
+        Button exitWithoutSaveButton = new Button("Exit to start screen");
+        Button saveAndExitButton = new Button("Save score and exit");
         //************************
-        // one player name scene
+        // One player name scene
         //************************
         Label onePlayerGiveNameLabel = new Label(" Give your name!\n Name can't be empty.");
         TextField onePlayerNameText = new TextField();
@@ -117,7 +145,7 @@ public class YatzyUi extends Application {
 
         VBox onePlayerElements = new VBox();
         onePlayerElements.getChildren().addAll(onePlayerGiveNameLabel,
-                onePlayerNameText, onePlayerPlayButton, exitButton);
+                onePlayerNameText, onePlayerPlayButton, exitWithoutSaveButton);
 
         onePlayerElements.setSpacing(10);
         onePlayerElements.setPadding(new Insets(10, 10, 10, 10));
@@ -125,7 +153,7 @@ public class YatzyUi extends Application {
         Scene onePlayerBeginScene = new Scene(onePlayerElements);
 
         //***********************
-        // two player name scene
+        // Two player name scene
         //***********************
         Label twoPlayerGiveNameLabel = new Label(" Give your names!\n Names can't be empty.");
         TextField twoPlayerNameOneText = new TextField();
@@ -134,7 +162,7 @@ public class YatzyUi extends Application {
 
         VBox twoPlayerElements = new VBox();
         twoPlayerElements.getChildren().addAll(twoPlayerGiveNameLabel,
-                twoPlayerNameOneText, twoPlayerNameTwoText, twoPlayerPlayButton, exitButton);
+                twoPlayerNameOneText, twoPlayerNameTwoText, twoPlayerPlayButton, exitWithoutSaveButton);
 
         twoPlayerElements.setSpacing(10);
         twoPlayerElements.setPadding(new Insets(10, 10, 10, 10));
@@ -145,10 +173,10 @@ public class YatzyUi extends Application {
         // Game scene
         //**************
         Label title = new Label("YATZY!");
-        playerWithTurn = new Label(null);
-        numberOfThrows = new Label(null);
+        playerWithTurn = new Label();
+        numberOfThrows = new Label();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < game.getDies().length; i++) {
             ToggleButton dice = new ToggleButton("0");
             diceButtonList.add(dice);
         }
@@ -165,9 +193,9 @@ public class YatzyUi extends Application {
         VBox combinationButtonsBox = new VBox();
         combinationButtonsBox.setSpacing(5);
         combinationButtonsBox.setPadding(new Insets(10, 10, 10, 10));
-        
+
         combinationButtonsBox.getChildren().add(new Label("Select combination:"));
-        
+
         String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives",
             "Sixes", "One pair", "Two pairs", "Three of a kind",
             "Four of a kind", "Small straight", "Big straight",
@@ -177,19 +205,26 @@ public class YatzyUi extends Application {
             Button btn = new Button(combination);
             btn.setPrefWidth(150);
             combinationButtonsBox.getChildren().add(btn);
+            combinationButtonList.add(btn);
             btn.setOnMouseClicked(event -> {
-                if(game.getScore(game.getPlayerWithTurn(), combination) == -1){
+                if (game.getScore(game.getPlayerWithTurn(), combination) == -1) {
                     game.setScore(game.getPlayerWithTurn(), combination);
                     throwSelectedButton.setDisable(true);
                     throwAllButton.setDisable(false);
                     reDrawGameArea();
                 }
-                System.out.println("Button " + combination + " was pressed.");
             });
         }
 
         scoreTable = new Label();
         scoreTable.setFont(Font.font("Monospaced"));
+
+        recordTable = new Label();
+        recordTable.setFont(Font.font("Monospaced"));
+
+        VBox scoresAndRecords = new VBox();
+        scoresAndRecords.setSpacing(10);
+        scoresAndRecords.getChildren().addAll(scoreTable, recordTable);
 
         GridPane gameButtonArea = new GridPane();
 
@@ -204,11 +239,15 @@ public class YatzyUi extends Application {
         gameButtonArea.setVgap(10);
         gameButtonArea.setPadding(new Insets(10, 10, 10, 10));
 
+        HBox exitButtons = new HBox();
+        exitButtons.setSpacing(10);
+        exitButtons.getChildren().addAll(exitWithoutSaveButton, saveAndExitButton);
+
         BorderPane onePlayerScene = new BorderPane();
         onePlayerScene.setLeft(gameButtonArea);
         onePlayerScene.setCenter(combinationButtonsBox);
-        onePlayerScene.setRight(scoreTable);
-        onePlayerScene.setBottom(exitButton);
+        onePlayerScene.setRight(scoresAndRecords);
+        onePlayerScene.setBottom(exitButtons);
         onePlayerScene.setPadding(new Insets(10, 10, 10, 10));
 
         Scene gameScene = new Scene(onePlayerScene);
@@ -219,19 +258,16 @@ public class YatzyUi extends Application {
         singlePlayerButton.setOnAction((event) -> {
             // Move to one player name giving scene.
             window.setScene(onePlayerBeginScene);
-            System.out.println("One player game initiated.");
         });
 
         twoPlayerButton.setOnAction((event) -> {
-            // Move to one player name giving scene.
+            // Move to two player name giving scene.
             window.setScene(twoPlayerBeginScene);
-            System.out.println("Two player game initiated.");
         });
 
         logInAsAdminButton.setOnAction((event) -> {
             // Show admin window
             if (passwordText.getText().equals("salasana")) {
-                System.out.println("Admin logged in");
                 // window.setScene(adminScene);
             }
         });
@@ -266,7 +302,7 @@ public class YatzyUi extends Application {
             }
 
             if (!areAllFalse(selected)) {
-                game.throwDies(selected);
+                game.throwSelectedDies(selected);
                 reDrawGameArea();
 
                 if (game.getThrowsUsed() == 3) {
@@ -296,10 +332,15 @@ public class YatzyUi extends Application {
             window.setScene(gameScene);
         });
 
-        exitButton.setOnAction((event) -> {
-            game.getPlayers().clear();
-            game.setThrowsUsed(0);
-            game.setDies(new int[game.getDies().length]);
+        exitWithoutSaveButton.setOnAction((event) -> {
+            game.reset();
+            reDrawGameArea();
+            window.setScene(startScene);
+        });
+
+        saveAndExitButton.setOnAction((event) -> {
+            game.updateRecords();
+            game.reset();
             reDrawGameArea();
             window.setScene(startScene);
         });

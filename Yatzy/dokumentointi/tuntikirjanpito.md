@@ -14,4 +14,12 @@
 |        | 2    | Luokkarakenteen ja riippuvuuksien parantaminen. |
 |        | 2,5  | Ulkoasumuutokset. |
 | 24.11. | 2    | UI-parannuksia. |
-|**Yht.**| **22** ||
+| 25.11. | 2    | Dokumentaation päivittäminen, CheckStylen vaatimuksiin mukauttaminen. |
+| 30.11. | 2    | UI-kehitystä. |
+|        | 2    | Tiedon tallennuksen implementointia. |
+|        | 2    | Luokkarakenteen selkeyttämistä, parametrointia. |
+|        | 1    | JavaDocien parantelu ja yleinen tyylittely. |
+| 1.12.  | 0,5  | Ennätystaulu ja Exit-napppulat UIhin. |
+|        | 2    | Ennätysten tallennkuksen kehittely. |
+|        | 1,5  | Testien kehittäminen ja paketointirakenteen muuttaminen. |
+|**Yht.**| **35** ||

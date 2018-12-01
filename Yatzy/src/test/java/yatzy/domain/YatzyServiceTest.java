@@ -1,13 +1,13 @@
+package yatzy.domain;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import yatzy.domain.YatzyService;
 
 /**
  *
@@ -19,15 +19,27 @@ public class YatzyServiceTest {
     }
 
     private YatzyService s;
+    private YatzyService s2;
 
     @Before
-    public void setUp() {
+    public void setUp() throws ClassNotFoundException {
         s = new YatzyService();
+        s2 = new YatzyService(20, 9, 3);
     }
 
     @Test
-    public void initialPlayerListEmpty() {
-        assertTrue(s.getPlayers().isEmpty());
+    public void playerListIsInitialized() {
+        assertTrue(s.getPlayers() != null);
+    }
+
+    @Test
+    public void diceCollectionIsInitialized() {
+        assertTrue(s.getDies() != null);
+    }
+
+    @Test
+    public void zeroThrowsInBeginning() {
+        assertEquals(0, s.getThrowsUsed());
     }
 
     @Test
@@ -44,7 +56,6 @@ public class YatzyServiceTest {
     @Test
     public void addedPlayerHasTurn() {
         s.addPlayer("name");
-        assertTrue(s.getPlayers().get(0).getTurn());
         assertEquals("name", s.getPlayerWithTurn().getName());
     }
 

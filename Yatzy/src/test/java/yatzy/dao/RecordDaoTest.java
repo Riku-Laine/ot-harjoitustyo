@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package yatzy.dao;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -10,19 +11,18 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import yatzy.domain.DiceCollection;
 
 /**
  *
  * @author Riku_L
  */
-public class DiceCollectionTest {
+public class RecordDaoTest {
     
-    public DiceCollectionTest() {
+    public RecordDaoTest() {
     }
     
-    private DiceCollection dc;
-    private DiceCollection dc2;
+    private RecordDao rd;
+    private Database rdb;
     
     @BeforeClass
     public static void setUpClass() {
@@ -34,10 +34,17 @@ public class DiceCollectionTest {
     
     @Before
     public void setUp() {
-        dc = new DiceCollection();
-        dc2 = new DiceCollection(20, 6);
+//        this rdb = new Database(databaseAddress);
+//        this.rd = new RecordDao(rdb);
     }
     
-    @Test
-    public void hello() {}
+    @After
+    public void tearDown() {
+    }
+
+    // TODO add test methods here.
+    // The methods must be annotated with annotation @Test. For example:
+    //
+    // @Test
+    // public void hello() {}
 }

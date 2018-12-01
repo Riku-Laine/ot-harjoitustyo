@@ -16,4 +16,11 @@
                 <goal>checkstyle:checkstyle</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-Paketoi</actionName>
+            <displayName>Paketoi</displayName>
+            <goals>
+                <goal>package</goal>
+            </goals>
+        </action>
     </actions>

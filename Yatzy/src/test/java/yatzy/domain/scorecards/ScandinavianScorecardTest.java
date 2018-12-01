@@ -1,3 +1,5 @@
+package yatzy.domain.scorecards;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,18 +12,21 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import yatzy.domain.Scorecard;
+import yatzy.domain.DiceCollection;
+import yatzy.domain.DiceCollection;
+import yatzy.domain.scorecards.ScandinavianScorecard;
 
 /**
  *
  * @author Riku_L
  */
-public class ScorecardTest {
+public class ScandinavianScorecardTest {
 
-    public ScorecardTest() {
+    public ScandinavianScorecardTest() {
     }
 
-    private Scorecard sc;
+    private ScandinavianScorecard sc;
+    private DiceCollection dc;
 
     @BeforeClass
     public static void setUpClass() {
@@ -33,10 +38,8 @@ public class ScorecardTest {
 
     @Before
     public void setUp() {
-//        Player nullPlayer = new Player();
-//        ArrayList players = new ArrayList();
-//        players.add(nullPlayer);
-        sc = new Scorecard();
+        sc = new ScandinavianScorecard();
+        dc = new DiceCollection();
     }
 
     @After
@@ -44,108 +47,116 @@ public class ScorecardTest {
     }
 
     @Test
-    public void throwsErrorIfInvalidCommand() {
-        try {
-            sc.setPointsForCombination("non_existing", new int[1]);
-            fail("IllegalArgumentException was expected");
-        } catch (IllegalArgumentException ex) {
-        }
-    }
-
-    @Test
     public void findsPair() {
         int[] dies = {1, 2, 3, 3, 4};
-        assertEquals(6, sc.checkForMultiplesOfSizeN(dies, 1, 2));
+        dc.setDies(dies);
+        assertEquals(6, sc.checkForMultiplesOfSizeN(dc, 1, 2));
     }
 
     @Test
     public void findsBiggestPair() {
         int[] dies = {1, 3, 3, 4, 4};
-        assertEquals(8, sc.checkForMultiplesOfSizeN(dies, 1, 2));
+        dc.setDies(dies);
+        assertEquals(8, sc.checkForMultiplesOfSizeN(dc, 1, 2));
     }
 
     @Test
     public void returnsZeroWhenNoPairs() {
         int[] dies = {1, 2, 3, 4, 6};
-        assertEquals(0, sc.checkForMultiplesOfSizeN(dies, 1, 2));
+        dc.setDies(dies);
+        assertEquals(0, sc.checkForMultiplesOfSizeN(dc, 1, 2));
     }
 
     @Test
     public void findsPairWhenTriplet() {
         int[] dies = {3, 4, 4, 6, 4};
-        assertEquals(8, sc.checkForMultiplesOfSizeN(dies, 1, 2));
+        dc.setDies(dies);
+        assertEquals(8, sc.checkForMultiplesOfSizeN(dc, 1, 2));
     }
 
     @Test
     public void findsTwoPairs() {
         int[] dies = {3, 4, 3, 1, 4};
-        assertEquals(14, sc.checkForMultiplesOfSizeN(dies, 2, 2));
+        dc.setDies(dies);
+        assertEquals(14, sc.checkForMultiplesOfSizeN(dc, 2, 2));
     }
 
     @Test
-    public void chanceIsRight() {
+    public void sumIsRight() {
         int[] dies = {1, 4, 3, 3, 4};
-        assertEquals(15, sc.checkForChance(dies));
+        dc.setDies(dies);
+        assertEquals(15, sc.getSumOfDies(dc));
     }
 
     @Test
     public void findsSmallStraight() {
         int[] dies = {3, 4, 2, 1, 5};
-        assertEquals(15, sc.checkForStraight(dies, "small"));
+        dc.setDies(dies);
+        assertEquals(15, sc.checkForSequentialNumbers(dc, 1, 5, 15));
     }
 
     @Test
     public void findsBigStraight() {
         int[] dies = {3, 4, 2, 6, 5};
-        assertEquals(20, sc.checkForStraight(dies, "big"));
+        dc.setDies(dies);
+        assertEquals(20, sc.checkForSequentialNumbers(dc, 2, 6, 20));
     }
 
     @Test
-    public void returnsZeroWhenNoSmallStraight() {
+    public void returnsZeroWhenNoStraight() {
         int[] dies = {3, 4, 2, 2, 5};
-        assertEquals(0, sc.checkForStraight(dies, "small"));
+        dc.setDies(dies);
+        assertEquals(0, sc.checkForSequentialNumbers(dc, 1, 5, 15));
     }
 
     @Test
     public void returnsZeroWhenNoBigStraight() {
-        int[] dies = {3, 4, 2, 2, 5};
-        assertEquals(0, sc.checkForStraight(dies, "big"));
+        int[] dies = {3, 4, 1, 2, 5};
+        dc.setDies(dies);
+        assertEquals(0, sc.checkForSequentialNumbers(dc, 2, 6, 15));
     }
 
     @Test
     public void findsFullHouse() {
         int[] dies = {3, 3, 4, 4, 3};
-        assertEquals(3 * 3 + 2 * 4, sc.checkForFullHouse(dies));
+        dc.setDies(dies);
+        assertEquals(3 * 3 + 2 * 4, sc.checkForFullHouse(dc));
     }
 
     @Test
     public void returnsZeroWhenNoFullHouse() {
         int[] dies = {3, 3, 3, 4, 3};
-        assertEquals(0, sc.checkForFullHouse(dies));
+        dc.setDies(dies);
+        assertEquals(0, sc.checkForFullHouse(dc));
     }
 
     @Test
     public void returnsZeroWhenNoOnes() {
         int[] dies = {3, 3, 3, 4, 3};
-        assertEquals(0, sc.checkForPointValues(dies, 1));
+        dc.setDies(dies);
+        assertEquals(0, sc.checkForPointValues(dc, 1));
     }
 
     @Test
     public void findsOneOnes() {
         int[] dies = {1, 3, 3, 4, 3};
-        assertEquals(1, sc.checkForPointValues(dies, 1));
+        dc.setDies(dies);
+        assertEquals(1, sc.checkForPointValues(dc, 1));
     }
 
     @Test
     public void findsFiveOnes() {
         int[] dies = {1, 1, 1, 1, 1};
-        assertEquals(5, sc.checkForPointValues(dies, 1));
+        dc.setDies(dies);
+        assertEquals(5, sc.checkForPointValues(dc, 1));
     }
     
+    // Subclass specific tests.
     @Test
     public void sc() {
         int[] dies = {1, 1, 1, 1, 1};
-        sc.setPointsForCombination("Ones", dies);
+        dc.setDies(dies);
+        sc.setPointsForCombination("Ones", dc);
         int score = sc.getPlayersScoretable().get("Ones");
         assertEquals(5, score);
     }
@@ -153,12 +164,12 @@ public class ScorecardTest {
     @Test
     public void totalIsRight() {
         int[] dies = {1, 1, 1, 1, 1};
-        sc.setPointsForCombination("Ones", dies);
+        dc.setDies(dies);
+        sc.setPointsForCombination("Ones", dc);
         int total = sc.getPlayersScoretable().get("Total");
         assertEquals(5, total);
         
-        int[] dies2 = {1, 1, 1, 1, 1};
-        sc.setPointsForCombination("Yatzy", dies2);
+        sc.setPointsForCombination("Yatzy", dc);
         int total2 = sc.getPlayersScoretable().get("Total");
         assertEquals(5 + 50, total2);
     }

@@ -12,29 +12,107 @@ package yatzy.dao;
 import java.util.*;
 import java.sql.*;
 import yatzy.domain.Player;
+import yatzy.domain.Record;
 
-public class RecordDao implements Dao<Player, Integer> {
+public class RecordDao implements Dao<Record, String> {
 
-    @Override
-    public Player findOne(Integer key) throws SQLException {
-        // not implemented
-        return null;
+    private Database recordDB;
+
+    public RecordDao(Database db) {
+        this.recordDB = db;
     }
 
     @Override
-    public List<Player> findAll() throws SQLException {
-        // not implemented
-        return null;
+    public Record findOne(String name) throws SQLException {
+        Connection connection = recordDB.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Records where name = ?");
+
+        stmt.setString(1, name);
+        ResultSet rs = stmt.executeQuery();
+        boolean found = rs.next();
+        if (!found) {
+            return null;
+        }
+
+        Record r = new Record(new Player(rs.getString("name")),
+                rs.getString("type"), rs.getInt("points"));
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return r;
     }
 
     @Override
-    public Player saveOrUpdate(Player object) throws SQLException {
-        // not implemented
-        return null;
+    public ArrayList<Record> findAll() throws SQLException {
+        Connection connection = recordDB.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Records");
+
+        ResultSet rs = stmt.executeQuery();
+        ArrayList<Record> records = new ArrayList<>();
+        while (rs.next()) {
+            records.add(new Record(new Player(rs.getString("name")),
+                    rs.getString("type"), rs.getInt("points")));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        if (records.isEmpty()) {
+            return null;
+        }
+        return records;
     }
 
     @Override
-    public void delete(Integer key) throws SQLException {
-        // not implemented
+    public void saveOrUpdate(Record record) throws SQLException {
+
+        Connection connection = recordDB.getConnection();
+        PreparedStatement searchQuery = connection.prepareStatement("SELECT * FROM Records WHERE name = ? AND type = ?");
+
+        String name = record.getPlayer().getName();
+        String type = record.getScorecardType();
+        int points = record.getPoints();
+
+        searchQuery.setString(1, name);
+        searchQuery.setString(2, type);
+
+        ResultSet rs = searchQuery.executeQuery();
+        boolean found = rs.next();
+        rs.close();
+        searchQuery.close();
+        if (!found) {
+            // insert into here
+            PreparedStatement insertStmt = connection.prepareStatement("INSERT INTO Records (name, type, points) VALUES (?, ?, ?)");
+            insertStmt.setString(1, name);
+            insertStmt.setString(2, type);
+            insertStmt.setInt(3, points);
+            insertStmt.executeUpdate();
+            insertStmt.close();
+        } else {
+            // update here
+            PreparedStatement updateStmt = connection.prepareStatement("UPDATE Records SET points = ? WHERE name = ? AND typé = ?");
+            updateStmt.setInt(1, points);
+            updateStmt.setString(2, name);
+            updateStmt.setString(3, type);
+            updateStmt.executeUpdate();
+            updateStmt.close();
+        }
+
+        connection.close();
+    }
+
+    @Override
+    public void delete(String name) throws SQLException {
+        Connection connection = recordDB.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Records WHERE name = ?");
+
+        stmt.setString(1, name);
+        stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
     }
 }

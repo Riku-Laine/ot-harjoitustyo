@@ -12,75 +12,24 @@ import java.util.LinkedHashMap;
  *
  * @author Riku_L
  */
-public class Scorecard {
+public abstract class Scorecard {
 
-    private final LinkedHashMap<String, Integer> scoretable;
-    private final String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives",
-        "Sixes", "One pair", "Two pairs", "Three of a kind",
-        "Four of a kind", "Small straight", "Big straight",
-        "Full house", "Chance", "Yatzy"};
+    protected final LinkedHashMap<String, Integer> scoretable;
+    protected String[] combinations;
+    protected String type;
 
-    public Scorecard() {
+    public Scorecard(String[] combinations, String name) {
         this.scoretable = new LinkedHashMap<>();
+        this.combinations = combinations;
+        this.type = name;
         initializeScoretable();
     }
+
+    public abstract void setPointsForCombination(String combination, DiceCollection dies);
 
     public LinkedHashMap<String, Integer> getPlayersScoretable() {
         getTotal();
         return this.scoretable;
-    }
-
-    /**
-     * Set points for a combination in the scorecard.
-     *
-     * @param combination Name of the combination. If name is not valid,
-     * IllegalArgumentException is thrown.
-     * @param dies Integeer array of dies.
-     */
-    public void setPointsForCombination(String combination, int[] dies) {
-        int score = 0;
-        if (null != combination) {
-            if (combination.equals("Ones")) {
-                score = checkForPointValues(dies, 1);
-            } else if (combination.equals("Twos")) {
-                score = checkForPointValues(dies, 2);
-            } else if (combination.equals("Threes")) {
-                score = checkForPointValues(dies, 3);
-            } else if (combination.equals("Fours")) {
-                score = checkForPointValues(dies, 4);
-            } else if (combination.equals("Fives")) {
-                score = checkForPointValues(dies, 5);
-            } else if (combination.equals("Sixes")) {
-                score = checkForPointValues(dies, 6);
-            } else if (combination.equals("One pair")) {
-                score = checkForMultiplesOfSizeN(dies, 1, 2);
-            } else if (combination.equals("Two pairs")) {
-                score = checkForMultiplesOfSizeN(dies, 2, 2);
-            } else if (combination.equals("Three of a kind")) {
-                score = checkForMultiplesOfSizeN(dies, 1, 3);
-            } else if (combination.equals("Four of a kind")) {
-                score = checkForMultiplesOfSizeN(dies, 1, 4);
-            } else if (combination.equals("Small straight")) {
-                score = checkForStraight(dies, "small");
-            } else if (combination.equals("Big straight")) {
-                score = checkForStraight(dies, "big");
-            } else if (combination.equals("Full house")) {
-                score = checkForFullHouse(dies);
-            } else if (combination.equals("Chance")) {
-                score = checkForChance(dies);
-            } else if (combination.equals("Yatzy")) {  // Yahtzee??
-                score = checkForYatzy(dies);
-            } else {
-                throw new IllegalArgumentException("Invalid combination argument!");
-            }
-        }
-
-        // TODO Should this return err
-        if (this.scoretable.get(combination) == -1) {
-            this.scoretable.replace(combination, score);
-        } else {
-            throw new Error("Combination valid, score already in scorecard!");
-        }
     }
 
     /**
@@ -90,11 +39,11 @@ public class Scorecard {
      * @param which Integer of which single point to inspect for.
      * @return Points for this combination.
      */
-    public int checkForPointValues(int[] dies, int which) {
+    public int checkForPointValues(DiceCollection dies, int which) {
         int score = 0;
-        for (int i = 0; i < dies.length; i++) {
-            if (dies[i] == which) {
-                score += dies[i];
+        for (int i = 0; i < dies.getDies().length; i++) {
+            if (dies.getDies()[i] == which) {
+                score += dies.getDies()[i];
             }
         }
         return score;
@@ -104,21 +53,23 @@ public class Scorecard {
      * This method counts multiples (pairs, triples, quadruplets etc.) from an
      * integer array and return the corresponding score (their sum).
      *
-     * @param dies The eyes of the dies.
+     * @param dc
      * @param howManyMultiples How many multiples? (e.g. 2 or 7 pairs)
      * @param whatMultiple Pair (2), triplet (3) quadruplet(4) etc.
-     * @return Number of points.
+     * @return Sum of eye values of the dies belonging in that multiple.
      */
-    public int checkForMultiplesOfSizeN(int[] dies, int howManyMultiples, int whatMultiple) {
+    public int checkForMultiplesOfSizeN(DiceCollection dc, int howManyMultiples, int whatMultiple) {
 
-        int[] freqs = new int[6]; // could be generalised max number of eye
+        int[] dies = dc.getDies();
+        int[] freqs = new int[dc.getBiggestEyeNumber()];
+
         for (int i = 0; i < dies.length; i++) {
             freqs[dies[i] - 1]++;  // array of freqs
         }
 
         int score = 0;
         int multiplesFound = 0;
-        for (int i = 5; i >= 0; i--) {
+        for (int i = freqs.length - 1; i >= 0; i--) {
             if (freqs[i] >= whatMultiple & multiplesFound < howManyMultiples) {
                 score += whatMultiple * (i + 1);
                 multiplesFound++;
@@ -136,43 +87,46 @@ public class Scorecard {
      * Returns points for big or small straight. Defined as (2, 3, 4, 5 and 6)
      * and (1, 2, 3, 4 and 5) correspondingly.
      *
-     * @param dies Integer array of dies.
-     * @param type String; "big" for big straight, "small" for small straight.
-     * @return If straight is found, returns (int) 20 for big straight and 15
-     * for small straight.
+     * @param dc DiceCollection of dies.
+     * @param fromEyeNumber First eye number of the sequence.
+     * @param toEyeNumber Last eye number of the sequence.
+     * @param pointsToGive Points to give if sequence is found.
+     * @return If sequence is found return pointsToGive, else return 0.
      */
-    public int checkForStraight(int[] dies, String type) {
-        Arrays.sort(dies);
-        for (int i = 0; i < dies.length; i++) {
-            if (dies[i] != i + 1 & type.equals("small")) {
-                return 0;
-            }
-            if (dies[i] != i + 2 & type.equals("big")) {
-                return 0;
-            }
-        }
-        if (type.equals("small")) {
-            return 15;
-        }
-        if (type.equals("big")) {
-            return 20;
+    public int checkForSequentialNumbers(DiceCollection dc, int fromEyeNumber, int toEyeNumber, int pointsToGive) {
+        if (dc == null || fromEyeNumber >= toEyeNumber || pointsToGive <= 0) {
+            throw new IllegalArgumentException();
         }
 
-        throw new IllegalArgumentException("Type wrong");
+        // TODO Make betterments.
+        int[] dies = dc.getDies();
+        Arrays.sort(dies);
+        int found = fromEyeNumber;
+        for(int i = 0; i < dies.length; i++){
+            if(dies[i] == found){
+                found++;
+            }
+        }
+        // If sequence is found, return pointsToGive.
+        if (found == toEyeNumber+1) {
+            return pointsToGive;
+        } else {
+            return 0;
+        }
     }
 
     /**
      * Calculate points for full house (a pair and a triplet).
      *
-     * @param dies Integer array of dies.
+     * @param dc Integer array of dies.
      * @return
      */
-    public int checkForFullHouse(int[] dies) {
-        int pair = checkForMultiplesOfSizeN(dies, 1, 2);
-        int triplet = checkForMultiplesOfSizeN(dies, 1, 3);
+    public int checkForFullHouse(DiceCollection dc) {
+        int pair = checkForMultiplesOfSizeN(dc, 1, 2);
+        int triplet = checkForMultiplesOfSizeN(dc, 1, 3);
 
         // TODO Make better fix
-        int four = checkForMultiplesOfSizeN(dies, 1, 4);
+        int four = checkForMultiplesOfSizeN(dc, 1, 4);
 
         if (pair != 0 & triplet != 0 & four == 0) {
             return pair + triplet;
@@ -181,12 +135,13 @@ public class Scorecard {
     }
 
     /**
-     * Calculate points for chance (sum of eyes).
+     * Calculate sum of eyes also known as chance.
      *
-     * @param dies Integer array of dice values.
-     * @return Points for chance.
+     * @param dc DiceCollection of dies.
+     * @return Points for the sum of dies.
      */
-    public int checkForChance(int[] dies) {
+    public int getSumOfDies(DiceCollection dc) {
+        int[] dies = dc.getDies();
         int score = 0;
         for (int i = 0; i < dies.length; i++) {
             score += dies[i];
@@ -196,11 +151,12 @@ public class Scorecard {
     }
 
     /**
-     * Initialize scorecard's LinkedHashMap with scores of -1 to differentiate
-     * between zero score and score not set.
+     * Initialize scorecard's LinkedHashMap with scores of -1 for combinations
+     * and 0 for total. -1 is set to differentiate between zero score and score
+     * not set.
      */
     private void initializeScoretable() {
-        for (String combination : combinations) {
+        for (String combination : getCombinations()) {
             this.scoretable.put(combination, -1);
         }
 
@@ -225,21 +181,31 @@ public class Scorecard {
     /**
      * Calculates points for Yatzy (five same).
      *
-     * @param dies Integer array of dies.
-     * @return 0 for no Yatzy 50 if there is Yatzy.
+     * @param dc DiceCollection of dies.
+     * @param pointsToGive Points to give if Yatzy found.
+     * @return pointsToGive if all are the same, zero otherwise.
      */
-    private Integer checkForYatzy(int[] dies) {
+    public Integer checkForAllTheSame(DiceCollection dc, int pointsToGive) {
+        int[] dies = dc.getDies();
         int eye = dies[0];
         for (int i = 0; i < dies.length; i++) {
             if (dies[i] != eye) {
                 return 0;
             }
         }
-        return 50;
+        return pointsToGive;
     }
 
     public String[] getCombinations() {
         return this.combinations;
+    }
+
+    public void setCombinations(String[] cmbs) {
+        this.combinations = cmbs;
+    }
+
+    public String getType() {
+        return this.type;
     }
 
 }
