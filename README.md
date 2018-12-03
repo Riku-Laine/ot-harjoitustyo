@@ -1,12 +1,10 @@
 # Yatzy
 
-**Sisällysluettelo:**
+Sovelluksen avulla on mahdollista pelata noppapeliä Yatzy joko yhdellä tai kahdella pelaajalla. Ennen pelin alkua pelaajille asetetaan nimimerkit, joiden alle talletetaan pelaajan ennätys. Pelissä noudatetaan ns. suomalaisen Yatzyn sääntöjä.
 
-* [Dokumentaatio](#dokumentaatio)
-* [Releaset](#releaset)
-* [Komentorivitoiminnot](#komentorivitoiminnot)
+_Hauskoja pelihetkiä!_
 
-## <a href="dokumentaatio"></a> Dokumentaatio
+## Dokumentaatio
 
 * [Käyttöohje TBA](<!---https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kayttoohje.md ---->)
 * [Vaatimusmäärittelyt](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/maarittelydokumentti.md)
@@ -14,9 +12,9 @@
 * [Testausdokumentti TBA](<!---https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/urlitestausdokumenttiin.md --->)
 * [Työaikakirjanpito](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/tuntikirjanpito.md)
 
-## <a href="releaset"></a> Releaset
+## Releaset
 
-## <a href="komentorivitoiminnot"></a> Komentorivitoiminnot
+## Komentorivitoiminnot
 
 ### Testaus
 
