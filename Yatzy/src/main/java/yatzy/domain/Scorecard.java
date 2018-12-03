@@ -5,6 +5,7 @@
  */
 package yatzy.domain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
@@ -15,20 +16,19 @@ import java.util.LinkedHashMap;
 public abstract class Scorecard {
 
     protected final LinkedHashMap<String, Integer> scoretable;
-    protected String[] combinations;
+    protected ArrayList<String> combinations;
     protected String type;
 
-    public Scorecard(String[] combinations, String name) {
+    public Scorecard(String name) {
         this.scoretable = new LinkedHashMap<>();
-        this.combinations = combinations;
+        this.combinations = new ArrayList<>();
         this.type = name;
-        initializeScoretable();
     }
 
     public abstract void setPointsForCombination(String combination, DiceCollection dies);
 
     public LinkedHashMap<String, Integer> getPlayersScoretable() {
-        getTotal();
+        calculateTotal();
         return this.scoretable;
     }
 
@@ -53,7 +53,7 @@ public abstract class Scorecard {
      * This method counts multiples (pairs, triples, quadruplets etc.) from an
      * integer array and return the corresponding score (their sum).
      *
-     * @param dc
+     * @param dc The dies.
      * @param howManyMultiples How many multiples? (e.g. 2 or 7 pairs)
      * @param whatMultiple Pair (2), triplet (3) quadruplet(4) etc.
      * @return Sum of eye values of the dies belonging in that multiple.
@@ -84,12 +84,13 @@ public abstract class Scorecard {
     }
 
     /**
-     * Returns points for big or small straight. Defined as (2, 3, 4, 5 and 6)
-     * and (1, 2, 3, 4 and 5) correspondingly.
+     * Returns points for sequential numbers. E.g. if fromEyeNumber is 2 and
+     * toEyeNumber is 6, method searches for numbers 2, 3, 4, 5, and 6 in the
+     * dies and if they are found, awards the player with pointsToGive points.
      *
      * @param dc DiceCollection of dies.
-     * @param fromEyeNumber First eye number of the sequence.
-     * @param toEyeNumber Last eye number of the sequence.
+     * @param fromEyeNumber First eye number of the sequence, inclusive.
+     * @param toEyeNumber Last eye number of the sequence, inclusive.
      * @param pointsToGive Points to give if sequence is found.
      * @return If sequence is found return pointsToGive, else return 0.
      */
@@ -102,36 +103,17 @@ public abstract class Scorecard {
         int[] dies = dc.getDies();
         Arrays.sort(dies);
         int found = fromEyeNumber;
-        for(int i = 0; i < dies.length; i++){
-            if(dies[i] == found){
+        for (int i = 0; i < dies.length; i++) {
+            if (dies[i] == found) {
                 found++;
             }
         }
         // If sequence is found, return pointsToGive.
-        if (found == toEyeNumber+1) {
+        if (found == toEyeNumber + 1) {
             return pointsToGive;
         } else {
             return 0;
         }
-    }
-
-    /**
-     * Calculate points for full house (a pair and a triplet).
-     *
-     * @param dc Integer array of dies.
-     * @return
-     */
-    public int checkForFullHouse(DiceCollection dc) {
-        int pair = checkForMultiplesOfSizeN(dc, 1, 2);
-        int triplet = checkForMultiplesOfSizeN(dc, 1, 3);
-
-        // TODO Make better fix
-        int four = checkForMultiplesOfSizeN(dc, 1, 4);
-
-        if (pair != 0 & triplet != 0 & four == 0) {
-            return pair + triplet;
-        }
-        return 0;
     }
 
     /**
@@ -155,18 +137,18 @@ public abstract class Scorecard {
      * and 0 for total. -1 is set to differentiate between zero score and score
      * not set.
      */
-    private void initializeScoretable() {
-        for (String combination : getCombinations()) {
+    protected void initializeScoretable() {
+        getCombinations().forEach((combination) -> {
             this.scoretable.put(combination, -1);
-        }
-
+        });
+        this.combinations.add("Total");
         this.scoretable.put("Total", 0);
     }
 
     /**
      * Calculates total of points for the scorecard.
      */
-    private void getTotal() {
+    private void calculateTotal() {
         int total = this.scoretable.keySet().stream().mapToInt(key -> {
             if (this.scoretable.get(key) >= 0 & !key.equals("Total")) {
                 return this.scoretable.get(key);
@@ -175,7 +157,6 @@ public abstract class Scorecard {
         }).sum();
 
         this.scoretable.replace("Total", total);
-
     }
 
     /**
@@ -196,16 +177,20 @@ public abstract class Scorecard {
         return pointsToGive;
     }
 
-    public String[] getCombinations() {
+    public ArrayList<String> getCombinations() {
         return this.combinations;
     }
 
-    public void setCombinations(String[] cmbs) {
+    public void setCombinations(ArrayList<String> cmbs) {
         this.combinations = cmbs;
     }
 
     public String getType() {
         return this.type;
+    }
+
+    int getPointsFor(String combination) {
+        return this.scoretable.get(combination);
     }
 
 }

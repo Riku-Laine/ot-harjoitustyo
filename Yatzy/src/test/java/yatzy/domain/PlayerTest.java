@@ -48,7 +48,7 @@ public class PlayerTest {
 
     @Test
     public void scorecardCreatedInStartup() {
-        assertFalse(p.getScorecard().isEmpty());
+        assertFalse(p.getScorecard() == null);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class PlayerTest {
         DiceCollection dc = new DiceCollection();
         dc.setDies(dies);
         p.setPoints("Yatzy", dc);
-        int score = p.getScorecard().get("Yatzy");
+        int score = p.getScorecard().getPointsFor("Yatzy");
         assertEquals(50, score);
     }
 

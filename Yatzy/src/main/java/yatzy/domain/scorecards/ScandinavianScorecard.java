@@ -5,6 +5,8 @@
  */
 package yatzy.domain.scorecards;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import yatzy.domain.DiceCollection;
 import yatzy.domain.Scorecard;
 
@@ -13,21 +15,29 @@ import yatzy.domain.Scorecard;
  * @author Riku_L
  */
 public class ScandinavianScorecard extends Scorecard {
-    
-    public ScandinavianScorecard(){
-        super(new String[]{"Ones", "Twos", "Threes", "Fours", 
-            "Fives", "Sixes", "One pair", "Two pairs", "Three of a kind",
-            "Four of a kind", "Small straight", "Big straight",
-            "Full house", "Chance", "Yatzy"}, "Scandinavian scorecard");
+
+    public ScandinavianScorecard() {
+        super("Scandinavian scorecard");
+
+        // TODO Fix this awful inheritance.
+        ArrayList scandinavianCombinations = new ArrayList();
+        scandinavianCombinations.addAll(Arrays.asList("Ones", "Twos", "Threes", "Fours",
+                "Fives", "Sixes", "One pair", "Two pairs", "Three of a kind",
+                "Four of a kind", "Small straight", "Big straight",
+                "Full house", "Chance", "Yatzy"));
+
+        this.combinations = scandinavianCombinations;
+        initializeScoretable();
     }
 
     /**
      * Set points for a combination in the scorecard.
      *
      * @param combination Name of the combination. If type is not valid,
- IllegalArgumentException is thrown.
+     * IllegalArgumentException is thrown.
      * @param dies DiceCollection of dies.
      */
+    @Override
     public void setPointsForCombination(String combination, DiceCollection dies) {
         int score = 0;
         if (null != combination) {
@@ -71,5 +81,24 @@ public class ScandinavianScorecard extends Scorecard {
         } else {
             throw new Error("Combination valid, score already in scorecard!");
         }
+    }
+
+    /**
+     * Calculate points for full house (a pair and a triplet).
+     *
+     * @param dc Integer array of dies.
+     * @return
+     */
+    public int checkForFullHouse(DiceCollection dc) {
+        int pair = checkForMultiplesOfSizeN(dc, 1, 2);
+        int triplet = checkForMultiplesOfSizeN(dc, 1, 3);
+
+        // TODO Make better fix
+        int four = checkForMultiplesOfSizeN(dc, 1, 4);
+
+        if (pair != 0 & triplet != 0 & four == 0) {
+            return pair + triplet;
+        }
+        return 0;
     }
 }

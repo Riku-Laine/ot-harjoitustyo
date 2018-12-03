@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package yatzy.ui;
 
 import java.sql.*;
@@ -39,13 +34,16 @@ public class YatzyUi extends Application {
     private Label numberOfThrows;
     private ArrayList<ToggleButton> diceButtonList;
     private ArrayList<Button> combinationButtonList;
+    private VBox combinationButtonsBox;
+    private Button throwSelectedButton;
+    private Button throwAllButton;
 
     /**
      * Redraw game area: update scoreboard, recordboard, name of player throwing
      * and number of throws used. Additionally if the first throw of the turn is
      * not yet thrown, disable combination selection buttons.
      */
-    private void reDrawGameArea() {
+    private void redrawGameArea() {
 
         // Update scoreboard text.
         scoreTable.setText(game.getScoreboard());
@@ -61,21 +59,64 @@ public class YatzyUi extends Application {
         // Update text for throws used
         numberOfThrows.setText("Throws used: " + game.getThrowsUsed());
 
+        // Unselect the dice buttons and update their text.
         for (int i = 0; i < diceButtonList.size(); i++) {
             diceButtonList.get(i).setSelected(false);
             diceButtonList.get(i).setText(game.getDies()[i] + "");
         }
 
-        // If first throw not thrown, disable combination selection buttons.
-        if (game.getThrowsUsed() == 0) {
-            this.combinationButtonList.stream().forEach(btn -> {
+        redrawThrowButtons();
+
+        redrawCombinationButtons();
+
+    }
+
+    /**
+     * Redraw combination buttons according to combinations in the scorecard of
+     * the player in turn. If a combination has been selected for the player or
+     * no throws have been thrown, button is disabled.
+     */
+    private void redrawCombinationButtons() {
+        combinationButtonsBox.getChildren().clear();
+        combinationButtonList.clear();
+        combinationButtonsBox.getChildren().add(new Label("Select combination:"));
+
+        ArrayList<String> combinations = game.getPlayerWithTurn().getScorecard().getCombinations();
+
+        for (int i = 0; i < combinations.size(); i++) {
+            String combination = combinations.get(i);
+            if (combination.equals("Total")) {
+                break;
+            }
+            Button btn = new Button(combination);
+            btn.setPrefWidth(150);
+            combinationButtonsBox.getChildren().add(btn);
+            combinationButtonList.add(btn);
+            if (game.getScore(game.getPlayerWithTurn(), combination) != -1
+                    || game.getThrowsUsed() == 0) {
                 btn.setDisable(true);
-            });
-        } else {
-            this.combinationButtonList.stream().forEach(btn -> {
-                btn.setDisable(false);
+            }
+            btn.setOnMouseClicked(event -> {
+                game.setScoreAndChangeTurn(game.getPlayerWithTurn(), combination);
+                redrawThrowButtons();
+                redrawGameArea();
             });
         }
+    }
+
+    private void redrawThrowButtons() {
+        int throwsUsed = game.getThrowsUsed();
+        if (throwsUsed == 0) {
+            throwSelectedButton.setDisable(true);
+            throwAllButton.setDisable(false);
+        } else if (throwsUsed == 3) {
+            throwSelectedButton.setDisable(true);
+            throwAllButton.setDisable(true);
+        } else {
+            throwSelectedButton.setDisable(false);
+            throwAllButton.setDisable(false);
+        }
+
     }
 
     @Override
@@ -84,6 +125,7 @@ public class YatzyUi extends Application {
         eyeImageViews = new HashMap<>();
         diceButtonList = new ArrayList<>();
         combinationButtonList = new ArrayList<>();
+        combinationButtonsBox = new VBox();
         game = new YatzyService();
 
         ImageView oneEye = new ImageView(new Image("file:dice-1.png"));
@@ -99,7 +141,6 @@ public class YatzyUi extends Application {
         eyeImageViews.put(4, fourEye);
         eyeImageViews.put(5, fiveEye);
         eyeImageViews.put(6, sixEye);
-
     }
 
     @Override
@@ -180,41 +221,19 @@ public class YatzyUi extends Application {
             ToggleButton dice = new ToggleButton("0");
             diceButtonList.add(dice);
         }
-        Button throwSelectedButton = new Button("Throw selected!");
-        throwSelectedButton.setDisable(true);
-        Button throwAllButton = new Button("Throw all!");
+        throwSelectedButton = new Button("Throw selected!");
+        throwAllButton = new Button("Throw all!");
+        redrawThrowButtons();
 
-        HBox diceButtonBox = new HBox();
+        HBox diceButtonsHBox = new HBox();
 
-        diceButtonList.stream().forEach(btn -> diceButtonBox.getChildren().add((ToggleButton) btn));
+        diceButtonList.stream().forEach(btn -> diceButtonsHBox.getChildren().add((ToggleButton) btn));
 
         title.setFont(Font.font(20));
 
-        VBox combinationButtonsBox = new VBox();
+        combinationButtonsBox = new VBox();
         combinationButtonsBox.setSpacing(5);
         combinationButtonsBox.setPadding(new Insets(10, 10, 10, 10));
-
-        combinationButtonsBox.getChildren().add(new Label("Select combination:"));
-
-        String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives",
-            "Sixes", "One pair", "Two pairs", "Three of a kind",
-            "Four of a kind", "Small straight", "Big straight",
-            "Full house", "Chance", "Yatzy"}; //, "Total"};
-
-        for (String combination : combinations) {
-            Button btn = new Button(combination);
-            btn.setPrefWidth(150);
-            combinationButtonsBox.getChildren().add(btn);
-            combinationButtonList.add(btn);
-            btn.setOnMouseClicked(event -> {
-                if (game.getScore(game.getPlayerWithTurn(), combination) == -1) {
-                    game.setScore(game.getPlayerWithTurn(), combination);
-                    throwSelectedButton.setDisable(true);
-                    throwAllButton.setDisable(false);
-                    reDrawGameArea();
-                }
-            });
-        }
 
         scoreTable = new Label();
         scoreTable.setFont(Font.font("Monospaced"));
@@ -230,7 +249,7 @@ public class YatzyUi extends Application {
 
         gameButtonArea.add(title, 0, 0);
         gameButtonArea.add(playerWithTurn, 0, 1);
-        gameButtonArea.add(diceButtonBox, 0, 2);
+        gameButtonArea.add(diceButtonsHBox, 0, 2);
         gameButtonArea.add(throwSelectedButton, 0, 3);
         gameButtonArea.add(throwAllButton, 0, 4);
         gameButtonArea.add(numberOfThrows, 0, 5);
@@ -278,7 +297,7 @@ public class YatzyUi extends Application {
             String name = onePlayerNameText.getText();
             if (!name.isEmpty()) {
                 game.addPlayer(name);
-                reDrawGameArea();
+                redrawGameArea();
                 window.setScene(gameScene);
             }
 
@@ -288,60 +307,38 @@ public class YatzyUi extends Application {
             if (!twoPlayerNameOneText.getText().isEmpty() & !twoPlayerNameTwoText.getText().isEmpty()) {
                 game.addPlayer(twoPlayerNameOneText.getText());
                 game.addPlayer(twoPlayerNameTwoText.getText());
-                reDrawGameArea();
+                redrawGameArea();
                 window.setScene(gameScene);
             }
 
         });
 
         throwSelectedButton.setOnAction((event) -> {
-
             boolean[] selected = new boolean[diceButtonList.size()];
             for (int i = 0; i < diceButtonList.size(); i++) {
                 selected[i] = diceButtonList.get(i).isSelected();
             }
-
             if (!areAllFalse(selected)) {
                 game.throwSelectedDies(selected);
-                reDrawGameArea();
-
-                if (game.getThrowsUsed() == 3) {
-                    throwSelectedButton.setDisable(true);
-                    throwAllButton.setDisable(true);
-                } else {
-                    throwSelectedButton.setDisable(false);
-                    throwAllButton.setDisable(false);
-                }
-
+                redrawGameArea();
                 window.setScene(gameScene);
             }
         });
 
         throwAllButton.setOnAction((event) -> {
             game.throwAllDies();
-            reDrawGameArea();
-
-            if (game.getThrowsUsed() == 3) {
-                throwSelectedButton.setDisable(true);
-                throwAllButton.setDisable(true);
-            } else {
-                throwSelectedButton.setDisable(false);
-                throwAllButton.setDisable(false);
-            }
-
+            redrawGameArea();
             window.setScene(gameScene);
         });
 
         exitWithoutSaveButton.setOnAction((event) -> {
             game.reset();
-            reDrawGameArea();
             window.setScene(startScene);
         });
 
         saveAndExitButton.setOnAction((event) -> {
             game.updateRecords();
             game.reset();
-            reDrawGameArea();
             window.setScene(startScene);
         });
 

@@ -5,14 +5,11 @@
  */
 package yatzy.domain;
 
-import java.util.Comparator;
-
-
 /**
  *
  * @author Riku_L
  */
-public class Record implements Comparable<Record>{
+public class Record implements Comparable<Record> {
 
     private final Player player;
     private final String scorecardType;
@@ -40,7 +37,5 @@ public class Record implements Comparable<Record>{
     public int compareTo(Record r) {
         return r.getPoints() - this.points;
     }
-
-
 
 }

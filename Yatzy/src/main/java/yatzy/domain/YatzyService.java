@@ -7,6 +7,7 @@ package yatzy.domain;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,6 +111,9 @@ public class YatzyService {
      * @param selected
      */
     public void throwSelectedDies(boolean[] selected) {
+        if (selected.length != this.dices.getDies().length) {
+            throw new IllegalArgumentException("Length of given array is wrong!");
+        }
         if (this.throwsUsed < this.maxNumberOfThrows) {
             this.dices.rollDies(selected);
         }
@@ -131,8 +135,7 @@ public class YatzyService {
     /**
      * Change player in turn.
      */
-    public void changeTurn() {
-
+    private void changeTurn() {
         Player p = getPlayerWithTurn();
         p.setTurn(false);
         int index = this.playerList.indexOf(p) + 1;
@@ -152,31 +155,39 @@ public class YatzyService {
      */
     public String getScoreboard() {
 
-        String spaces = "              ";
-        String scoreBoard = "Combinations    | " + this.playerList.stream()
-                .map(p -> (p.getName() + spaces).substring(0, p.getName().length() + 2)).collect(Collectors.joining(" | ")) + " |\n\n";
-
-        // TODO Go through playerlist, get combinations from scroecard, add them to
-        // a Set, use the set to write the combinations.
-        String[] combinations = {"Ones", "Twos", "Threes", "Fours", "Fives",
-            "Sixes", "One pair", "Two pairs", "Three of a kind",
-            "Four of a kind", "Small straight", "Big straight",
-            "Full house", "Chance", "Yatzy", "Total"};
-
-        for (String comb : combinations) {
-            String row = (comb + spaces).substring(0, 16) + "| ";
-            for (Player p : this.playerList) {
-                int score = p.getScorecard().get(comb);
-                if (score == -1) {
-                    row += (" " + "-" + spaces).substring(0, p.getName().length() + 2) + " | ";
-                } else {
-                    row += (" " + score + spaces).substring(0, p.getName().length() + 2) + " | ";
-                }
-            }
-            scoreBoard += row + "\n";
+        if (this.playerList.isEmpty()) {
+            return "No players!";
         }
 
+        String scoreBoard = "Combinations    | " + this.playerList.stream()
+                .map(p -> (p.getName())).collect(Collectors.joining(" | ")) + " |\n\n";
+
+        ArrayList<String> combinations = getPlayerWithTurn().getScorecard().getCombinations();
+
+        scoreBoard = combinations.stream().map((combination) -> {
+            String row = padRight(combination, 16) + "| ";
+            for (Player p : this.playerList) {
+                int score = p.getScorecard().getPointsFor(combination);
+                if (score == -1) {
+                    row += padRight("-", p.getName().length()) + " | ";
+                } else {
+                    row += padRight(String.valueOf(score), p.getName().length()) + " | ";
+                }
+            }
+            return row;
+        }).map((row) -> row + "\n").reduce(scoreBoard, String::concat);
         return scoreBoard;
+    }
+
+    /**
+     * Pads given string with spaces to the right side.
+     *
+     * @param s String to pad.
+     * @param n Length of the returned string, String s included.
+     * @return Padded string of length n.
+     */
+    public String padRight(String s, int n) {
+        return String.format("%1$-" + n + "s", s);
     }
 
     /**
@@ -203,7 +214,7 @@ public class YatzyService {
      * @param player
      * @param combination
      */
-    public void setScore(Player player, String combination) {
+    public void setScoreAndChangeTurn(Player player, String combination) {
         player.setPoints(combination, this.dices);
         changeTurn();
     }
@@ -216,15 +227,16 @@ public class YatzyService {
      * @return Points of the specified player for the specified combination.
      */
     public int getScore(Player player, String combination) {
-        return player.getScorecard().get(combination);
+        return player.getScorecard().getPointsFor(combination);
     }
 
     public void updateRecords() {
         this.playerList.stream().forEach(player -> {
-            Record record = new Record(player, player.getScorecardType(), player.getScorecard().get("Total"));
+            Record record = new Record(player, player.getScorecard().getType(), player.getScorecard().getPointsFor("Total"));
             try {
                 this.recordDao.saveOrUpdate(record);
             } catch (SQLException ex) {
+                System.out.println("Error in updating!");
                 Logger.getLogger(YatzyService.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
@@ -240,11 +252,17 @@ public class YatzyService {
         setDies(new int[getDies().length]);
     }
 
+    /**
+     * Get the record board to write in the UI.
+     *
+     * @return The record board as string.
+     */
     public String getRecordboard() {
         ArrayList<Record> records = new ArrayList<>();
         try {
             records = this.recordDao.findAll();
         } catch (SQLException ex) {
+            System.out.println("Can not find records!");
             Logger.getLogger(YatzyService.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (records == null) {
@@ -257,6 +275,10 @@ public class YatzyService {
         for (Record record : records) {
             board += record.getPlayer().getName() + ",  " + record.getScorecardType() + ", " + record.getPoints() + "\n";
         }
-        return board; //To change body of generated methods, choose Tools | Templates.
+        return board;
+    }
+
+    public Scorecard getPlayersScorecard(Player player) {
+        return player.getScorecard();
     }
 }

@@ -6,7 +6,6 @@
 package yatzy.domain;
 
 import yatzy.domain.scorecards.ScandinavianScorecard;
-import java.util.HashMap;
 
 /**
  *
@@ -16,11 +15,11 @@ public class Player {
 
     private final String name;
     private boolean hasTurn;
-    private final ScandinavianScorecard scorecard;
+    private final Scorecard scorecard;
 
     public Player(String name) {
         this.name = name;
-        this.scorecard = new ScandinavianScorecard();
+        this.scorecard = new ScandinavianScorecard(); // With chosen type.
         this.hasTurn = false;
     }
 
@@ -40,11 +39,7 @@ public class Player {
         this.scorecard.setPointsForCombination(combination, dc);
     }
 
-    public HashMap<String, Integer> getScorecard() {
-        return this.scorecard.getPlayersScoretable();
-    }
-
-    public String getScorecardType() {
-        return this.scorecard.getType();
+    public Scorecard getScorecard() {
+        return this.scorecard;
     }
 }
