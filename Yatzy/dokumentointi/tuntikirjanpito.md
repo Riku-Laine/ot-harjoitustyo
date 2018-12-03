@@ -19,7 +19,8 @@
 |        | 2    | Tiedon tallennuksen implementointia. |
 |        | 2    | Luokkarakenteen selkeyttämistä, parametrointia. |
 |        | 1    | JavaDocien parantelu ja yleinen tyylittely. |
-| 1.12.  | 0,5  | Ennätystaulu ja Exit-napppulat UIhin. |
-|        | 2    | Ennätysten tallennkuksen kehittely. |
+| 1.12.  | 0,5  | Ennätystaulu ja Exit-nappulat UIhin. |
+|        | 2    | Ennätysten tallennuksen kehittely. |
 |        | 1,5  | Testien kehittäminen ja paketointirakenteen muuttaminen. |
-|**Yht.**| **35** ||
+| 3.12.  | 3    | Koodi: periminen ja UI-refaktorointi, dokumentointi, tunnit ja muu edellytetty säätö |
+|**Yht.**| **38** ||
