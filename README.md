@@ -14,6 +14,8 @@ _Hauskoja pelihetkiä!_
 
 ## Releaset
 
+Löydät viidennen viikon releasen [täältä](https://github.com/Riku-Laine/ot-harjoitustyo/releases/tag/Viikko_5)!
+
 ## Komentorivitoiminnot
 
 ### Testaus
