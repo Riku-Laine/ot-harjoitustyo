@@ -1,0 +1,42 @@
+title Sekvenssikaavio Yatzy-projektille: getScoreBoard() ja getRecordBoard()
+
+UI -->+ YatzyService game: getScoreBoard()
+YatzyService game -->+ ArrayList playerList: stream()
+loop for Player p in playerList
+    ArrayList playerList -->+ Player p : getName()
+    Player p -->- ArrayList playerList: [name]
+end
+ArrayList playerList -->- YatzyService game : Collectors.joining(" | ")
+YatzyService game -> YatzyService game: getPlayerWithTurn()
+YatzyService game -->+ Player inTurn : getScorecard().getCombinations()
+Player inTurn -->+ ScandinavianScorecard: getCombinations()
+ScandinavianScorecard -->- Player inTurn: combinationList
+Player inTurn -->- YatzyService game : combinationList
+loop for each combination
+    loop for Player p in playerList
+        YatzyService game -->+ Player p : getScorecard().getPointsFor(combination)
+        Player p -->+ ScandinavianScorecard: getPointsFor(combination)
+        ScandinavianScorecard -->- Player p : points
+        Player p -->- YatzyService game : points
+        YatzyService game -->+ Player p : getName()
+        Player p -->- YatzyService game : [name]
+        YatzyService game -> YatzyService game: padRight()
+    end
+    YatzyService game -> YatzyService game: reduce()
+end
+YatzyService game -->- UI: scoreBoard
+
+UI -->+ YatzyService game: getRecordBoard()
+YatzyService game -->+ RecordDao : findAll()
+RecordDao -->- YatzyService game : records
+loop for record in records
+    YatzyService game -->+ Record inList: getPlayer().getName()
+    Record inList -->+ Player inRecords: getName()
+    Player inRecords -->- Record inList : [name]
+    Record inList -->- YatzyService game : [name]
+    YatzyService game -->+ Record inList : getScorecardtype()
+    Record inList -->- YatzyService game : [scorecardType]
+    YatzyService game -->+ Record inList : getPoints()
+    Record inList -->- YatzyService game : [points]
+end
+YatzyService game -->- UI: recordBoard

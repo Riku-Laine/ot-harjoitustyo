@@ -19,7 +19,7 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
-        this.scorecard = new ScandinavianScorecard(); // With chosen type.
+        this.scorecard = new ScandinavianScorecard(); // With chosen type!
         this.hasTurn = false;
     }
 

@@ -16,9 +16,9 @@ import yatzy.domain.Record;
 
 public class RecordDao implements Dao<Record, String> {
 
-    private Database recordDB;
+    private final Database recordDB;
 
-    public RecordDao(Database db) {
+    public RecordDao(Database db)  {
         this.recordDB = db;
     }
 
@@ -68,7 +68,6 @@ public class RecordDao implements Dao<Record, String> {
 
     @Override
     public void saveOrUpdate(Record record) throws SQLException {
-
         Connection connection = recordDB.getConnection();
         PreparedStatement searchQuery = connection.prepareStatement("SELECT * FROM Records WHERE name = ? AND type = ?");
 

@@ -17,7 +17,7 @@ public abstract class Scorecard {
 
     protected final LinkedHashMap<String, Integer> scoretable;
     protected ArrayList<String> combinations;
-    protected String type;
+    protected final String type;
 
     public Scorecard(String name) {
         this.scoretable = new LinkedHashMap<>();
@@ -25,6 +25,12 @@ public abstract class Scorecard {
         this.type = name;
     }
 
+    /**
+     * Subclasses must implement metod to set points for a combination.
+     *
+     * @param combination Combination for which the points are to be set.
+     * @param dies DiceCollection of the dies in the situation.
+     */
     public abstract void setPointsForCombination(String combination, DiceCollection dies);
 
     public LinkedHashMap<String, Integer> getPlayersScoretable() {
@@ -37,7 +43,7 @@ public abstract class Scorecard {
      *
      * @param dies Integer array of dice values
      * @param which Integer of which single point to inspect for.
-     * @return Points for this combination.
+     * @return Points for this combination, i.e. sum of the point values.
      */
     public int checkForPointValues(DiceCollection dies, int which) {
         int score = 0;
@@ -135,9 +141,9 @@ public abstract class Scorecard {
     /**
      * Initialize scorecard's LinkedHashMap with scores of -1 for combinations
      * and 0 for total. -1 is set to differentiate between zero score and score
-     * not set.
+     * not set. Can not be overriden by subclasses.
      */
-    protected void initializeScoretable() {
+    final protected void initializeScoretable() {
         getCombinations().forEach((combination) -> {
             this.scoretable.put(combination, -1);
         });
@@ -179,10 +185,6 @@ public abstract class Scorecard {
 
     public ArrayList<String> getCombinations() {
         return this.combinations;
-    }
-
-    public void setCombinations(ArrayList<String> cmbs) {
-        this.combinations = cmbs;
     }
 
     public String getType() {

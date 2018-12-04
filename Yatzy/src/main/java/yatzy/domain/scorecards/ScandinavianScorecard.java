@@ -18,15 +18,12 @@ public class ScandinavianScorecard extends Scorecard {
 
     public ScandinavianScorecard() {
         super("Scandinavian scorecard");
+        
+        this.combinations = new ArrayList(Arrays.asList("Ones", "Twos", "Threes",
+                "Fours", "Fives", "Sixes", "One pair", "Two pairs",
+                "Three of a kind", "Four of a kind", "Small straight",
+                "Big straight", "Full house", "Chance", "Yatzy"));
 
-        // TODO Fix this awful inheritance.
-        ArrayList scandinavianCombinations = new ArrayList();
-        scandinavianCombinations.addAll(Arrays.asList("Ones", "Twos", "Threes", "Fours",
-                "Fives", "Sixes", "One pair", "Two pairs", "Three of a kind",
-                "Four of a kind", "Small straight", "Big straight",
-                "Full house", "Chance", "Yatzy"));
-
-        this.combinations = scandinavianCombinations;
         initializeScoretable();
     }
 

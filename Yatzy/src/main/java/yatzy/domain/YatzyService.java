@@ -7,7 +7,6 @@ package yatzy.domain;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +15,7 @@ import yatzy.dao.Database;
 import yatzy.dao.RecordDao;
 
 /**
+ * Class for application logic.
  *
  * @author Riku_L
  */
@@ -25,9 +25,15 @@ public class YatzyService {
     private final DiceCollection dices;
     private int throwsUsed;
     private final int maxNumberOfThrows;
-    private RecordDao recordDao;
-    private Database recordDB;
+    private final RecordDao recordDao;
+    private final Database recordDB;
 
+    /**
+     * Default constructor for a conventional Yatzy game of with 5 6-sided dies
+     * and 3 throws.
+     *
+     * @throws ClassNotFoundException
+     */
     public YatzyService() throws ClassNotFoundException {
         this.playerList = new ArrayList<>();
         this.dices = new DiceCollection();
@@ -37,6 +43,14 @@ public class YatzyService {
         recordDao = new RecordDao(recordDB);
     }
 
+    /**
+     * Constructor for a customized game of Yatzy.
+     *
+     * @param nDies Number of dies.
+     * @param biggestEye Number of sides in a dice.
+     * @param maxNumberOfThrows Number of throws in a turn.
+     * @throws ClassNotFoundException
+     */
     public YatzyService(int nDies, int biggestEye, int maxNumberOfThrows) throws ClassNotFoundException {
         this.playerList = new ArrayList<>();
         this.dices = new DiceCollection(nDies, biggestEye);
@@ -276,9 +290,5 @@ public class YatzyService {
             board += record.getPlayer().getName() + ",  " + record.getScorecardType() + ", " + record.getPoints() + "\n";
         }
         return board;
-    }
-
-    public Scorecard getPlayersScorecard(Player player) {
-        return player.getScorecard();
     }
 }
