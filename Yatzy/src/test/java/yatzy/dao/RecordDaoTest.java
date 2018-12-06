@@ -17,27 +17,27 @@ import static org.junit.Assert.*;
  * @author Riku_L
  */
 public class RecordDaoTest {
-    
+
     public RecordDaoTest() {
     }
-    
+
     private RecordDao rd;
     private Database rdb;
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
 //        this rdb = new Database(databaseAddress);
 //        this.rd = new RecordDao(rdb);
     }
-    
+
     @After
     public void tearDown() {
     }

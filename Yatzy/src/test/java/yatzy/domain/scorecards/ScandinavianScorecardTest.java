@@ -5,7 +5,6 @@ package yatzy.domain.scorecards;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -126,7 +125,7 @@ public class ScandinavianScorecardTest {
         int[] dies = {3, 3, 3, 4, 3};
         dc.setDies(dies);
         assertEquals(0, sc.checkForFullHouse(dc));
-        
+
         int[] dies2 = {3, 3, 4, 3, 6};
         dc.setDies(dies2);
         assertEquals(0, sc.checkForFullHouse(dc));
@@ -152,7 +151,7 @@ public class ScandinavianScorecardTest {
         dc.setDies(dies);
         assertEquals(5, sc.checkForPointValues(dc, 1));
     }
-    
+
     // Subclass specific tests.
     @Test
     public void sc() {
@@ -162,7 +161,7 @@ public class ScandinavianScorecardTest {
         int score = sc.getPlayersScoretable().get("Ones");
         assertEquals(5, score);
     }
-    
+
     @Test
     public void totalIsRight() {
         int[] dies = {1, 1, 1, 1, 1};
@@ -170,7 +169,7 @@ public class ScandinavianScorecardTest {
         sc.setPointsForCombination("Ones", dc);
         int total = sc.getPlayersScoretable().get("Total");
         assertEquals(5, total);
-        
+
         sc.setPointsForCombination("Yatzy", dc);
         int total2 = sc.getPlayersScoretable().get("Total");
         assertEquals(5 + 50, total2);

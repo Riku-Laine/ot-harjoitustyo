@@ -101,11 +101,11 @@ public class ScandinavianScorecard extends Scorecard {
         for (int i = dc.getBiggestEyeNumber(); i > 0; i--) {
             if (!pairFound & freqs[i] == 2) {
                 pairFound = true;
-            } else if(!tripletFound & freqs[i] == 3) {
+            } else if (!tripletFound & freqs[i] == 3) {
                 tripletFound = true;
             }
         }
-        if(pairFound & tripletFound){
+        if (pairFound & tripletFound) {
             return getSumOfDies(dc);
         }
         return 0;

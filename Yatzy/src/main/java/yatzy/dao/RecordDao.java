@@ -18,7 +18,7 @@ public class RecordDao implements Dao<Record, String> {
 
     private final Database recordDB;
 
-    public RecordDao(Database db)  {
+    public RecordDao(Database db) {
         this.recordDB = db;
     }
 
