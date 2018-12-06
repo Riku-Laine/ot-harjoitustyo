@@ -24,4 +24,5 @@
 |        | 1,5  | Testien kehittäminen ja paketointirakenteen muuttaminen. |
 | 3.12.  | 3    | Koodi: periminen ja UI-refaktorointi, dokumentointi, tunnit ja muu edellytetty säätö |
 | 4.12.  | 3    | Pakkaus- ja luokkarakenteen setviminen, dokumentaatio, sekvenssikaavion luonti. |
-|**Yht.**| **41** ||
+| 6.12.  | 1    | Jar-ongelmat, tuloskorttikorjuaksia.|
+|**Yht.**| **42** ||
