@@ -182,6 +182,16 @@ public abstract class Scorecard {
         }
         return pointsToGive;
     }
+    
+    /**
+     * Method to check if the DiceCollection is of the right kind for this 
+     * scorecard. ENTÄ JOS HALUAA VAIN PELATA 100 NOPALLA NORMI YATZYA??!?!?!?
+     * @param dc
+     * @return 
+     */
+    private boolean isValid(DiceCollection dc){
+        return false;
+    }
 
     public ArrayList<String> getCombinations() {
         return this.combinations;

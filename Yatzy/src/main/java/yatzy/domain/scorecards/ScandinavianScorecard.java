@@ -18,7 +18,7 @@ public class ScandinavianScorecard extends Scorecard {
 
     public ScandinavianScorecard() {
         super("Scandinavian scorecard");
-        
+
         this.combinations = new ArrayList(Arrays.asList("Ones", "Twos", "Threes",
                 "Fours", "Fives", "Sixes", "One pair", "Two pairs",
                 "Three of a kind", "Four of a kind", "Small straight",
@@ -81,20 +81,32 @@ public class ScandinavianScorecard extends Scorecard {
     }
 
     /**
-     * Calculate points for full house (a pair and a triplet).
+     * Calculate points for full house (a pair and a triplet). Desinged for
+     * convetional Yatzy of five six-sided dies.
      *
      * @param dc Integer array of dies.
-     * @return
+     * @return 0 if there is not full house, sum of dies otherwise.
      */
     public int checkForFullHouse(DiceCollection dc) {
-        int pair = checkForMultiplesOfSizeN(dc, 1, 2);
-        int triplet = checkForMultiplesOfSizeN(dc, 1, 3);
+        int[] dies = dc.getDies();
+        Arrays.sort(dies);
 
-        // TODO Make better fix
-        int four = checkForMultiplesOfSizeN(dc, 1, 4);
+        int[] freqs = new int[dc.getBiggestEyeNumber() + 1];
+        for (int i = 0; i < dies.length; i++) {
+            freqs[dies[i]]++;
+        }
+        boolean pairFound = false;
+        boolean tripletFound = false;
 
-        if (pair != 0 & triplet != 0 & four == 0) {
-            return pair + triplet;
+        for (int i = dc.getBiggestEyeNumber(); i > 0; i--) {
+            if (!pairFound & freqs[i] == 2) {
+                pairFound = true;
+            } else if(!tripletFound & freqs[i] == 3) {
+                tripletFound = true;
+            }
+        }
+        if(pairFound & tripletFound){
+            return getSumOfDies(dc);
         }
         return 0;
     }

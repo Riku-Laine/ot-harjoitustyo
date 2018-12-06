@@ -13,8 +13,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import yatzy.domain.DiceCollection;
-import yatzy.domain.DiceCollection;
-import yatzy.domain.scorecards.ScandinavianScorecard;
 
 /**
  *
@@ -127,6 +125,10 @@ public class ScandinavianScorecardTest {
     public void returnsZeroWhenNoFullHouse() {
         int[] dies = {3, 3, 3, 4, 3};
         dc.setDies(dies);
+        assertEquals(0, sc.checkForFullHouse(dc));
+        
+        int[] dies2 = {3, 3, 4, 3, 6};
+        dc.setDies(dies2);
         assertEquals(0, sc.checkForFullHouse(dc));
     }
 
