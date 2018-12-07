@@ -1,5 +1,7 @@
 # Käyttöohje
 
-Lataa tiedosto [Yatzy-vX.X.jar](https://github.com/Riku-Laine/ot-harjoitustyo/tree/master/Yatzy).
+Lataa tiedosto [Yatzy-vX.X.jar](https://github.com/Riku-Laine/ot-harjoitustyo/releases).
 
-## tee juttuja
+## Peli
+
+Avaa tiedostosijainti, käynnistä ja pelaa. Admin-salasana on salasana.
