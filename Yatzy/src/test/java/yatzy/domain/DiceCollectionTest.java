@@ -91,8 +91,30 @@ public class DiceCollectionTest {
     }
 
     @Test
+    public void tooSmallEyeNumberThrowsException() {
+        int[] dies = {1, 2, 3, 4, -1};
+        try {
+            dc.setDies(dies);
+            fail();
+        } catch (Exception ex) {
+
+        }
+    }
+
+    @Test
     public void tooLongArrayThrowsException() {
         int[] dies = {1, 2, 3, 4, 5, 6};
+        try {
+            dc.setDies(dies);
+            fail();
+        } catch (Exception ex) {
+
+        }
+    }
+
+    @Test
+    public void tooShortArrayThrowsException() {
+        int[] dies = {1, 2, 3, 4};
         try {
             dc.setDies(dies);
             fail();
@@ -112,4 +134,24 @@ public class DiceCollectionTest {
             }
         }
     }
+
+    @Test
+    public void rollsAllDies() {
+        // Dies are initiated at zeroes.
+        dc.rollAllDies();
+        int[] dies = dc.getDies();
+        for (int i = 0; i < dies.length; i++) {
+            if (dies[i] == 0) {
+                fail();
+            }
+        }
+        dc2.rollAllDies();
+        int[] dies_long = dc.getDies();
+        for (int i = 0; i < dies_long.length; i++) {
+            if (dies_long[i] == 0) {
+                fail();
+            }
+        }
+    }
+
 }

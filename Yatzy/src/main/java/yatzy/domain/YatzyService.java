@@ -8,8 +8,6 @@ package yatzy.domain;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import yatzy.dao.Database;
 import yatzy.dao.RecordDao;
@@ -108,21 +106,9 @@ public class YatzyService {
     }
 
     /**
-     * Set throws used.
-     *
-     * @param number
-     */
-    public void setThrowsUsed(int number) {
-        if (number < 0 || number > maxNumberOfThrows) {
-            throw new IllegalArgumentException("Number set is too low or to high!");
-        }
-        this.throwsUsed = number;
-    }
-
-    /**
      * If there are throws left, throw selected dies.
      *
-     * @param selected
+     * @param selected Array of boolean values to indicate which dies to throw.
      */
     public void throwSelectedDies(boolean[] selected) {
         if (selected.length != this.dices.getDies().length) {
@@ -200,7 +186,7 @@ public class YatzyService {
      * @param n Length of the returned string, String s included.
      * @return Padded string of length n.
      */
-    public String padRight(String s, int n) {
+    private String padRight(String s, int n) {
         return String.format("%1$-" + n + "s", s);
     }
 
@@ -244,14 +230,16 @@ public class YatzyService {
         return player.getScorecard().getPointsFor(combination);
     }
 
-    public void updateRecords() {
+    /**
+     * Add all the players in the playerList to high score database.
+     */
+    public void addPlayersInTheGameToRecords() {
         this.playerList.stream().forEach(player -> {
             Record record = new Record(player, player.getScorecard().getType(), player.getScorecard().getPointsFor("Total"));
             try {
                 this.recordDao.saveOrUpdate(record);
             } catch (SQLException ex) {
                 System.out.println("Error in updating!");
-                Logger.getLogger(YatzyService.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
@@ -267,28 +255,55 @@ public class YatzyService {
     }
 
     /**
-     * Get the record board to write in the UI.
+     * Get high scores to write in the UI.
      *
-     * @return The record board as string.
+     * @return The high score board as string.
      */
-    public String getRecordboard() {
+    public String getHighScores() {
         ArrayList<Record> records = new ArrayList<>();
         try {
             records = this.recordDao.findAll();
         } catch (SQLException ex) {
-            System.out.println("Can not find records!");
-            Logger.getLogger(YatzyService.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Could not access records! :(");
         }
-        if (records == null) {
-            System.out.println("null records");
-            return null;
+        if (records == null || records.isEmpty()) {
+            return "No records!";
         }
         Collections.sort(records);
         String board = "Records:\n";
-
+        int standing = 1;
         for (Record record : records) {
-            board += record.getPlayer().getName() + ",  " + record.getScorecardType() + ", " + record.getPoints() + "\n";
+            board += standing + ". " + record.getPlayer().getName() + ", " + record.getScorecardType() + ", " + record.getPoints() + "\n";
+            standing++;
         }
         return board;
+    }
+
+    /**
+     * Remove record by the given name from the database. Accessible by the
+     * administrator.
+     *
+     * @param name Name of the player whose record to delete.
+     */
+    public void removeRecord(String name) {
+        try {
+            this.recordDao.delete(name);
+        } catch (SQLException ex) {
+            System.out.println("Couldn't remove record! :(");
+        }
+    }
+
+    /**
+     * Remove all records from the database. Accessible by the administrator.
+     */
+    public void removeAllRecords() {
+        try {
+            ArrayList<Record> records = this.recordDao.findAll();
+            for (Record record : records) {
+                this.recordDao.delete(record.getPlayer().getName());
+            }
+        } catch (SQLException ex) {
+            System.out.println("Could not remove all records!");
+        }
     }
 }

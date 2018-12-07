@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 /**
+ * Abstract super class of scorecards. Provides methods to calculate points for
+ * most of the regular combinations.
  *
  * @author Riku_L
  */
@@ -34,7 +36,6 @@ public abstract class Scorecard {
     public abstract void setPointsForCombination(String combination, DiceCollection dies);
 
     public LinkedHashMap<String, Integer> getPlayersScoretable() {
-        calculateTotal();
         return this.scoretable;
     }
 
@@ -154,7 +155,7 @@ public abstract class Scorecard {
     /**
      * Calculates total of points for the scorecard.
      */
-    private void calculateTotal() {
+    final protected void calculateTotal() {
         int total = this.scoretable.keySet().stream().mapToInt(key -> {
             if (this.scoretable.get(key) >= 0 & !key.equals("Total")) {
                 return this.scoretable.get(key);

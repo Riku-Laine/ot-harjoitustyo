@@ -78,7 +78,7 @@ public class DiceCollection {
             throw new IllegalArgumentException("Wrong size of integer array!");
         }
         for (int i = 0; i < dies.length; i++) {
-            if (dies[i] > this.biggestEyeNumber) {
+            if (dies[i] > this.biggestEyeNumber || dies[i] < 0) {
                 throw new IllegalArgumentException("A too big eye number specified!");
             }
         }

@@ -83,21 +83,10 @@ public class RecordDao implements Dao<Record, String> {
         rs.close();
         searchQuery.close();
         if (!found) {
-            // insert into here
-            PreparedStatement insertStmt = connection.prepareStatement("INSERT INTO Records (name, type, points) VALUES (?, ?, ?)");
-            insertStmt.setString(1, name);
-            insertStmt.setString(2, type);
-            insertStmt.setInt(3, points);
-            insertStmt.executeUpdate();
-            insertStmt.close();
+            insertRecord(record);
         } else {
-            // update here
-            PreparedStatement updateStmt = connection.prepareStatement("UPDATE Records SET points = ? WHERE name = ? AND typé = ?");
-            updateStmt.setInt(1, points);
-            updateStmt.setString(2, name);
-            updateStmt.setString(3, type);
-            updateStmt.executeUpdate();
-            updateStmt.close();
+            updateRecord(record);
+
         }
 
         connection.close();
@@ -113,5 +102,35 @@ public class RecordDao implements Dao<Record, String> {
 
         stmt.close();
         connection.close();
+    }
+
+    private void insertRecord(Record record) throws SQLException {
+        Connection connection = recordDB.getConnection();
+        PreparedStatement insertStmt = connection.prepareStatement("INSERT INTO Records (name, type, points) VALUES (?, ?, ?)");
+
+        String name = record.getPlayer().getName();
+        String type = record.getScorecardType();
+        int points = record.getPoints();
+
+        insertStmt.setString(1, name);
+        insertStmt.setString(2, type);
+        insertStmt.setInt(3, points);
+        insertStmt.executeUpdate();
+        insertStmt.close();
+    }
+
+    private void updateRecord(Record record) throws SQLException {
+        Connection connection = recordDB.getConnection();
+        PreparedStatement updateStmt = connection.prepareStatement("UPDATE Records SET points = ? WHERE name = ? AND type = ?");
+
+        String name = record.getPlayer().getName();
+        String type = record.getScorecardType();
+        int points = record.getPoints();
+
+        updateStmt.setInt(1, points);
+        updateStmt.setString(2, name);
+        updateStmt.setString(3, type);
+        updateStmt.executeUpdate();
+        updateStmt.close();
     }
 }

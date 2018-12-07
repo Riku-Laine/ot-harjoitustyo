@@ -35,7 +35,7 @@ public class Record implements Comparable<Record> {
 
     @Override
     public int compareTo(Record r) {
-        return r.getPoints() - this.points;
+        return this.getScorecardType().compareTo(r.getScorecardType()) * 1000 + r.getPoints() - this.points;
     }
 
 }

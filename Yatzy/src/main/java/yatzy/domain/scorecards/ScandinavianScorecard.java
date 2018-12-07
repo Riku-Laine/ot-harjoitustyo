@@ -11,13 +11,20 @@ import yatzy.domain.DiceCollection;
 import yatzy.domain.Scorecard;
 
 /**
+ * Scandinavian scorecard for Yatzy game. Contains combinations such as 'One
+ * pair' which are not included in the US version of the game. Also Big Straight
+ * is defined as numbers from 2 to 6 and is worth 20 points.
  *
  * @author Riku_L
  */
 public class ScandinavianScorecard extends Scorecard {
 
+    /**
+     * Constructs scandinavian scorecard. Assigns name of "Scandinavian" and
+     * inserts combination names.
+     */
     public ScandinavianScorecard() {
-        super("Scandinavian scorecard");
+        super("Scandinavian");
 
         this.combinations = new ArrayList(Arrays.asList("Ones", "Twos", "Threes",
                 "Fours", "Fives", "Sixes", "One pair", "Two pairs",
@@ -76,8 +83,9 @@ public class ScandinavianScorecard extends Scorecard {
         if (this.scoretable.get(combination) == -1) {
             this.scoretable.replace(combination, score);
         } else {
-            throw new Error("Combination valid, score already in scorecard!");
+            throw new Error("Combination valid, but score already in scorecard!");
         }
+        calculateTotal();
     }
 
     /**

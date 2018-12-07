@@ -1,6 +1,5 @@
 package yatzy.ui;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.application.Application;
@@ -8,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
@@ -21,15 +21,16 @@ import javafx.stage.Stage;
 import yatzy.domain.YatzyService;
 
 /**
+ * Class responsible for updating the user interface.
  *
  * @author Riku_L
  */
 public class YatzyUi extends Application {
 
     private YatzyService game;
-    private HashMap<Integer, ImageView> eyeImageViews;
+    private HashMap<Integer, String> eyeImageURLs;
     private Label scoreTable;
-    private Label recordTable;
+    private Label highScoreTable;
     private Label playerWithTurn;
     private Label numberOfThrows;
     private ArrayList<ToggleButton> diceButtonList;
@@ -37,6 +38,8 @@ public class YatzyUi extends Application {
     private VBox combinationButtonsBox;
     private Button throwSelectedButton;
     private Button throwAllButton;
+    private TextField adminToRemoveFromHighScoresField;
+    private Label adminHighScoreTable;
 
     /**
      * Redraw game area: update scoreboard, recordboard, name of player throwing
@@ -48,8 +51,8 @@ public class YatzyUi extends Application {
         // Update scoreboard text.
         scoreTable.setText(game.getScoreboard());
 
-        // Update records.
-        recordTable.setText(game.getRecordboard());
+        // Update high scores.
+        highScoreTable.setText(game.getHighScores());
 
         // Update text for player in turn.
         if (game.getPlayerWithTurn() != null) {
@@ -59,11 +62,7 @@ public class YatzyUi extends Application {
         // Update text for throws used
         numberOfThrows.setText("Throws used: " + game.getThrowsUsed());
 
-        // Unselect the dice buttons and update their text.
-        for (int i = 0; i < diceButtonList.size(); i++) {
-            diceButtonList.get(i).setSelected(false);
-            diceButtonList.get(i).setText(game.getDies()[i] + "");
-        }
+        redrawDiceButtons();
 
         redrawThrowButtons();
 
@@ -77,6 +76,7 @@ public class YatzyUi extends Application {
      * no throws have been thrown, button is disabled.
      */
     private void redrawCombinationButtons() {
+
         combinationButtonsBox.getChildren().clear();
         combinationButtonList.clear();
         combinationButtonsBox.getChildren().add(new Label("Select combination:"));
@@ -104,6 +104,9 @@ public class YatzyUi extends Application {
         }
     }
 
+    /**
+     * Enable or disable throw buttons according to the number of throws left.
+     */
     private void redrawThrowButtons() {
         int throwsUsed = game.getThrowsUsed();
         if (throwsUsed == 0) {
@@ -119,32 +122,58 @@ public class YatzyUi extends Application {
 
     }
 
-    @Override
-    public void init() throws SQLException, ClassNotFoundException {
+    /**
+     * Redraw dice buttons.
+     */
+    private void redrawDiceButtons() {
+        // Unselect the dice buttons and update their text.
+        for (int i = 0; i < diceButtonList.size(); i++) {
+            diceButtonList.get(i).setSelected(false);
+            // Get dice values as pictures
+            if (game.getDies()[i] != 0) {
+                diceButtonList.get(i).setText(null);
+                ImageView iv = new ImageView(new Image(eyeImageURLs.get(game.getDies()[i])));
+                diceButtonList.get(i).setGraphic(iv);
+            }
+        }
+    }
 
-        eyeImageViews = new HashMap<>();
+    /**
+     * Redraw fields in the admin window.
+     */
+    private void reDrawAdminScene() {
+        adminToRemoveFromHighScoresField.setText("");
+        adminHighScoreTable.setText(game.getHighScores());
+    }
+
+    @Override
+    public void init() throws ClassNotFoundException {
+
+        eyeImageURLs = new HashMap<>();
         diceButtonList = new ArrayList<>();
         combinationButtonList = new ArrayList<>();
         combinationButtonsBox = new VBox();
         game = new YatzyService();
+        highScoreTable = new Label(game.getHighScores());
+        highScoreTable.setFont(Font.font("Monospaced"));
 
-        ImageView oneEye = new ImageView(new Image("file:dice-1.png"));
-        ImageView twoEye = new ImageView(new Image("file:dice-2.png"));
-        ImageView threeEye = new ImageView(new Image("file:dice-3.png"));
-        ImageView fourEye = new ImageView(new Image("file:dice-4.png"));
-        ImageView fiveEye = new ImageView(new Image("file:dice-5.png"));
-        ImageView sixEye = new ImageView(new Image("file:dice-6.png"));
+        String oneEye = "file:./src/main/resources/dice-1.png";
+        String twoEye = "file:./src/main/resources/dice-2.png";
+        String threeEye = "file:./src/main/resources/dice-3.png";
+        String fourEye = "file:./src/main/resources/dice-4.png";
+        String fiveEye = "file:./src/main/resources/dice-5.png";
+        String sixEye = "file:./src/main/resources/dice-6.png";
 
-        eyeImageViews.put(1, oneEye);
-        eyeImageViews.put(2, twoEye);
-        eyeImageViews.put(3, threeEye);
-        eyeImageViews.put(4, fourEye);
-        eyeImageViews.put(5, fiveEye);
-        eyeImageViews.put(6, sixEye);
+        eyeImageURLs.put(1, oneEye);
+        eyeImageURLs.put(2, twoEye);
+        eyeImageURLs.put(3, threeEye);
+        eyeImageURLs.put(4, fourEye);
+        eyeImageURLs.put(5, fiveEye);
+        eyeImageURLs.put(6, sixEye);
     }
 
     @Override
-    public void start(Stage window) throws SQLException {
+    public void start(Stage window) {
 
         window.setTitle("Play Yatzy!");
 
@@ -155,7 +184,7 @@ public class YatzyUi extends Application {
         Button twoPlayerButton = new Button("2 players");
         Label adminLabel = new Label("Log in as administrator:");
         Label passwordLabel = new Label("Password: ");
-        TextField passwordText = new TextField();
+        PasswordField passwordText = new PasswordField();
         Button logInAsAdminButton = new Button("Log in");
 
         singlePlayerButton.setFont(Font.font("Monospaced", 20));
@@ -175,18 +204,52 @@ public class YatzyUi extends Application {
         startLayout.setPadding(new Insets(10, 10, 10, 10));
         Scene startScene = new Scene(startLayout);
 
-        Button exitWithoutSaveButton = new Button("Exit to start screen");
         Button saveAndExitButton = new Button("Save score and exit");
+
+        //************************
+        // Admin scene
+        //************************
+        Label adminInstructionLabel = new Label("Give name of the player you \n"
+                + "wish to remove from the scoreboard!");
+        adminToRemoveFromHighScoresField = new TextField("Player name");
+        Button adminRemoveGivenNameButton = new Button("Remove player!");
+        Button adminRemoveAllButton = new Button("Remove all!");
+        Button adminExitButton = new Button("Exit to start screen");
+
+        HBox removeButtons = new HBox();
+        removeButtons.getChildren().addAll(adminRemoveGivenNameButton, adminRemoveAllButton);
+        removeButtons.setSpacing(10);
+
+        VBox adminElements = new VBox();
+        adminElements.getChildren().addAll(adminInstructionLabel,
+                adminToRemoveFromHighScoresField, removeButtons, adminExitButton);
+
+        adminElements.setSpacing(10);
+        adminElements.setPadding(new Insets(10, 10, 10, 10));
+
+        BorderPane adminPane = new BorderPane();
+
+        adminPane.setPadding(new Insets(10, 10, 10, 10));
+
+        adminHighScoreTable = new Label(game.getHighScores());
+        adminHighScoreTable.setFont(Font.font("Monospaced"));
+
+        adminPane.setLeft(adminElements);
+        adminPane.setRight(adminHighScoreTable);
+
+        Scene adminScene = new Scene(adminPane);
+
         //************************
         // One player name scene
         //************************
-        Label onePlayerGiveNameLabel = new Label(" Give your name!\n Name can't be empty.");
-        TextField onePlayerNameText = new TextField();
+        Label onePlayerGiveNameLabel = new Label("Give your name!");
+        TextField onePlayerNameText = new TextField("Player 1");
         Button onePlayerPlayButton = new Button("Begin");
+        Button onePlayerExitButton = new Button("Exit to start screen");
 
         VBox onePlayerElements = new VBox();
         onePlayerElements.getChildren().addAll(onePlayerGiveNameLabel,
-                onePlayerNameText, onePlayerPlayButton, exitWithoutSaveButton);
+                onePlayerNameText, onePlayerPlayButton, onePlayerExitButton);
 
         onePlayerElements.setSpacing(10);
         onePlayerElements.setPadding(new Insets(10, 10, 10, 10));
@@ -196,14 +259,17 @@ public class YatzyUi extends Application {
         //***********************
         // Two player name scene
         //***********************
-        Label twoPlayerGiveNameLabel = new Label(" Give your names!\n Names can't be empty.");
-        TextField twoPlayerNameOneText = new TextField();
-        TextField twoPlayerNameTwoText = new TextField();
+        Label twoPlayerGiveNameLabel = new Label(" Give your names!\n "
+                + "Names can't be empty.\n Player 1 begins.");
+        TextField twoPlayerNameOneText = new TextField("Player 1");
+        TextField twoPlayerNameTwoText = new TextField("Player 2");
         Button twoPlayerPlayButton = new Button("Begin");
+        Button twoPlayerExitButton = new Button("Exit to start screen");
 
         VBox twoPlayerElements = new VBox();
         twoPlayerElements.getChildren().addAll(twoPlayerGiveNameLabel,
-                twoPlayerNameOneText, twoPlayerNameTwoText, twoPlayerPlayButton, exitWithoutSaveButton);
+                twoPlayerNameOneText, twoPlayerNameTwoText, twoPlayerPlayButton,
+                twoPlayerExitButton);
 
         twoPlayerElements.setSpacing(10);
         twoPlayerElements.setPadding(new Insets(10, 10, 10, 10));
@@ -216,9 +282,11 @@ public class YatzyUi extends Application {
         Label title = new Label("YATZY!");
         playerWithTurn = new Label();
         numberOfThrows = new Label();
+        Button gameExitWithoutSaveButton = new Button("Exit and reset game");
 
         for (int i = 0; i < game.getDies().length; i++) {
-            ToggleButton dice = new ToggleButton("0");
+            ImageView iv = new ImageView(new Image(eyeImageURLs.get(6)));
+            ToggleButton dice = new ToggleButton(null, iv);
             diceButtonList.add(dice);
         }
         throwSelectedButton = new Button("Throw selected!");
@@ -227,7 +295,9 @@ public class YatzyUi extends Application {
 
         HBox diceButtonsHBox = new HBox();
 
-        diceButtonList.stream().forEach(btn -> diceButtonsHBox.getChildren().add((ToggleButton) btn));
+        diceButtonList.stream().forEach(btn -> {
+            diceButtonsHBox.getChildren().add((ToggleButton) btn);
+        });
 
         title.setFont(Font.font(20));
 
@@ -238,12 +308,9 @@ public class YatzyUi extends Application {
         scoreTable = new Label();
         scoreTable.setFont(Font.font("Monospaced"));
 
-        recordTable = new Label();
-        recordTable.setFont(Font.font("Monospaced"));
-
         VBox scoresAndRecords = new VBox();
         scoresAndRecords.setSpacing(10);
-        scoresAndRecords.getChildren().addAll(scoreTable, recordTable);
+        scoresAndRecords.getChildren().addAll(scoreTable, highScoreTable);
 
         GridPane gameButtonArea = new GridPane();
 
@@ -260,7 +327,7 @@ public class YatzyUi extends Application {
 
         HBox exitButtons = new HBox();
         exitButtons.setSpacing(10);
-        exitButtons.getChildren().addAll(exitWithoutSaveButton, saveAndExitButton);
+        exitButtons.getChildren().addAll(gameExitWithoutSaveButton, saveAndExitButton);
 
         BorderPane onePlayerScene = new BorderPane();
         onePlayerScene.setLeft(gameButtonArea);
@@ -287,7 +354,7 @@ public class YatzyUi extends Application {
         logInAsAdminButton.setOnAction((event) -> {
             // Show admin window
             if (passwordText.getText().equals("salasana")) {
-                // window.setScene(adminScene);
+                window.setScene(adminScene);
             }
         });
 
@@ -300,7 +367,6 @@ public class YatzyUi extends Application {
                 redrawGameArea();
                 window.setScene(gameScene);
             }
-
         });
 
         twoPlayerPlayButton.setOnAction((event) -> {
@@ -310,9 +376,9 @@ public class YatzyUi extends Application {
                 redrawGameArea();
                 window.setScene(gameScene);
             }
-
         });
 
+        // Throw the selected dies if there are selections.
         throwSelectedButton.setOnAction((event) -> {
             boolean[] selected = new boolean[diceButtonList.size()];
             for (int i = 0; i < diceButtonList.size(); i++) {
@@ -325,21 +391,52 @@ public class YatzyUi extends Application {
             }
         });
 
+        // Throw all dies.
         throwAllButton.setOnAction((event) -> {
             game.throwAllDies();
             redrawGameArea();
             window.setScene(gameScene);
         });
 
-        exitWithoutSaveButton.setOnAction((event) -> {
+        gameExitWithoutSaveButton.setOnAction((event) -> {
             game.reset();
             window.setScene(startScene);
         });
 
-        saveAndExitButton.setOnAction((event) -> {
-            game.updateRecords();
-            game.reset();
+        adminExitButton.setOnAction((event) -> {
             window.setScene(startScene);
+        });
+
+        onePlayerExitButton.setOnAction((event) -> {
+            window.setScene(startScene);
+        });
+
+        twoPlayerExitButton.setOnAction((event) -> {
+            window.setScene(startScene);
+        });
+
+        // Save scores to high scores, reset game and exit.
+        saveAndExitButton.setOnAction((event) -> {
+            game.addPlayersInTheGameToRecords();
+            game.reset();
+            reDrawAdminScene();
+            window.setScene(startScene);
+        });
+
+        // Remove record by the given name.
+        adminRemoveGivenNameButton.setOnAction((event) -> {
+            if (!adminToRemoveFromHighScoresField.getText().isEmpty()) {
+                game.removeRecord(adminToRemoveFromHighScoresField.getText());
+                reDrawAdminScene();
+                window.setScene(adminScene);
+            }
+        });
+
+        // Remove all records.
+        adminRemoveAllButton.setOnAction((event) -> {
+            game.removeAllRecords();
+            reDrawAdminScene();
+            window.setScene(adminScene);
         });
 
         window.setScene(startScene);
