@@ -1,4 +1,4 @@
-# Määrittelydokumentti (alustava)
+# Määrittelydokumentti
 
 **Sisällysluettelo**
 
@@ -11,7 +11,7 @@
 
 Sovelluksessa on tarkoitus pelata noppapeliä [Yatzy](https://fi.wikipedia.org/wiki/Yatzy) yhdellä tai kahdella pelaajalla. Yksin pelatessa oman tuloksensa voi tallentaa ennätyslistaan omalla nimimerkillä.
 
-Tulosten kirjaamisessa noudatetaan suomalaisia yhdistelmiä, jotka löytyvät pelin Wikipedia-sivulta. Tällöin esimerkiksi pieni suora tarkoittaa noppayhdistelmää 1, 2, 3, 4 ja 5.
+Tulosten kirjaamisessa noudatetaan ensisijaisesti suomalaisia yhdistelmiä, jotka löytyvät pelin Wikipedia-sivulta. Tällöin esimerkiksi pieni suora tarkoittaa noppayhdistelmää 1, 2, 3, 4 ja 5.
 
 ## <a name="kayttajat"></a>Käyttäjät ja käyttöroolit
 
@@ -33,7 +33,6 @@ Moderaattorilla on pääsy ennätystauluun ja hän voi poistaa nimimerkkejä ja 
 	* Graafisessa käyttöliittymässä toteutetaan taulukolla
 * Klikkaamalla voi valita nopat ja poistaa valinnan (noppien kuvat)
 * Jos pelaaja yksinpelatessaan ylittää ennätyksen, ennätystulos päivittyy vastaamaan tulosta.
-	* *Miten toteutus? Kirjautuminen / Ylikirjoitus / Ei samoja nimimerkkejä*
 * Kaksinpeluussa peliä pelataan vuorotellen, pelinäkymä erilainen
 
 ### Jatkoideat
@@ -52,4 +51,5 @@ Moderaattorilla on pääsy ennätystauluun ja hän voi poistaa nimimerkkejä ja 
 * Pistetaulukossa reaaliaikaisesti tulos, joka vahvistetaan vuoron päätyttyä
 * Moninpeluuseen mahdollisuus pelata paras N:stä
 
-*Perusversion vaatimusmäärittelyjä tarkennettu 16.11. alakohdilla ja kuvaukseen lisätty maininta suomalaisista säännöistä.*
+*Perusversion vaatimusmäärittelyjä tarkennettu 16.11. alakohdilla ja kuvaukseen lisätty maininta suomalaisista säännöistä.  
+7.12. pieniä muokkauksia.*
