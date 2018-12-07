@@ -6,7 +6,7 @@ _Hauskoja pelihetkiä!_
 
 ## Dokumentaatio
 
-* [Käyttöohje TBA](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kayttoohje.md)
+* [Käyttöohje](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kayttoohje.md)
 * [Vaatimusmäärittelyt](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/maarittelydokumentti.md)
 * [Arkkitehtuurikuvaus](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/arkkitehtuuri.md)
 * [Testausdokumentti TBA](<!---https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/urlitestausdokumenttiin.md --->)
