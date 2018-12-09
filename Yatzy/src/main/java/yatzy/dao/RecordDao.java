@@ -14,7 +14,7 @@ import java.sql.*;
 import yatzy.domain.Player;
 import yatzy.domain.Record;
 
-public class RecordDao implements Dao<Record, String> {
+public class RecordDao implements Dao<Record, Record> {
 
     private final Database recordDB;
 
@@ -23,22 +23,30 @@ public class RecordDao implements Dao<Record, String> {
     }
 
     @Override
-    public Record findOne(String name) throws SQLException {
+    public Record findOne(Record record) throws SQLException {
         Connection connection = recordDB.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Records where name = ?");
+        PreparedStatement searchQuery = connection.prepareStatement("SELECT * FROM Records WHERE name = ? AND scorecard_type = ? AND"
+                + " dice_amount = ? AND max_dice_number = ? AND throws_amount = ? ");
 
-        stmt.setString(1, name);
-        ResultSet rs = stmt.executeQuery();
+        searchQuery.setString(1, record.getPlayer().getName());
+        searchQuery.setString(2, record.getScorecardType());
+        searchQuery.setInt(3, record.getDiceAmount());
+        searchQuery.setInt(4, record.getMaxEyeNumber());
+        searchQuery.setInt(5, record.getThrowAmount());
+
+        ResultSet rs = searchQuery.executeQuery();
         boolean found = rs.next();
         if (!found) {
             return null;
         }
 
         Record r = new Record(new Player(rs.getString("name")),
-                rs.getString("type"), rs.getInt("points"));
+                rs.getString("scorecard_type"), rs.getInt("dice_amount"),
+                rs.getInt("max_dice_number"), rs.getInt("throws_amount"),
+                rs.getInt("points"));
 
         rs.close();
-        stmt.close();
+        searchQuery.close();
         connection.close();
 
         return r;
@@ -53,7 +61,9 @@ public class RecordDao implements Dao<Record, String> {
         ArrayList<Record> records = new ArrayList<>();
         while (rs.next()) {
             records.add(new Record(new Player(rs.getString("name")),
-                    rs.getString("type"), rs.getInt("points")));
+                    rs.getString("scorecard_type"), rs.getInt("dice_amount"),
+                    rs.getInt("max_dice_number"), rs.getInt("throws_amount"),
+                    rs.getInt("points")));
         }
 
         rs.close();
@@ -68,36 +78,28 @@ public class RecordDao implements Dao<Record, String> {
 
     @Override
     public void saveOrUpdate(Record record) throws SQLException {
-        Connection connection = recordDB.getConnection();
-        PreparedStatement searchQuery = connection.prepareStatement("SELECT * FROM Records WHERE name = ? AND type = ?");
 
-        String name = record.getPlayer().getName();
-        String type = record.getScorecardType();
-        int points = record.getPoints();
+        Record found = findOne(record);
 
-        searchQuery.setString(1, name);
-        searchQuery.setString(2, type);
-
-        ResultSet rs = searchQuery.executeQuery();
-        boolean found = rs.next();
-        rs.close();
-        searchQuery.close();
-        if (!found) {
+        if (found == null) {
             insertRecord(record);
-        } else {
+        } else if (found.getPoints() < record.getPoints()) {
             updateRecord(record);
-
         }
-
-        connection.close();
     }
 
     @Override
-    public void delete(String name) throws SQLException {
+    public void delete(Record record) throws SQLException {
         Connection connection = recordDB.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Records WHERE name = ?");
+        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Records WHERE name = ? AND scorecard_type = ? AND "
+                + "dice_amount = ? AND max_dice_number = ? AND throws_amount = ? ");
 
-        stmt.setString(1, name);
+        stmt.setString(1, record.getPlayer().getName());
+        stmt.setString(2, record.getScorecardType());
+        stmt.setInt(3, record.getDiceAmount());
+        stmt.setInt(4, record.getMaxEyeNumber());
+        stmt.setInt(5, record.getThrowAmount());
+
         stmt.executeUpdate();
 
         stmt.close();
@@ -106,30 +108,31 @@ public class RecordDao implements Dao<Record, String> {
 
     private void insertRecord(Record record) throws SQLException {
         Connection connection = recordDB.getConnection();
-        PreparedStatement insertStmt = connection.prepareStatement("INSERT INTO Records (name, type, points) VALUES (?, ?, ?)");
+        PreparedStatement insertStmt = connection.prepareStatement("INSERT INTO "
+                + "Records (name, scorecard_type, dice_amount, max_dice_number, throws_amount, points) VALUES (?, ?, ?, ?, ?, ?)");
 
-        String name = record.getPlayer().getName();
-        String type = record.getScorecardType();
-        int points = record.getPoints();
-
-        insertStmt.setString(1, name);
-        insertStmt.setString(2, type);
-        insertStmt.setInt(3, points);
+        insertStmt.setString(1, record.getPlayer().getName());
+        insertStmt.setString(2, record.getScorecardType());
+        insertStmt.setInt(3, record.getDiceAmount());
+        insertStmt.setInt(4, record.getMaxEyeNumber());
+        insertStmt.setInt(5, record.getThrowAmount());
+        insertStmt.setInt(6, record.getPoints());
         insertStmt.executeUpdate();
         insertStmt.close();
     }
 
     private void updateRecord(Record record) throws SQLException {
         Connection connection = recordDB.getConnection();
-        PreparedStatement updateStmt = connection.prepareStatement("UPDATE Records SET points = ? WHERE name = ? AND type = ?");
+        PreparedStatement updateStmt = connection.prepareStatement("UPDATE Records SET points = ? WHERE name = ? AND scorecard_type = ? AND "
+                + "dice_amount = ? AND max_dice_number = ? AND throws_amount = ? ");
 
-        String name = record.getPlayer().getName();
-        String type = record.getScorecardType();
-        int points = record.getPoints();
+        updateStmt.setInt(1, record.getPoints());
+        updateStmt.setString(2, record.getPlayer().getName());
+        updateStmt.setString(3, record.getScorecardType());
+        updateStmt.setInt(4, record.getDiceAmount());
+        updateStmt.setInt(5, record.getMaxEyeNumber());
+        updateStmt.setInt(6, record.getThrowAmount());
 
-        updateStmt.setInt(1, points);
-        updateStmt.setString(2, name);
-        updateStmt.setString(3, type);
         updateStmt.executeUpdate();
         updateStmt.close();
     }

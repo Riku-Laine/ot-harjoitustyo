@@ -61,11 +61,11 @@ public abstract class Scorecard {
      * integer array and return the corresponding score (their sum).
      *
      * @param dc The dies.
-     * @param howManyMultiples How many multiples? (e.g. 2 or 7 pairs)
-     * @param whatMultiple Pair (2), triplet (3) quadruplet(4) etc.
+     * @param K How many multiples? (e.g. 2 or 7 pairs)
+     * @param N What multiple? (pair (2), triplet (3) quadruplet(4) etc.)
      * @return Sum of eye values of the dies belonging in that multiple.
      */
-    public int checkForMultiplesOfSizeN(DiceCollection dc, int howManyMultiples, int whatMultiple) {
+    public int checkForKMultiplesOfSizeN(DiceCollection dc, int K, int N) {
 
         int[] dies = dc.getDies();
         int[] freqs = new int[dc.getBiggestEyeNumber()];
@@ -77,14 +77,14 @@ public abstract class Scorecard {
         int score = 0;
         int multiplesFound = 0;
         for (int i = freqs.length - 1; i >= 0; i--) {
-            if (freqs[i] >= whatMultiple & multiplesFound < howManyMultiples) {
-                score += whatMultiple * (i + 1);
+            if (freqs[i] >= N & multiplesFound < K) {
+                score += N * (i + 1);
                 multiplesFound++;
             }
         }
 
         // Check that all multiples have been found
-        if (multiplesFound == howManyMultiples) {
+        if (multiplesFound == K) {
             return score;
         }
         return 0;
@@ -182,17 +182,6 @@ public abstract class Scorecard {
             }
         }
         return pointsToGive;
-    }
-
-    /**
-     * Method to check if the DiceCollection is of the right kind for this
-     * scorecard. ENTÄ JOS HALUAA VAIN PELATA 100 NOPALLA NORMI YATZYA??!?!?!?
-     *
-     * @param dc
-     * @return
-     */
-    private boolean isValid(DiceCollection dc) {
-        return false;
     }
 
     public ArrayList<String> getCombinations() {

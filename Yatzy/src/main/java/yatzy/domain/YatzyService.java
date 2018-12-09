@@ -8,6 +8,8 @@ package yatzy.domain;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import yatzy.dao.Database;
 import yatzy.dao.RecordDao;
@@ -82,6 +84,22 @@ public class YatzyService {
     }
 
     /**
+     * Add player to player list. If playerlist is empty, added player will be
+     * set to start the game.
+     *
+     * @param name Name of the player.
+     * @param scorecardType Type of the scorecard, e.g. "American" or
+     * "Scandinavian".
+     */
+    public void addPlayer(String name, String scorecardType) {
+        Player p = new Player(name, scorecardType);
+        if (this.playerList.isEmpty()) {
+            p.setTurn(true);
+        }
+        this.playerList.add(p);
+    }
+
+    /**
      * Get player with turn.
      *
      * @return Player with turn. If there are no players, null is returned.
@@ -97,7 +115,7 @@ public class YatzyService {
     }
 
     /**
-     * Get throws used.
+     * Get nuumber of throws used.
      *
      * @return Throws used.
      */
@@ -235,11 +253,13 @@ public class YatzyService {
      */
     public void addPlayersInTheGameToRecords() {
         this.playerList.stream().forEach(player -> {
-            Record record = new Record(player, player.getScorecard().getType(), player.getScorecard().getPointsFor("Total"));
+            Record record = new Record(player, player.getScorecard().getType(),
+                    getDies().length, this.dices.getBiggestEyeNumber(),
+                    this.maxNumberOfThrows, player.getScorecard().getPointsFor("Total"));
             try {
                 this.recordDao.saveOrUpdate(record);
             } catch (SQLException ex) {
-                System.out.println("Error in updating!");
+                System.out.println("Error in updating records!");
             }
         });
     }
@@ -270,11 +290,20 @@ public class YatzyService {
             return "No records!";
         }
         Collections.sort(records);
-        String board = "Records:\n";
+        String board = "Records: (player name, points)\n";
         int standing = 1;
+        if (getPlayerWithTurn() == null) {
+            return "";
+        }
         for (Record record : records) {
-            board += standing + ". " + record.getPlayer().getName() + ", " + record.getScorecardType() + ", " + record.getPoints() + "\n";
-            standing++;
+            if (record.getDiceAmount() == getDies().length & 
+                    record.getMaxEyeNumber() == dices.getBiggestEyeNumber() & 
+                    record.getThrowAmount() == maxNumberOfThrows & 
+                    record.getScorecardType().equals(getPlayerWithTurn().getScorecard().getType())) {
+                board += standing + ". " + record.getPlayer().getName() + ", " + record.getPoints() + "\n";
+                standing++;
+            }
+
         }
         return board;
     }
@@ -283,11 +312,11 @@ public class YatzyService {
      * Remove record by the given name from the database. Accessible by the
      * administrator.
      *
-     * @param name Name of the player whose record to delete.
+     * @param record Object of class rcord of which record to remove.
      */
-    public void removeRecord(String name) {
+    public void removeRecord(Record record) {
         try {
-            this.recordDao.delete(name);
+            this.recordDao.delete(record);
         } catch (SQLException ex) {
             System.out.println("Couldn't remove record! :(");
         }
@@ -300,10 +329,57 @@ public class YatzyService {
         try {
             ArrayList<Record> records = this.recordDao.findAll();
             for (Record record : records) {
-                this.recordDao.delete(record.getPlayer().getName());
+                this.recordDao.delete(record);
             }
         } catch (SQLException ex) {
             System.out.println("Could not remove all records!");
         }
+    }
+
+    public int getMaxThrows() {
+        return this.maxNumberOfThrows;
+    }
+
+    public int getMaxNumber() {
+        return this.dices.getBiggestEyeNumber();
+    }
+
+    /**
+     * Set ith plar to begin game.
+     *
+     * @param i
+     */
+    public void setToBegin(int i) {
+        for (int index = 0; index < this.playerList.size(); index++) {
+            this.playerList.get(index).setTurn(index == i);
+        }
+    }
+
+    /**
+     * Check whether game has ended, e.g. all combinations played and scorecard
+     * full.
+     *
+     * @return Boolean indicating whether a game has been played out.
+     */
+    public boolean hasEnded() {
+        for (Player p : this.playerList) {
+            if (!p.isScorecardFull()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Ger records as Arraylist.
+     * @return Records as ArrayList.
+     */
+    public ArrayList<Record> getRecords() {
+        try {
+            return this.recordDao.findAll();
+        } catch (SQLException ex) {
+            System.out.println("Error in retrieving records!");
+        }
+        return null;
     }
 }

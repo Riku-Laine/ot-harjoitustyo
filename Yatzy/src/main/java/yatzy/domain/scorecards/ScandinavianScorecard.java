@@ -58,13 +58,13 @@ public class ScandinavianScorecard extends Scorecard {
             } else if (combination.equals("Sixes")) {
                 score = checkForPointValues(dies, 6);
             } else if (combination.equals("One pair")) {
-                score = checkForMultiplesOfSizeN(dies, 1, 2);
+                score = checkForKMultiplesOfSizeN(dies, 1, 2);
             } else if (combination.equals("Two pairs")) {
-                score = checkForMultiplesOfSizeN(dies, 2, 2);
+                score = checkForKMultiplesOfSizeN(dies, 2, 2);
             } else if (combination.equals("Three of a kind")) {
-                score = checkForMultiplesOfSizeN(dies, 1, 3);
+                score = checkForKMultiplesOfSizeN(dies, 1, 3);
             } else if (combination.equals("Four of a kind")) {
-                score = checkForMultiplesOfSizeN(dies, 1, 4);
+                score = checkForKMultiplesOfSizeN(dies, 1, 4);
             } else if (combination.equals("Small straight")) {
                 score = checkForSequentialNumbers(dies, 1, 5, 15);
             } else if (combination.equals("Big straight")) {

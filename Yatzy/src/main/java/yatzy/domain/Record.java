@@ -13,12 +13,30 @@ public class Record implements Comparable<Record> {
 
     private final Player player;
     private final String scorecardType;
+    private final int diceAmount;
+    private final int maxEyeNumber;
+    private final int throwAmount;
     private final int points;
 
-    public Record(Player p, String scorecardType, int recordPoints) {
+    public Record(Player p, String scorecardType, int diceAmount, int maxEyeNumber, int maxThrows, int points) {
         this.player = p;
         this.scorecardType = scorecardType;
-        this.points = recordPoints;
+        this.diceAmount = diceAmount;
+        this.maxEyeNumber = maxEyeNumber;
+        this.throwAmount = maxThrows;
+        this.points = points;
+    }
+
+    public int getDiceAmount() {
+        return diceAmount;
+    }
+
+    public int getMaxEyeNumber() {
+        return maxEyeNumber;
+    }
+
+    public int getThrowAmount() {
+        return throwAmount;
     }
 
     public Player getPlayer() {
@@ -35,7 +53,12 @@ public class Record implements Comparable<Record> {
 
     @Override
     public int compareTo(Record r) {
-        return this.getScorecardType().compareTo(r.getScorecardType()) * 1000 + r.getPoints() - this.points;
+        return r.getPoints() - this.points;
+    }
+
+    @Override
+    public String toString() {
+        return scorecardType + " (" + diceAmount + "d" + maxEyeNumber + ", " + throwAmount + " throws) " + player.getName() + ", " + points + " points";
     }
 
 }

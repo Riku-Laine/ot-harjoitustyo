@@ -5,6 +5,7 @@
  */
 package yatzy.domain;
 
+import yatzy.domain.scorecards.AmericanScorecard;
 import yatzy.domain.scorecards.ScandinavianScorecard;
 
 /**
@@ -19,7 +20,17 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
-        this.scorecard = new ScandinavianScorecard(); // With chosen type!
+        this.scorecard = new ScandinavianScorecard();
+        this.hasTurn = false;
+    }
+
+    public Player(String name, String scorecardType) {
+        this.name = name;
+        if (scorecardType.equals("Scandinavian")) {
+            this.scorecard = new ScandinavianScorecard();
+        } else {
+            this.scorecard = new AmericanScorecard();
+        }
         this.hasTurn = false;
     }
 
@@ -41,5 +52,20 @@ public class Player {
 
     public Scorecard getScorecard() {
         return this.scorecard;
+    }
+
+    /**
+     * Check if all combiations have been filled, i.e. that the scorecard is
+     * full.
+     *
+     * @return true if full, false otherwise.
+     */
+    public boolean isScorecardFull() {
+        for (String combination : this.scorecard.getCombinations()) {
+            if (this.scorecard.getPointsFor(combination) == -1) {
+                return false;
+            }
+        }
+        return true;
     }
 }

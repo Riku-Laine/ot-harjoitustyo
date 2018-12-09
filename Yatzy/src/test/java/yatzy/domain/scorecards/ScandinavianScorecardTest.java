@@ -47,35 +47,35 @@ public class ScandinavianScorecardTest {
     public void findsPair() {
         int[] dies = {1, 2, 3, 3, 4};
         dc.setDies(dies);
-        assertEquals(6, sc.checkForMultiplesOfSizeN(dc, 1, 2));
+        assertEquals(6, sc.checkForKMultiplesOfSizeN(dc, 1, 2));
     }
 
     @Test
     public void findsBiggestPair() {
         int[] dies = {1, 3, 3, 4, 4};
         dc.setDies(dies);
-        assertEquals(8, sc.checkForMultiplesOfSizeN(dc, 1, 2));
+        assertEquals(8, sc.checkForKMultiplesOfSizeN(dc, 1, 2));
     }
 
     @Test
     public void returnsZeroWhenNoPairs() {
         int[] dies = {1, 2, 3, 4, 6};
         dc.setDies(dies);
-        assertEquals(0, sc.checkForMultiplesOfSizeN(dc, 1, 2));
+        assertEquals(0, sc.checkForKMultiplesOfSizeN(dc, 1, 2));
     }
 
     @Test
     public void findsPairWhenTriplet() {
         int[] dies = {3, 4, 4, 6, 4};
         dc.setDies(dies);
-        assertEquals(8, sc.checkForMultiplesOfSizeN(dc, 1, 2));
+        assertEquals(8, sc.checkForKMultiplesOfSizeN(dc, 1, 2));
     }
 
     @Test
     public void findsTwoPairs() {
         int[] dies = {3, 4, 3, 1, 4};
         dc.setDies(dies);
-        assertEquals(14, sc.checkForMultiplesOfSizeN(dc, 2, 2));
+        assertEquals(14, sc.checkForKMultiplesOfSizeN(dc, 2, 2));
     }
 
     @Test
