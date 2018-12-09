@@ -457,14 +457,16 @@ public class YatzyUi extends Application {
         for (int i = 0; i < game.getDies().length; i++) {
             ToggleButton button = new ToggleButton();
             button.setSelected(false);
-
-            if (game.getDies()[i] != 0 & game.getMaxNumber() <= 6) {
+            // TODO Jarin resurssien käyttö!!
+            //if (game.getDies()[i] != 0 & game.getMaxNumber() <= 6) {
+            if (game.getDies()[i] != 0 & game.getMaxNumber() <= 0) {
                 button.setText(null);
                 ImageView iv = new ImageView(new Image(eyeImageURLs.get(game.getDies()[i])));
                 button.setGraphic(iv);
             } else if (game.getDies()[i] != 0) {
                 button.setText(game.getDies()[i] + "");
-            } else if (game.getMaxNumber() <= 6) {
+            //} else if (game.getMaxNumber() <= 6) {
+            } else if (game.getMaxNumber() <= 0) {
                 button.setText(null);
                 ImageView iv = new ImageView(new Image(eyeImageURLs.get(6)));
                 button.setGraphic(iv);
