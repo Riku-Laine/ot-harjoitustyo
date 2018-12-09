@@ -25,5 +25,7 @@
 | 3.12.  | 3    | Koodi: periminen ja UI-refaktorointi, dokumentointi, tunnit ja muu edellytetty säätö |
 | 4.12.  | 3    | Pakkaus- ja luokkarakenteen setviminen, dokumentaatio, sekvenssikaavion luonti. |
 | 6.12.  | 1    | Jar-ongelmat, tuloskorttikorjuaksia.|
-| 7.12.  | 4    | Refaktorointi, JavaDocien hiominen
-|**Yht.**| **46** ||
+| 7.12.  | 4    | Refaktorointi, JavaDocien hiominen |
+| 8.12.  | 5    | Admin-toiminnallisuuksia, UI-metodien refaktorointi |
+| 9.12.  | 5    | Tietokannan rakenteen muokkaus, ja vastaavat DAO- sekä UI-muutokset. Tapahtumakäsittelyjä. |
+|**Yht.**| **56** ||
