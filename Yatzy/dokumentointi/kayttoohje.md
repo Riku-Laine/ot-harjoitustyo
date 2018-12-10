@@ -38,7 +38,7 @@ Kun peli on pelattu loppun, sovellus avaa automaattisesti dialogin tulosten tall
 
 ### Ennätysten hallinnointi
 
-![ennätysten hallinnointi](hhttps://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/adminn%C3%A4kym%C3%A4.PNG)
+![ennätysten hallinnointi](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/adminn%C3%A4kym%C3%A4.PNG)
 
 Kun olet kirjautunut järjestelmänvalvojana järjestelmään, voit poistaa haluamiasi ennätyksiä. Valitse poistettava ennätys ja paina ``Remove selected``. Varmenna valinta poistaaksesi tulokset. ``Remove all``-painike poistaa kaikki ennätykset. **Poistoja ei voi perua.**
 
