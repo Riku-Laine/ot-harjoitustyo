@@ -10,7 +10,7 @@ Käynnistä sovellus komennolla ```java -jar Yatzy-vX.X.jar``` korvaten X-kirjai
 
 Sovellus käynnistyy aloitusnäkymään, jossa voit aloittaa tavallisen pikapelin tai asetuksiltaan kustomoidun pelin.
 
-![aloitusnäkymä](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/aloitusnäyttö.png)
+![aloitusnäkymä](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/aloitusn%C3%A4ytt%C3%B6.PNG)
 
 Pikapeli on Yatzy yhdellä tai kahdella pelaajalla perinteiseen skandinaaviseen pöytäkirjaan. Napin painamisen jälkeen ohjelma siirtää sinut ikkunaan, jossa voit antaa pelaajille nimimerkit. Tulokset tallennetaan ja päivittyvät ennätyslistaan nimimerkin ja pelin asetusten perusteella.
 
@@ -22,13 +22,13 @@ Ikkunan alareunasta voit aloittaa täysin kustomoidun pelin haluamallasi määr�
 
 Pelin aloittamisen jälkeen siirrytään nimenantonäkymään. Oikealla olevien radiobuttonien avulla voit valita aloittavan pelaajan. Kenttiä tulee niin monta kuin pelaajia on valittu.
 
-![nimenantoikkuna](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/nimenantoikkuna.png)
+![nimenantoikkuna](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/nimenantoikkuna.PNG)
 
 Paina ``Begin`` aloittaaksesi pelin ja siirtyäksesi pelinäkymään.
 
 ### Pelaaminen
 
-![pelinäkymä](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/pelitila.png)
+![pelinäkymä](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/pelitila.PNG)
 
 Pelinäkymässä vasemmalla voit valita ja heittää noppia. Näet sieltä myös käytettyjen heittojen määrän sekä vuorossa olevan pelajan nimen. Kun olet heittänyt noppia ensimmäisen kerran vuorollasi, keskellä olevat yhdistelmäpainikkeet aktivoituvat. Voit valita haluamasi yhdistelmän tuloskorttiin painimalla yhdistelmäpainiketta. Kirjausta ei voi perua.
 
@@ -38,7 +38,7 @@ Kun peli on pelattu loppun, sovellus avaa automaattisesti dialogin tulosten tall
 
 ### Ennätysten hallinnointi
 
-![ennätysten hallinnointi](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/adminnäkymä.png)
+![ennätysten hallinnointi](hhttps://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/adminn%C3%A4kym%C3%A4.PNG)
 
 Kun olet kirjautunut järjestelmänvalvojana järjestelmään, voit poistaa haluamiasi ennätyksiä. Valitse poistettava ennätys ja paina ``Remove selected``. Varmenna valinta poistaaksesi tulokset. ``Remove all``-painike poistaa kaikki ennätykset. **Poistoja ei voi perua.**
 
