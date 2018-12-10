@@ -20,7 +20,7 @@ loop for each combination
         Player p -->- YatzyService game : points
         YatzyService game -->+ Player p : getName()
         Player p -->- YatzyService game : [name]
-        YatzyService game -> YatzyService game: padRight()
+        YatzyService game -> YatzyService game: paight()
     end
     YatzyService game -> YatzyService game: reduce()
 end

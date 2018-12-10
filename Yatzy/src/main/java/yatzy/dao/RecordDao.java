@@ -11,6 +11,8 @@ package yatzy.dao;
  */
 import java.util.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import yatzy.domain.Player;
 import yatzy.domain.Record;
 
@@ -20,6 +22,7 @@ public class RecordDao implements Dao<Record, Record> {
 
     public RecordDao(Database db) {
         this.recordDB = db;
+        initDB();
     }
 
     @Override
@@ -135,5 +138,27 @@ public class RecordDao implements Dao<Record, Record> {
 
         updateStmt.executeUpdate();
         updateStmt.close();
+    }
+
+    /**
+     * Create database if it doesn't exist.
+     */
+    private void initDB() {
+        try {
+            Connection connection = recordDB.getConnection();
+            PreparedStatement initStmt = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Records ("
+                    + "	id integer PRIMARY KEY,"
+                    + "	name varchar(200),"
+                    + "	scorecard_type varchar(200),"
+                    + "	dice_amount integer,"
+                    + "	max_dice_number integer,"
+                    + "	throws_amount integer,"
+                    + "	points integer"
+                    + ")");
+            initStmt.execute();
+        } catch (SQLException ex) {
+            System.out.println("Error in database creation!");
+        }
+
     }
 }
