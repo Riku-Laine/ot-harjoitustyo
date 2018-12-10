@@ -1,0 +1,9 @@
+## yuml.me "koodi" luokkakaaviolle
+
+[YatzyService]1-1[DiceCollection],
+[YatzyService]->[<abstract>;Scorecard],
+[YatzyService]1-0...*[Player],
+[Player]1-1[<abstract>;Scorecard],
+[YatzyService]->[Record],
+[<abstract>;Scorecard]->[DiceCollection],
+[Record]*-1[Player],
