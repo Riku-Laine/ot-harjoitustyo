@@ -47,3 +47,22 @@ Oheisessa sekvenssikaaviossa on kuvattu tulos- ja ennätystaulujen luomisprosess
 ![Sekvenssikaavio tulos- ja ennätystaulujen luomiseksi](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/sekvenssikaavio_getScoreBoard_ja_getRecordBoard_04DEC2018.png)
 
 Sekvenssikaavion selite TBA.
+
+
+## Tietojen tallennus
+
+Tiedoista vastaa luokka RecordDao.
+
+Tietokanta Sql-tietokanta,käsitellään sqlite-ohjemalla. tietokanta sisältää vain yhhden taulun, joka on luotu komennolla 
+
+``SQL
+CREATE TABLE IF NOT EXISTS Records (
+	id integer PRIMARY KEY,
+	name varchar(200),
+	scorecard_type varchar(200),
+	dice_amount integer,
+	max_dice_number integer,
+	throws_amount integer,
+	points integer
+);
+``
