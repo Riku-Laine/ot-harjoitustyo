@@ -55,14 +55,14 @@ Tiedoista vastaa luokka RecordDao.
 
 Tietokanta Sql-tietokanta,käsitellään sqlite-ohjemalla. tietokanta sisältää vain yhhden taulun, joka on luotu komennolla 
 
-``SQL
+```SQL
 CREATE TABLE IF NOT EXISTS Records (
-	id integer PRIMARY KEY,
-	name varchar(200),
-	scorecard_type varchar(200),
-	dice_amount integer,
-	max_dice_number integer,
-	throws_amount integer,
-	points integer
+	id integer PRIMARY KEY,  
+	name varchar(200),  
+	scorecard_type varchar(200),  
+	dice_amount integer,  
+	max_dice_number integer,  
+	throws_amount integer,  
+	points integer  
 );
-``
+```
