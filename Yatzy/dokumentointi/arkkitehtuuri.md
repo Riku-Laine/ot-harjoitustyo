@@ -1,10 +1,11 @@
 # Arkkitehtuurikuvaus
 
 
-
 ## Rakenne
 
-*Ohjelman rakenne noudattaa...*
+Ohjelman rakenne on jaettu kolmitasoiseksi oheisen kuvan mukaisesti.
+
+![pakkauskaavio](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/pakkausrakenne.png)
 
 Pakkauksista
 
@@ -18,20 +19,26 @@ Pakkauksista
 Käyttöliittymä kostuu neljästä eri näkymästä:
 
 * Aloitusnäkymästä
-* Yhden pelaajan pelin aloitusnäkymästä
-* Kahden pelaajan pelin aloitusnäkymästä
-* Pelinäkymästä.
-* (Moderaattorin näkymä TBA)
+* Nimenantonäkymästä
+* Pelinäkymästä
+* Moderaattorin näkymästä.
 
-Eriytys tehty, kutsuu parametreilla Yatzyserviceä, pelisää melkein aina piirretään
-pelinäkymä uusiksi joka toiminnon jälkeen
+Jokainen näistä on toteutettu erillisenä JavaFX:n [Scene-oliona](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Scene.html), joita käsitellään käyttöliittymän luokassa erillisillä metodeilla. Käyttäjä näkee kerrallaan vain yhden Scene-olion käyttöliittymässään.
+
+
 ## Sovelluslogiikka
 
-![Sovelluslogiikka](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/luokkakaavio.png)
+Sovelluksen looginen datamalli on oheisen kuvan mukainen.
+
+![Sovelluslogiikka](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/luokkakaavio_v2.png)
+
+Muiden osien suhdetta kuvaava pakkausjaavio
+
+![Sovelluslogiikka](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/pakkausrakenne.png)
 
 ### Päätoiminnallisuuksia
 
-SKuvataan seuraavaksi muutamia sovelluksen sisäisiä ja ulosnäkyviä päätoiminnallisuksia sekä niiden osia.
+Kuvataan seuraavaksi muutamia sovelluksen sisäisiä ja ulosnäkyviä päätoiminnallisuksia sekä niiden osia.
 
 #### Tulos- ja ennätystaulun luominen
 
