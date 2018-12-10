@@ -34,7 +34,7 @@ Sovelluksen looginen datamalli on oheisen kuvan mukainen.
 
 Muiden osien suhdetta kuvaava pakkausjaavio
 
-![Sovelluslogiikka](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/pakkausrakenne.png)
+![pakkauskaavio](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/pakkausrakenne.png)
 
 ### Päätoiminnallisuuksia
 
