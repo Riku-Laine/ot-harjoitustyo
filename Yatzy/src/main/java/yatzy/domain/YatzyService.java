@@ -8,8 +8,6 @@ package yatzy.domain;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import yatzy.dao.Database;
 import yatzy.dao.RecordDao;
@@ -251,7 +249,7 @@ public class YatzyService {
     /**
      * Add all the players in the playerList to high score database.
      */
-    public void addPlayersInTheGameToRecords() {
+    public void addAllPlayersInTheGameToRecords() {
         this.playerList.stream().forEach(player -> {
             Record record = new Record(player, player.getScorecard().getType(),
                     getDies().length, this.dices.getBiggestEyeNumber(),
@@ -292,19 +290,13 @@ public class YatzyService {
         Collections.sort(records);
         String board = "Records: (player name, points)\n";
         int standing = 1;
-        if (getPlayerWithTurn() == null) {
-            return "";
-        }
         for (Record record : records) {
-            if (record.getDiceAmount() == getDies().length & 
-                    record.getMaxEyeNumber() == dices.getBiggestEyeNumber() & 
-                    record.getThrowAmount() == maxNumberOfThrows & 
-                    record.getScorecardType().equals(getPlayerWithTurn().getScorecard().getType())) {
+            if (matchesTheGame(record)) {
                 board += standing + ". " + record.getPlayer().getName() + ", " + record.getPoints() + "\n";
                 standing++;
             }
-
         }
+
         return board;
     }
 
@@ -345,7 +337,7 @@ public class YatzyService {
     }
 
     /**
-     * Set ith plar to begin game.
+     * Set ith player to begin game.
      *
      * @param i
      */
@@ -356,8 +348,8 @@ public class YatzyService {
     }
 
     /**
-     * Check whether game has ended, e.g. all combinations played and scorecard
-     * full.
+     * Check whether game has ended, e.g. all combinations have been played and
+     * scorecard is full.
      *
      * @return Boolean indicating whether a game has been played out.
      */
@@ -372,6 +364,7 @@ public class YatzyService {
 
     /**
      * Ger records as Arraylist.
+     *
      * @return Records as ArrayList.
      */
     public ArrayList<Record> getRecords() {
@@ -381,5 +374,22 @@ public class YatzyService {
             System.out.println("Error in retrieving records!");
         }
         return null;
+    }
+
+    /**
+     * Boolean indicating whether the specified record matches the game, i.e. if
+     * its settings are the sama as in the game now in progree.
+     *
+     * @param record Record to check against.
+     * @return true if there is a match, false otherwise.
+     */
+    private boolean matchesTheGame(Record record) {
+        if (getPlayerWithTurn() == null) {
+            return false;
+        }
+        return record.getDiceAmount() == getDies().length
+                & record.getMaxEyeNumber() == dices.getBiggestEyeNumber()
+                & record.getThrowAmount() == maxNumberOfThrows
+                & record.getScorecardType().equals(getPlayerWithTurn().getScorecard().getType());
     }
 }

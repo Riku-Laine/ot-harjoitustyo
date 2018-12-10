@@ -6,6 +6,7 @@
 package yatzy.dao;
 
 /**
+ * Database functionalities.
  *
  * @author Riku_L
  */

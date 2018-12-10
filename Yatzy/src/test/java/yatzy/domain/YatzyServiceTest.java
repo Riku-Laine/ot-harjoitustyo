@@ -94,7 +94,6 @@ public class YatzyServiceTest {
     public void canResetGame() {
         s.addPlayer("1");
         s.throwAllDies();
-        // Lista, throws dies
         s.reset();
         assertTrue(s.getPlayers().isEmpty());
         assertEquals(null, s.getPlayerWithTurn());
@@ -152,6 +151,43 @@ public class YatzyServiceTest {
         s.throwAllDies();
         try {
             s.setScoreAndChangeTurn(s.getPlayerWithTurn(), "Chance");
+            fail();
+        } catch (Exception e) {
+        }
+    }
+
+    @Test
+    public void canAddAmericanCard() {
+        s.addPlayer("1", "American");
+        assertEquals("American", s.getPlayerWithTurn().getScorecard().getType());
+    }
+
+    @Test
+    public void canSetNthToBegin() {
+        for (int i = 0; i < 10; i++) {
+            s.addPlayer(i + "");
+        }
+
+        s.setToBegin(5);
+        assertEquals("5", s.getPlayerWithTurn().getName());
+    }
+
+    @Test
+    public void canSetAmericanPoints() {
+        int[] dies = {1, 1, 1, 1, 1};
+        s.addPlayer("1", "American");
+        s.setDies(dies);
+        s.setScoreAndChangeTurn(s.getPlayerWithTurn(), "Aces");
+        assertEquals(5, s.getPlayerWithTurn().getScorecard().getPointsFor("Aces"));
+    }
+
+    @Test
+    public void americanPointsInScandinavianCardThrowsError() {
+        int[] dies = {1, 1, 1, 1, 1};
+        s.addPlayer("1", "Scandinavian");
+        s.setDies(dies);
+        try {
+            s.setScoreAndChangeTurn(s.getPlayerWithTurn(), "Aces");
             fail();
         } catch (Exception e) {
         }

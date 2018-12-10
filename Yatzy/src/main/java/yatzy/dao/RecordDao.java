@@ -6,13 +6,12 @@
 package yatzy.dao;
 
 /**
+ * DAO class for accessing records in the database.
  *
  * @author Riku_L
  */
 import java.util.*;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import yatzy.domain.Player;
 import yatzy.domain.Record;
 
@@ -27,6 +26,9 @@ public class RecordDao implements Dao<Record, Record> {
 
     @Override
     public Record findOne(Record record) throws SQLException {
+        if (record == null) {
+            return null;
+        }
         Connection connection = recordDB.getConnection();
         PreparedStatement searchQuery = connection.prepareStatement("SELECT * FROM Records WHERE name = ? AND scorecard_type = ? AND"
                 + " dice_amount = ? AND max_dice_number = ? AND throws_amount = ? ");
@@ -38,8 +40,7 @@ public class RecordDao implements Dao<Record, Record> {
         searchQuery.setInt(5, record.getThrowAmount());
 
         ResultSet rs = searchQuery.executeQuery();
-        boolean found = rs.next();
-        if (!found) {
+        if (!rs.next()) {
             return null;
         }
 
@@ -81,7 +82,9 @@ public class RecordDao implements Dao<Record, Record> {
 
     @Override
     public void saveOrUpdate(Record record) throws SQLException {
-
+        if (record == null) {
+            return;
+        }
         Record found = findOne(record);
 
         if (found == null) {
@@ -93,6 +96,9 @@ public class RecordDao implements Dao<Record, Record> {
 
     @Override
     public void delete(Record record) throws SQLException {
+        if (record == null) {
+            return;
+        }
         Connection connection = recordDB.getConnection();
         PreparedStatement stmt = connection.prepareStatement("DELETE FROM Records WHERE name = ? AND scorecard_type = ? AND "
                 + "dice_amount = ? AND max_dice_number = ? AND throws_amount = ? ");
@@ -110,6 +116,9 @@ public class RecordDao implements Dao<Record, Record> {
     }
 
     private void insertRecord(Record record) throws SQLException {
+        if (record == null) {
+            return;
+        }
         Connection connection = recordDB.getConnection();
         PreparedStatement insertStmt = connection.prepareStatement("INSERT INTO "
                 + "Records (name, scorecard_type, dice_amount, max_dice_number, throws_amount, points) VALUES (?, ?, ?, ?, ?, ?)");
@@ -125,6 +134,9 @@ public class RecordDao implements Dao<Record, Record> {
     }
 
     private void updateRecord(Record record) throws SQLException {
+        if (record == null) {
+            return;
+        }
         Connection connection = recordDB.getConnection();
         PreparedStatement updateStmt = connection.prepareStatement("UPDATE Records SET points = ? WHERE name = ? AND scorecard_type = ? AND "
                 + "dice_amount = ? AND max_dice_number = ? AND throws_amount = ? ");

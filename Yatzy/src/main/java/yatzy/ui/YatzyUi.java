@@ -298,7 +298,7 @@ public class YatzyUi extends Application {
 
         // Save scores to high scores, reset game and exit.
         saveAndExitButton.setOnAction((event) -> {
-            game.addPlayersInTheGameToRecords();
+            game.addAllPlayersInTheGameToRecords();
             game.reset();
             redrawAdminButtons();
             window.setScene(startScene);
@@ -465,7 +465,7 @@ public class YatzyUi extends Application {
                 button.setGraphic(iv);
             } else if (game.getDies()[i] != 0) {
                 button.setText(game.getDies()[i] + "");
-            //} else if (game.getMaxNumber() <= 6) {
+                //} else if (game.getMaxNumber() <= 6) {
             } else if (game.getMaxNumber() <= 0) {
                 button.setText(null);
                 ImageView iv = new ImageView(new Image(eyeImageURLs.get(6)));
@@ -631,7 +631,7 @@ public class YatzyUi extends Application {
                 + " 'OK'. Otherwise press 'Cancel'.");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            game.addPlayersInTheGameToRecords();
+            game.addAllPlayersInTheGameToRecords();
             window.setScene(startScene);
         }
 

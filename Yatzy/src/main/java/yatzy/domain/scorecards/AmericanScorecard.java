@@ -11,10 +11,14 @@ import yatzy.domain.DiceCollection;
 import yatzy.domain.Scorecard;
 
 /**
+ * American scorecard for Yatzy (or Yahtzee) game.
  *
  * @author Riku_L
  */
 public class AmericanScorecard extends Scorecard {
+
+    private final ArrayList<String> upperSection;
+    private final ArrayList<String> lowerSection;
 
     /**
      * Constructs an American score card for Yatzy. Ie. Yatzy is named Yahtzee
@@ -28,6 +32,13 @@ public class AmericanScorecard extends Scorecard {
                 "Full house", "Short straight", "Long straight", "Yahtzee",
                 "Chance"));
 
+        this.upperSection = new ArrayList(Arrays.asList("Aces", "Twos", "Threes",
+                "Fours", "Fives", "Sixes"));
+
+        this.lowerSection = new ArrayList(Arrays.asList("Three of a kind",
+                "Four of a kind", "Full house", "Short straight",
+                "Long straight", "Yahtzee", "Chance"));
+
         initializeScoretable();
 
     }
@@ -36,41 +47,10 @@ public class AmericanScorecard extends Scorecard {
     public void setPointsForCombination(String combination, DiceCollection dies) {
         int score = 0;
         if (null != combination) {
-            if (combination.equals("Aces")) {
-                score = checkForPointValues(dies, 1);
-            } else if (combination.equals("Twos")) {
-                score = checkForPointValues(dies, 2);
-            } else if (combination.equals("Threes")) {
-                score = checkForPointValues(dies, 3);
-            } else if (combination.equals("Fours")) {
-                score = checkForPointValues(dies, 4);
-            } else if (combination.equals("Fives")) {
-                score = checkForPointValues(dies, 5);
-            } else if (combination.equals("Sixes")) {
-                score = checkForPointValues(dies, 6);
-            } else if (combination.equals("Three of a kind")) {
-                if (checkForKMultiplesOfSizeN(dies, 1, 3) != 0) {
-                    score = getSumOfDies(dies);
-                }
-            } else if (combination.equals("Four of a kind")) {
-                if (checkForKMultiplesOfSizeN(dies, 1, 4) != 0) {
-                    score = getSumOfDies(dies);
-                }
-            } else if (combination.equals("Short straight")) {
-                score = Math.max(checkForSequentialNumbers(dies, 1, 4, 30),
-                        Math.max(checkForSequentialNumbers(dies, 2, 5, 30),
-                                checkForSequentialNumbers(dies, 3, 6, 30)));
-            } else if (combination.equals("Long straight")) {
-                score = Math.max(checkForSequentialNumbers(dies, 1, 5, 40),
-                        checkForSequentialNumbers(dies, 2, 6, 40));
-            } else if (combination.equals("Full house")) {
-                score = checkForFullHouse(dies);
-            } else if (combination.equals("Chance")) {
-                score = getSumOfDies(dies);
-            } else if (combination.equals("Yahtzee")) {
-                if (checkForKMultiplesOfSizeN(dies, 1, 5) != 0) {
-                    score = 50;
-                }
+            if (this.upperSection.contains(combination)) {
+                score = upperSectionPoints(combination, dies);
+            } else if (this.lowerSection.contains(combination)) {
+                score = lowerSectionPoints(combination, dies);
             } else {
                 throw new IllegalArgumentException("Invalid combination argument!");
             }
@@ -99,8 +79,8 @@ public class AmericanScorecard extends Scorecard {
         for (int i = 0; i < dies.length; i++) {
             freqs[dies[i]]++;
         }
-        boolean pairFound = false;
-        boolean tripletFound = false;
+
+        boolean pairFound = false, tripletFound = false;
 
         for (int i = dc.getBiggestEyeNumber(); i > 0; i--) {
             if (!pairFound & freqs[i] == 2) {
@@ -113,5 +93,52 @@ public class AmericanScorecard extends Scorecard {
             return 25;
         }
         return 0;
+    }
+
+    private int upperSectionPoints(String combination, DiceCollection dies) {
+        if (combination.equals("Aces")) {
+            return checkForPointValues(dies, 1);
+        } else if (combination.equals("Twos")) {
+            return checkForPointValues(dies, 2);
+        } else if (combination.equals("Threes")) {
+            return checkForPointValues(dies, 3);
+        } else if (combination.equals("Fours")) {
+            return checkForPointValues(dies, 4);
+        } else if (combination.equals("Fives")) {
+            return checkForPointValues(dies, 5);
+        } else if (combination.equals("Sixes")) {
+            return checkForPointValues(dies, 6);
+        }
+        throw new Error();
+    }
+
+    private int lowerSectionPoints(String combination, DiceCollection dies) {
+        if (combination.equals("Three of a kind")) {
+            return (checkForKMultiplesOfSizeN(dies, 1, 3) != 0 ? getSumOfDies(dies) : 0);
+        } else if (combination.equals("Four of a kind")) {
+            return (checkForKMultiplesOfSizeN(dies, 1, 4) != 0 ? getSumOfDies(dies) : 0);
+        } else if (combination.equals("Short straight")) {
+            return checkForAmericanStraight(dies, false);
+        } else if (combination.equals("Long straight")) {
+            return checkForAmericanStraight(dies, true);
+        } else if (combination.equals("Full house")) {
+            return checkForFullHouse(dies);
+        } else if (combination.equals("Chance")) {
+            return getSumOfDies(dies);
+        } else if (combination.equals("Yahtzee")) {
+            return (checkForKMultiplesOfSizeN(dies, 1, 5) != 0 ? 50 : 0);
+        }
+        throw new Error();
+    }
+
+    private int checkForAmericanStraight(DiceCollection dies, boolean isLong) {
+        if (isLong) {
+            return Math.max(checkForSequentialNumbers(dies, 1, 4, 30),
+                    Math.max(checkForSequentialNumbers(dies, 2, 5, 30),
+                            checkForSequentialNumbers(dies, 3, 6, 30)));
+        } else {
+            return Math.max(checkForSequentialNumbers(dies, 1, 5, 40),
+                    checkForSequentialNumbers(dies, 2, 6, 40));
+        }
     }
 }

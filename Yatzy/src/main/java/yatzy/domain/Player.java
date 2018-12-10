@@ -9,6 +9,7 @@ import yatzy.domain.scorecards.AmericanScorecard;
 import yatzy.domain.scorecards.ScandinavianScorecard;
 
 /**
+ * Class providing player functionalities.
  *
  * @author Riku_L
  */

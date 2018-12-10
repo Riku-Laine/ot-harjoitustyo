@@ -9,10 +9,11 @@ import java.sql.*;
 import java.util.*;
 
 /**
+ * Basic Data Access Object Interface.
  *
  * @author Riku_L
- * @param <T>
- * @param <K>
+ * @param <T> Retrievable object.
+ * @param <K> Key for the object.
  */
 public interface Dao<T, K> {
 

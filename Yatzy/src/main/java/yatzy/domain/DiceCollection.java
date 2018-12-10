@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
+ * Class for operations with the dies.
  *
  * @author Riku_L
  */

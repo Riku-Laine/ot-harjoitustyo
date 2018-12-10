@@ -5,6 +5,7 @@ package yatzy.domain.scorecards;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.sun.net.httpserver.Authenticator;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -154,7 +155,7 @@ public class ScandinavianScorecardTest {
 
     // Subclass specific tests.
     @Test
-    public void sc() {
+    public void canUpdateScorecard() {
         int[] dies = {1, 1, 1, 1, 1};
         dc.setDies(dies);
         sc.setPointsForCombination("Ones", dc);
@@ -173,5 +174,30 @@ public class ScandinavianScorecardTest {
         sc.setPointsForCombination("Yatzy", dc);
         int total2 = sc.getPlayersScoretable().get("Total");
         assertEquals(5 + 50, total2);
+    }
+
+    @Test
+    public void cantPutSameCombinationTwice() {
+        int[] dies = {1, 1, 1, 1, 1};
+        dc.setDies(dies);
+        sc.setPointsForCombination("Ones", dc);
+        try {
+            sc.setPointsForCombination("Ones", dc);
+            fail();
+        } catch (Error e) {
+
+        }
+    }
+
+    @Test
+    public void falseCombinationThrowsException() {
+        int[] dies = {1, 1, 1, 1, 1};
+        dc.setDies(dies);
+        try {
+            sc.setPointsForCombination("Fake", dc);
+            fail();
+        } catch (Exception e) {
+
+        }
     }
 }

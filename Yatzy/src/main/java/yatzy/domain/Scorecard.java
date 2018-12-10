@@ -61,11 +61,12 @@ public abstract class Scorecard {
      * integer array and return the corresponding score (their sum).
      *
      * @param dc The dies.
-     * @param K How many multiples? (e.g. 2 or 7 pairs)
-     * @param N What multiple? (pair (2), triplet (3) quadruplet(4) etc.)
+     * @param numberOfMultiples How many multiples? (e.g. 2 or 7 pairs)
+     * @param sizeOfMultiple What multiple? (pair (2), triplet (3) quadruplet(4)
+     * etc.)
      * @return Sum of eye values of the dies belonging in that multiple.
      */
-    public int checkForKMultiplesOfSizeN(DiceCollection dc, int K, int N) {
+    public int checkForKMultiplesOfSizeN(DiceCollection dc, int numberOfMultiples, int sizeOfMultiple) {
 
         int[] dies = dc.getDies();
         int[] freqs = new int[dc.getBiggestEyeNumber()];
@@ -77,14 +78,14 @@ public abstract class Scorecard {
         int score = 0;
         int multiplesFound = 0;
         for (int i = freqs.length - 1; i >= 0; i--) {
-            if (freqs[i] >= N & multiplesFound < K) {
-                score += N * (i + 1);
+            if (freqs[i] >= sizeOfMultiple & multiplesFound < numberOfMultiples) {
+                score += sizeOfMultiple * (i + 1);
                 multiplesFound++;
             }
         }
 
         // Check that all multiples have been found
-        if (multiplesFound == K) {
+        if (multiplesFound == numberOfMultiples) {
             return score;
         }
         return 0;
