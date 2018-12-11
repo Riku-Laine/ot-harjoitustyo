@@ -1,6 +1,6 @@
 # Yatzy
 
-Sovelluksen avulla on mahdollista pelata noppapeliä Yatzy joko yhdellä tai kahdella pelaajalla. Ennen pelin alkua pelaajille asetetaan nimimerkit, joiden alle talletetaan pelaajan ennätys. Pelissä noudatetaan ns. suomalaisen Yatzyn sääntöjä.
+Sovelluksen avulla on mahdollista pelata noppapeliä Yatzy yksin tai kaverien kanssa. Ennen pelin alkua pelaajille asetetaan nimimerkit, joiden alle talletetaan pelaajan ennätys. Pelissä voi valita, kirjataanko tulokset skandinaaviseen vai amerikkalaistyyliseen pöytäkirjaan.
 
 _Hauskoja pelihetkiä!_
 
