@@ -36,6 +36,10 @@ Pelinäkymässä oikealla ylhäällä näkyy kyseisen pelin pistetilanne. Oikeas
 
 Kun peli on pelattu loppun, sovellus avaa automaattisesti dialogin tulosten tallentamiseksi.
 
+#### Säännöt
+
+Pelissä noudatetaan Wikipediaan kirjoitettuja sääntöjä. Skandinaavinen versio noudattaa [suomenkieliseltä](https://fi.wikipedia.org/wiki/Yatzy) sivulta löytyvää pistetytystä ja amerikkalainen vastaavasti [englanninkielistä](https://en.wikipedia.org/wiki/Yahtzee). Pelistä puuttuvat vielä välibonukset.
+
 ### Ennätysten hallinnointi
 
 ![ennätysten hallinnointi](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kuvat/adminn%C3%A4kym%C3%A4.PNG)
