@@ -392,4 +392,26 @@ public class YatzyService {
                 & record.getThrowAmount() == maxNumberOfThrows
                 & record.getScorecardType().equals(getPlayerWithTurn().getScorecard().getType());
     }
+
+    /**
+     * Check if all elements of a boolean array are false.
+     *
+     * @param array An array containing boolean elements.
+     * @return 
+     */
+    public boolean areAllFalse(boolean[] array) {
+        for (boolean b : array) {
+            if (b) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Close database connection.
+     */
+    public void closeDatabaseConnection() {
+        this.recordDao.closeConnection();
+    }
 }

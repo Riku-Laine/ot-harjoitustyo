@@ -12,15 +12,23 @@ package yatzy.dao;
  */
 import java.util.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import yatzy.domain.Player;
 import yatzy.domain.Record;
 
 public class RecordDao implements Dao<Record, Record> {
 
     private final Database recordDB;
+    private Connection connection;
 
     public RecordDao(Database db) {
         this.recordDB = db;
+        try {
+            connection = recordDB.getConnection();
+        } catch (SQLException ex) {
+            System.out.println("Error in connection!");
+        }
         initDB();
     }
 
@@ -29,7 +37,6 @@ public class RecordDao implements Dao<Record, Record> {
         if (record == null) {
             return null;
         }
-        Connection connection = recordDB.getConnection();
         PreparedStatement searchQuery = connection.prepareStatement("SELECT * FROM Records WHERE name = ? AND scorecard_type = ? AND"
                 + " dice_amount = ? AND max_dice_number = ? AND throws_amount = ? ");
 
@@ -51,14 +58,12 @@ public class RecordDao implements Dao<Record, Record> {
 
         rs.close();
         searchQuery.close();
-        connection.close();
 
         return r;
     }
 
     @Override
     public ArrayList<Record> findAll() throws SQLException {
-        Connection connection = recordDB.getConnection();
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Records");
 
         ResultSet rs = stmt.executeQuery();
@@ -72,7 +77,6 @@ public class RecordDao implements Dao<Record, Record> {
 
         rs.close();
         stmt.close();
-        connection.close();
 
         if (records.isEmpty()) {
             return null;
@@ -99,7 +103,6 @@ public class RecordDao implements Dao<Record, Record> {
         if (record == null) {
             return;
         }
-        Connection connection = recordDB.getConnection();
         PreparedStatement stmt = connection.prepareStatement("DELETE FROM Records WHERE name = ? AND scorecard_type = ? AND "
                 + "dice_amount = ? AND max_dice_number = ? AND throws_amount = ? ");
 
@@ -112,16 +115,15 @@ public class RecordDao implements Dao<Record, Record> {
         stmt.executeUpdate();
 
         stmt.close();
-        connection.close();
     }
 
     private void insertRecord(Record record) throws SQLException {
         if (record == null) {
             return;
         }
-        Connection connection = recordDB.getConnection();
         PreparedStatement insertStmt = connection.prepareStatement("INSERT INTO "
-                + "Records (name, scorecard_type, dice_amount, max_dice_number, throws_amount, points) VALUES (?, ?, ?, ?, ?, ?)");
+                + "Records (name, scorecard_type, dice_amount, max_dice_number, "
+                + "throws_amount, points) VALUES (?, ?, ?, ?, ?, ?)");
 
         insertStmt.setString(1, record.getPlayer().getName());
         insertStmt.setString(2, record.getScorecardType());
@@ -137,8 +139,8 @@ public class RecordDao implements Dao<Record, Record> {
         if (record == null) {
             return;
         }
-        Connection connection = recordDB.getConnection();
-        PreparedStatement updateStmt = connection.prepareStatement("UPDATE Records SET points = ? WHERE name = ? AND scorecard_type = ? AND "
+        PreparedStatement updateStmt = connection.prepareStatement("UPDATE Records "
+                + "SET points = ? WHERE name = ? AND scorecard_type = ? AND "
                 + "dice_amount = ? AND max_dice_number = ? AND throws_amount = ? ");
 
         updateStmt.setInt(1, record.getPoints());
@@ -157,7 +159,6 @@ public class RecordDao implements Dao<Record, Record> {
      */
     private void initDB() {
         try {
-            Connection connection = recordDB.getConnection();
             PreparedStatement initStmt = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Records ("
                     + "	id integer PRIMARY KEY,"
                     + "	name varchar(200),"
@@ -172,5 +173,16 @@ public class RecordDao implements Dao<Record, Record> {
             System.out.println("Error in database creation!");
         }
 
+    }
+
+    /**
+     * Close database connection.
+     */
+    public void closeConnection() {
+        try {
+            this.connection.close();
+        } catch (SQLException ex) {
+            System.out.println("Couldn't close connection!");
+        }
     }
 }

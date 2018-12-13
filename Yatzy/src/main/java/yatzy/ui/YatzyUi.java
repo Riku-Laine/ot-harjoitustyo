@@ -265,7 +265,7 @@ public class YatzyUi extends Application {
             for (int i = 0; i < diceButtonList.size(); i++) {
                 selected[i] = diceButtonList.get(i).isSelected();
             }
-            if (!areAllFalse(selected)) {
+            if (!game.areAllFalse(selected)) {
                 game.throwSelectedDies(selected);
                 redrawGameArea(window);
                 window.setScene(gameScene);
@@ -352,6 +352,11 @@ public class YatzyUi extends Application {
 
         window.setScene(startScene);
         window.show();
+    }
+    
+    @Override
+    public void stop(){
+        game.closeDatabaseConnection();
     }
 
     public static void main(String[] args) {
@@ -489,7 +494,6 @@ public class YatzyUi extends Application {
 
         ArrayList<Record> records = game.getRecords();
         if (records == null) {
-            System.out.println("tyj'");
             return;
         }
         for (int i = 0; i < records.size(); i++) {
@@ -609,14 +613,6 @@ public class YatzyUi extends Application {
         return button;
     }
 
-    public static boolean areAllFalse(boolean[] array) {
-        for (boolean b : array) {
-            if (b) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Prompt to display at the end of the game.

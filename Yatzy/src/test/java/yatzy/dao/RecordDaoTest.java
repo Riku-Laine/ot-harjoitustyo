@@ -9,12 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
@@ -46,7 +43,7 @@ public class RecordDaoTest {
     @Before
     public void setUp() throws ClassNotFoundException, IOException {
         dbFile = dbFolder.newFile("recordTestDatabase.db");
-        System.out.println(dbFile.getName());
+
         this.database = new Database("jdbc:sqlite:" + dbFile.getAbsolutePath());
 
         this.recordDao = new RecordDao(database);
@@ -145,6 +142,7 @@ public class RecordDaoTest {
     @After
     public void tearDown() {
         dbFolder.delete();
+        this.recordDao.closeConnection();
     }
 
 }
