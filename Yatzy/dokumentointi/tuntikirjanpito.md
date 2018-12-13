@@ -28,4 +28,5 @@
 | 7.12.  | 4    | Refaktorointi, JavaDocien hiominen |
 | 8.12.  | 5    | Admin-toiminnallisuuksia, UI-metodien refaktorointi |
 | 9.12.  | 5    | Tietokannan rakenteen muokkaus, ja vastaavat DAO- sekä UI-muutokset. Tapahtumakäsittelyjä. |
-|**Yht.**| **56** ||
+| 10.12. | 6    | CheckStyle-refaktorointia, dokumentaatio. |
+|**Yht.**| **62** ||
