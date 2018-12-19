@@ -1,4 +1,4 @@
-# Määrittelydokumentti
+# Vaatimusmäärittelyt
 
 **Sisällysluettelo**
 
@@ -9,15 +9,15 @@
 
 ## <a name="tarkoitus"></a>Sovelluksen tarkoitus
 
-Sovelluksessa on tarkoitus pelata noppapeliä [Yatzy](https://fi.wikipedia.org/wiki/Yatzy) yhdellä tai kahdella pelaajalla. Yksin pelatessa oman tuloksensa voi tallentaa ennätyslistaan omalla nimimerkillä.
+Sovelluksessa on tarkoitus pelata noppapeliä [Yatzy](https://fi.wikipedia.org/wiki/Yatzy) (Wikipedia) yhdellä tai useammalla pelaajalla. Pelin tuloksen voi halutessaan tallentaa ennätystauluun kirittämään seuraavia pelejä.
 
-Tulosten kirjaamisessa noudatetaan ensisijaisesti suomalaisia yhdistelmiä, jotka löytyvät pelin Wikipedia-sivulta. Tällöin esimerkiksi pieni suora tarkoittaa noppayhdistelmää 1, 2, 3, 4 ja 5.
+Tulosten kirjaamisessa noudatetaan ensisijaisesti suomalaisia yhdistelmiä, jotka löytyvät pelin Wikipedia-sivulta. Tällöin esimerkiksi pieni suora tarkoittaa noppayhdistelmää 1, 2, 3, 4 ja 5. Peliin on lisätty mahdollisuus käyttää myös amerikkalaisia yhdistelmiä, jolloin pieni suora on nopat 1 &#8211; 4, 2 &#8211; 5, tai 3 &#8211; 6.
 
 ## <a name="kayttajat"></a>Käyttäjät ja käyttöroolit
 
-Sovelluksessa on roolit *pelaajalle* ja myöhemmin lisättävälle *moderaattorille*.  
+Sovelluksessa on roolit *pelaajalle* ja *moderaattorille*.  
 
-Pelaajat voivat pelata peliä, kaksinpelissä vuorotellen.
+Pelaajat voivat pelata peliä, moninpelissä vuorotellen. Aloittava pelaaja on vapaavalintainen.
 
 Moderaattorilla on pääsy ennätystauluun ja hän voi poistaa nimimerkkejä ja tuloksia tarpeiden mukaan. Moderaattorin henkilöllisyys varmennetaan salasanan avulla.
 
@@ -25,31 +25,26 @@ Moderaattorilla on pääsy ennätystauluun ja hän voi poistaa nimimerkkejä ja 
 
 ### Perusversio
 
-* Pelaaja voi pelata Yatzya, sisältäen
+* Pelaaja voi tai pelaajat voivat pelata Yatzya, sisältäen
 	* noppien heiton, eli viiden numeron generoinnin
 	* noppien valinnan, eli heiton rajauksen
 	* kirjanpitoon kirjattavan yhdistelmän valinnan
 * Pelaaja näkee koko ajan oman pistetilanteensa
 	* Graafisessa käyttöliittymässä toteutetaan taulukolla
-* Klikkaamalla voi valita nopat ja poistaa valinnan (noppien kuvat)
-* Jos pelaaja yksinpelatessaan ylittää ennätyksen, ennätystulos päivittyy vastaamaan tulosta.
-* Kaksinpeluussa peliä pelataan vuorotellen, pelinäkymä erilainen
+* Klikkaamalla voi valita nopat ja poistaa valinnan
+* Pelaajat näkevät kyseiseen pelityyppiin liittyvät ennätykseet pelinäkymässä.
+	* Pelityyppi määritellään noppien lukumäärällä, suurimmalla silmäluvulla, heittojen määrällä sekä käytetyllä tuloskortilla.
+* Moninpelissä peliä pelataan vuorotellen
+* Moderaattori voi poistaa valitsemiaan ennätyksiä.
 
 ### Jatkoideat
 
-* Ennätyslista
-	* Useita tuloksia
-	* Tuloksen yhteyteen on mahdollista lisätä nimimerkki
-* Moderaattori hallinnoi ennätyslistaa
-	* Asiattomien nimimerkkien poisto
+* Valittujen ja valitsemattomien noppien parempi erottelu käyttöliittymässä.
+* Noppien silmäluku kuvina.
 * Nopan silmäluvun muodostumisen animointi
 * Noppien heiton animointi
-* Mielivaltainen määrä pelaajia
-* Mielivaltainen määrä noppia
-* Erikoisnopat (N-sivuinen)
+* Äänitehosteet heitoille, pisteille ja pelin loppumiselle.
+* Pelaaja voi asettaa avatarin (kuvakkeen) itselleen
 * Vaihtoehtojen (täyskäsi, viitoset jne.) viereen tulostuu tuloksen todennäköisyys
-* Pistetaulukossa reaaliaikaisesti tulos, joka vahvistetaan vuoron päätyttyä
+* Pistetaulukossa näkyy reaaliaikaisesti noppayhdistelmästä saatavat pisteet
 * Moninpeluuseen mahdollisuus pelata paras N:stä
-
-*Perusversion vaatimusmäärittelyjä tarkennettu 16.11. alakohdilla ja kuvaukseen lisätty maininta suomalaisista säännöistä.  
-7.12. pieniä muokkauksia.*
