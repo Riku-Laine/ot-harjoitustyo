@@ -9,7 +9,7 @@ _Hauskoja pelihetkiä!_
 * [Käyttöohje](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/kayttoohje.md)
 * [Vaatimusmäärittelyt](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/maarittelydokumentti.md)
 * [Arkkitehtuurikuvaus](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/arkkitehtuuri.md)
-* [Testausdokumentti TBA](<!---https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/urlitestausdokumenttiin.md --->)
+* [Testausdokumentti TBA](<https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/testausdokumentti.md)
 * [Työaikakirjanpito](https://github.com/Riku-Laine/ot-harjoitustyo/blob/master/Yatzy/dokumentointi/tuntikirjanpito.md)
 
 ## Releaset
