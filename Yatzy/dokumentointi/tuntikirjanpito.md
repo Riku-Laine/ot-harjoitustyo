@@ -29,4 +29,5 @@
 | 8.12.  | 5    | Admin-toiminnallisuuksia, UI-metodien refaktorointi |
 | 9.12.  | 5    | Tietokannan rakenteen muokkaus, ja vastaavat DAO- sekä UI-muutokset. Tapahtumakäsittelyjä. |
 | 10.12. | 6    | CheckStyle-refaktorointia, dokumentaatio. |
-|**Yht.**| **62** ||
+| 22.12. | 4    | Loppuviimeistelyt, dokumentaatiot, testit. |
+|**Yht.**| **66** ||
