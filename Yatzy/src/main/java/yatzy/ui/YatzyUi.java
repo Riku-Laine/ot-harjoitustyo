@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -14,6 +16,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -25,6 +28,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import yatzy.domain.Record;
 import yatzy.domain.YatzyService;
@@ -55,15 +59,17 @@ public class YatzyUi extends Application {
     private HBox diceButtonsHBox;
     private VBox adminRemovableRecordsButtonsBox;
     private ArrayList<CheckBox> adminRemovableRecordsCheckBoxList;
+    private String dbAddress;
 
     @Override
     public void init() throws ClassNotFoundException {
 
+        dbAddress = "jdbc:sqlite:records.db";
         eyeImageURLs = new HashMap<>();
         diceButtonList = new ArrayList<>();
         combinationButtonList = new ArrayList<>();
         combinationButtonsBox = new VBox();
-        game = new YatzyService();
+        game = new YatzyService(dbAddress);
         highScoreTable = new Label(game.getHighScores());
         highScoreTable.setFont(Font.font("Monospaced"));
         nameGivingScene = new Scene(new BorderPane());
@@ -101,9 +107,9 @@ public class YatzyUi extends Application {
         //**************
         Button singlePlayerButton = new Button("1-player quick game");
         Button twoPlayerButton = new Button("2-player quick game");
-        Label adminLabel = new Label("Log in as administrator:");
+        Label adminLabel = new Label("Log in as administrator");
         Label passwordLabel = new Label("Password: ");
-        PasswordField passwordText = new PasswordField();
+        PasswordField passwordTextField = new PasswordField();
         Button logInAsAdminButton = new Button("Log in");
 
         Slider numberOfPlayersSlider = createSettingSlider(1, 10, 1, 1, 0);
@@ -121,35 +127,58 @@ public class YatzyUi extends Application {
         Label maxThrowNumberLabel = new Label("Number of throws in turn:");
         Label scorecardTypeLabel = new Label("Type of scorecard:");
 
-        Button customGameStartButton = new Button("FUN GAME");
+        Button customGameStartButton = new Button("Begin custom game!");
 
         singlePlayerButton.setFont(Font.font("Monospaced", 20));
         twoPlayerButton.setFont(Font.font("Monospaced", 20));
 
-        GridPane startLayout = new GridPane();
+        VBox scorecardButtons = new VBox(american, scandinavian);
+        scorecardButtons.setSpacing(10);
 
-        startLayout.add(singlePlayerButton, 1, 0);
-        startLayout.add(twoPlayerButton, 1, 1);
-        startLayout.add(adminLabel, 0, 2);
-        startLayout.add(passwordLabel, 0, 3);
-        startLayout.add(passwordText, 1, 3);
-        startLayout.add(logInAsAdminButton, 0, 4);
-        startLayout.add(numberOfPlayersSlider, 0, 5);
-        startLayout.add(playerNumberLabel, 1, 5);
-        startLayout.add(numberOfDiesSlider, 0, 6);
-        startLayout.add(diceNumberLabel, 1, 6);
-        startLayout.add(biggestNumberSlider, 0, 7);
-        startLayout.add(biggestEyeNumberLabel, 1, 7);
-        startLayout.add(maxNumberOfThrowsSlider, 0, 8);
-        startLayout.add(maxThrowNumberLabel, 1, 8);
-        startLayout.add(scorecardTypeLabel, 0, 9);
-        startLayout.add(american, 1, 9);
-        startLayout.add(scandinavian, 2, 9);
-        startLayout.add(customGameStartButton, 0, 10);
+        VBox startLayout = new VBox();
+        startLayout.setSpacing(10);
+        startLayout.setPadding(new Insets(10));
+        startLayout.setAlignment(Pos.CENTER);
 
-        startLayout.setHgap(10);
-        startLayout.setVgap(10);
-        startLayout.setPadding(new Insets(10, 10, 10, 10));
+        VBox quickGames = new VBox(singlePlayerButton, twoPlayerButton);
+        quickGames.setSpacing(10);
+        quickGames.setAlignment(Pos.CENTER);
+        startLayout.getChildren().add(quickGames);
+
+        Separator horizontalSeparatorUpper = new Separator(Orientation.HORIZONTAL);
+        startLayout.getChildren().add(horizontalSeparatorUpper);
+
+        Label customGameTitleLabel = new Label("Custom game settings");
+        customGameTitleLabel.setFont(Font.font(STYLESHEET_CASPIAN, FontWeight.BOLD, 16));
+        GridPane customGameSettingSetters = new GridPane();
+        customGameSettingSetters.setHgap(10);
+        customGameSettingSetters.setVgap(10);
+
+        customGameSettingSetters.add(numberOfPlayersSlider, 1, 0);
+        customGameSettingSetters.add(playerNumberLabel, 0, 0);
+        customGameSettingSetters.add(numberOfDiesSlider, 1, 1);
+        customGameSettingSetters.add(diceNumberLabel, 0, 1);
+        customGameSettingSetters.add(biggestNumberSlider, 1, 2);
+        customGameSettingSetters.add(biggestEyeNumberLabel, 0, 2);
+        customGameSettingSetters.add(maxNumberOfThrowsSlider, 1, 3);
+        customGameSettingSetters.add(maxThrowNumberLabel, 0, 3);
+        customGameSettingSetters.add(scorecardButtons, 1, 4);
+        customGameSettingSetters.add(scorecardTypeLabel, 0, 4);
+
+        Separator horizontalSeparatorLower = new Separator(Orientation.HORIZONTAL);
+
+        startLayout.getChildren().addAll(customGameTitleLabel, customGameSettingSetters,
+                customGameStartButton, horizontalSeparatorLower);
+
+        VBox adminSection = new VBox(10, adminLabel,
+                new HBox(10, passwordLabel, passwordTextField), logInAsAdminButton);
+
+        Separator verticalSeparatorBottom = new Separator(Orientation.VERTICAL);
+
+        HBox adminAndHighScores = new HBox(10, adminSection,
+                verticalSeparatorBottom);
+
+        startLayout.getChildren().add(adminAndHighScores);
 
         startScene = new Scene(startLayout);
 
@@ -252,10 +281,10 @@ public class YatzyUi extends Application {
 
         logInAsAdminButton.setOnAction((event) -> {
             // Show admin window
-            if (passwordText.getText().equals("salasana")) {
+            if (passwordTextField.getText().equals("salasana")) {
                 redrawAdminButtons();
                 window.setScene(adminScene);
-                passwordText.setText("");
+                passwordTextField.setText("");
             }
         });
 
@@ -353,9 +382,9 @@ public class YatzyUi extends Application {
         window.setScene(startScene);
         window.show();
     }
-    
+
     @Override
-    public void stop(){
+    public void stop() {
         game.closeDatabaseConnection();
     }
 
@@ -406,13 +435,11 @@ public class YatzyUi extends Application {
         if (game.getPlayerWithTurn() == null) {
             return;
         }
-        ArrayList<String> combinations = game.getPlayerWithTurn().getScorecard().getCombinations();
+        ArrayList<String> combinations = game.getPlayerWithTurn().getScorecard().getCombinationNames();
 
         for (int i = 0; i < combinations.size(); i++) {
             String combination = combinations.get(i);
-            if (combination.equals("Total") || combination.contains("onus")) {
-                break;
-            }
+
             Button btn = new Button(combination);
             btn.setPrefWidth(150);
             combinationButtonsBox.getChildren().add(btn);
@@ -545,7 +572,7 @@ public class YatzyUi extends Application {
             // All fields must have content.
             if (nameFields.stream().noneMatch((field) -> (field.getText().isEmpty()))) {
                 try {
-                    game = new YatzyService(numberOfDies, biggestEyeNumber, maxNumberOfThrows);
+                    game = new YatzyService(numberOfDies, biggestEyeNumber, maxNumberOfThrows, dbAddress);
                 } catch (ClassNotFoundException ex) {
                     System.out.println("Couldn't create new game!");
                 }
@@ -613,7 +640,6 @@ public class YatzyUi extends Application {
         return button;
     }
 
-
     /**
      * Prompt to display at the end of the game.
      *
@@ -628,6 +654,8 @@ public class YatzyUi extends Application {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             game.addAllPlayersInTheGameToRecords();
+            window.setScene(startScene);
+        } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
             window.setScene(startScene);
         }
 

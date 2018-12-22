@@ -27,7 +27,12 @@ public class AmericanScorecard extends Scorecard {
     public AmericanScorecard() {
         super("American");
 
-        this.combinations = new ArrayList(Arrays.asList("Aces", "Twos", "Threes",
+        this.combinationAndBonusNames = new ArrayList(Arrays.asList("Aces", "Twos", "Threes",
+                "Fours", "Fives", "Sixes", "Upper Bonus", "Three of a kind",
+                "Four of a kind", "Full house", "Short straight",
+                "Long straight", "Yahtzee", "Chance", "Total"));
+
+        this.combinationNames = new ArrayList(Arrays.asList("Aces", "Twos", "Threes",
                 "Fours", "Fives", "Sixes", "Three of a kind", "Four of a kind",
                 "Full house", "Short straight", "Long straight", "Yahtzee",
                 "Chance"));
@@ -49,6 +54,8 @@ public class AmericanScorecard extends Scorecard {
         if (null != combination) {
             if (this.upperSection.contains(combination)) {
                 score = upperSectionPoints(combination, dies);
+                checkForUpperSectionBonus();
+
             } else if (this.lowerSection.contains(combination)) {
                 score = lowerSectionPoints(combination, dies);
             } else {
@@ -132,13 +139,27 @@ public class AmericanScorecard extends Scorecard {
     }
 
     private int checkForAmericanStraight(DiceCollection dies, boolean isLong) {
-        if (isLong) {
+        if (!isLong) {
             return Math.max(checkForSequentialNumbers(dies, 1, 4, 30),
                     Math.max(checkForSequentialNumbers(dies, 2, 5, 30),
                             checkForSequentialNumbers(dies, 3, 6, 30)));
         } else {
             return Math.max(checkForSequentialNumbers(dies, 1, 5, 40),
                     checkForSequentialNumbers(dies, 2, 6, 40));
+        }
+    }
+
+    /**
+     * If player has 63 points or more in the upper section of their game, they
+     * are awarded 35 extra points.
+     */
+    private void checkForUpperSectionBonus() {
+        int upperSum = 0;
+        for (String upperCombination : this.upperSection) {
+            upperSum += this.scoretable.get(upperCombination);
+        }
+        if (upperSum >= 63) {
+            this.scoretable.replace("Upper Bonus", 35);
         }
     }
 }

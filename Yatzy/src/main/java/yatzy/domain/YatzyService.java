@@ -30,14 +30,15 @@ public class YatzyService {
      * Default constructor for a conventional Yatzy game of with 5 6-sided dies
      * and 3 throws.
      *
+     * @param dbAddress Database address,
      * @throws ClassNotFoundException
      */
-    public YatzyService() throws ClassNotFoundException {
+    public YatzyService(String dbAddress) throws ClassNotFoundException {
         this.playerList = new ArrayList<>();
         this.dices = new DiceCollection();
         this.throwsUsed = 0;
         this.maxNumberOfThrows = 3;
-        recordDB = new Database("jdbc:sqlite:records.db");
+        recordDB = new Database(dbAddress);
         recordDao = new RecordDao(recordDB);
     }
 
@@ -47,14 +48,15 @@ public class YatzyService {
      * @param nDies Number of dies.
      * @param biggestEye Number of sides in a dice.
      * @param maxNumberOfThrows Number of throws in a turn.
+     * @param dbAddress Database address.
      * @throws ClassNotFoundException
      */
-    public YatzyService(int nDies, int biggestEye, int maxNumberOfThrows) throws ClassNotFoundException {
+    public YatzyService(int nDies, int biggestEye, int maxNumberOfThrows, String dbAddress) throws ClassNotFoundException {
         this.playerList = new ArrayList<>();
         this.dices = new DiceCollection(nDies, biggestEye);
         this.throwsUsed = 0;
         this.maxNumberOfThrows = maxNumberOfThrows;
-        recordDB = new Database("jdbc:sqlite:records.db");
+        recordDB = new Database(dbAddress);
         recordDao = new RecordDao(recordDB);
     }
 
@@ -65,20 +67,6 @@ public class YatzyService {
      */
     public ArrayList<Player> getPlayers() {
         return this.playerList;
-    }
-
-    /**
-     * Add player to player list. If playerlist is empty, added player will be
-     * set to start the game.
-     *
-     * @param name Name of the player.
-     */
-    public void addPlayer(String name) {
-        Player p = new Player(name);
-        if (this.playerList.isEmpty()) {
-            p.setTurn(true);
-        }
-        this.playerList.add(p);
     }
 
     /**
@@ -178,9 +166,9 @@ public class YatzyService {
         String scoreBoard = "Combinations    | " + this.playerList.stream()
                 .map(p -> (p.getName())).collect(Collectors.joining(" | ")) + " |\n\n";
 
-        ArrayList<String> combinations = getPlayerWithTurn().getScorecard().getCombinations();
+        ArrayList<String> combinationAndBonusNames = getPlayerWithTurn().getScorecard().getCombinationAndBonusNames();
 
-        scoreBoard = combinations.stream().map((combination) -> {
+        scoreBoard = combinationAndBonusNames.stream().map((combination) -> {
             String row = padRight(combination, 16) + "| ";
             for (Player p : this.playerList) {
                 int score = p.getScorecard().getPointsFor(combination);
@@ -282,7 +270,7 @@ public class YatzyService {
         try {
             records = this.recordDao.findAll();
         } catch (SQLException ex) {
-            System.out.println("Could not access records! :(");
+            System.out.println("Could not access records!");
         }
         if (records == null || records.isEmpty()) {
             return "No records!";
@@ -397,7 +385,7 @@ public class YatzyService {
      * Check if all elements of a boolean array are false.
      *
      * @param array An array containing boolean elements.
-     * @return 
+     * @return
      */
     public boolean areAllFalse(boolean[] array) {
         for (boolean b : array) {

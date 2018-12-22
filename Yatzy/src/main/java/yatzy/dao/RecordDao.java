@@ -12,8 +12,6 @@ package yatzy.dao;
  */
 import java.util.*;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import yatzy.domain.Player;
 import yatzy.domain.Record;
 
@@ -51,7 +49,7 @@ public class RecordDao implements Dao<Record, Record> {
             return null;
         }
 
-        Record r = new Record(new Player(rs.getString("name")),
+        Record r = new Record(new Player(rs.getString("name"), rs.getString("scorecard_type")),
                 rs.getString("scorecard_type"), rs.getInt("dice_amount"),
                 rs.getInt("max_dice_number"), rs.getInt("throws_amount"),
                 rs.getInt("points"));
@@ -69,7 +67,7 @@ public class RecordDao implements Dao<Record, Record> {
         ResultSet rs = stmt.executeQuery();
         ArrayList<Record> records = new ArrayList<>();
         while (rs.next()) {
-            records.add(new Record(new Player(rs.getString("name")),
+            records.add(new Record(new Player(rs.getString("name"), rs.getString("scorecard_type")),
                     rs.getString("scorecard_type"), rs.getInt("dice_amount"),
                     rs.getInt("max_dice_number"), rs.getInt("throws_amount"),
                     rs.getInt("points")));

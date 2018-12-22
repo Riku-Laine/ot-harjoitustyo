@@ -11,9 +11,9 @@ import yatzy.domain.DiceCollection;
 import yatzy.domain.Scorecard;
 
 /**
- * Scandinavian scorecard for Yatzy game. Contains combinations such as 'One
- * pair' which are not included in the US version of the game. Also Big Straight
- * is defined as numbers from 2 to 6 and is worth 20 points.
+ * Scandinavian scorecard for Yatzy game. Contains combinationAndBonusNames such
+ * as 'One pair' which are not included in the US version of the game. Also Big
+ * Straight is defined as numbers from 2 to 6 and is worth 20 points.
  *
  * @author Riku_L
  */
@@ -29,7 +29,12 @@ public class ScandinavianScorecard extends Scorecard {
     public ScandinavianScorecard() {
         super("Scandinavian");
 
-        this.combinations = new ArrayList(Arrays.asList("Ones", "Twos", "Threes",
+        this.combinationAndBonusNames = new ArrayList(Arrays.asList("Ones", "Twos", "Threes",
+                "Fours", "Fives", "Sixes", "Upper Bonus", "One pair", "Two pairs",
+                "Three of a kind", "Four of a kind", "Small straight",
+                "Big straight", "Full house", "Chance", "Yatzy", "Total"));
+
+        this.combinationNames = new ArrayList(Arrays.asList("Ones", "Twos", "Threes",
                 "Fours", "Fives", "Sixes", "One pair", "Two pairs",
                 "Three of a kind", "Four of a kind", "Small straight",
                 "Big straight", "Full house", "Chance", "Yatzy"));
@@ -40,6 +45,7 @@ public class ScandinavianScorecard extends Scorecard {
         this.lowerSection = new ArrayList(Arrays.asList("One pair", "Two pairs",
                 "Three of a kind", "Four of a kind", "Small straight",
                 "Big straight", "Full house", "Chance", "Yatzy"));
+
         initializeScoretable();
     }
 
@@ -56,6 +62,7 @@ public class ScandinavianScorecard extends Scorecard {
         if (null != combination) {
             if (this.upperSection.contains(combination)) {
                 score = upperSectionPoints(combination, dies);
+                checkForUpperSectionBonus();
             } else if (this.lowerSection.contains(combination)) {
                 score = lowerSectionPoints(combination, dies);
             }
@@ -139,5 +146,19 @@ public class ScandinavianScorecard extends Scorecard {
             return checkForAllTheSame(dies, 50);
         }
         throw new Error();
+    }
+
+    /**
+     * If player has 63 points or more in the upper section of their game, they
+     * are awarded 50 extra points.
+     */
+    private void checkForUpperSectionBonus() {
+        int upperSum = 0;
+        for (String upperCombination : this.upperSection) {
+            upperSum += this.scoretable.get(upperCombination);
+        }
+        if (upperSum >= 63) {
+            this.scoretable.replace("Upper Bonus", 50);
+        }
     }
 }

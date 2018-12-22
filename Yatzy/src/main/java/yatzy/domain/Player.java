@@ -19,13 +19,10 @@ public class Player {
     private boolean hasTurn;
     private final Scorecard scorecard;
 
-    public Player(String name) {
-        this.name = name;
-        this.scorecard = new ScandinavianScorecard();
-        this.hasTurn = false;
-    }
-
     public Player(String name, String scorecardType) {
+        if (name.equals("") || scorecardType.equals("")) {
+            throw new IllegalArgumentException("Name or scorecard type is empty!");
+        }
         this.name = name;
         if (scorecardType.equals("Scandinavian")) {
             this.scorecard = new ScandinavianScorecard();
@@ -62,7 +59,7 @@ public class Player {
      * @return true if full, false otherwise.
      */
     public boolean isScorecardFull() {
-        for (String combination : this.scorecard.getCombinations()) {
+        for (String combination : this.scorecard.getCombinationNames()) {
             if (this.scorecard.getPointsFor(combination) == -1) {
                 return false;
             }

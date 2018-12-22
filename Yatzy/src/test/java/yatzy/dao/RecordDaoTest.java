@@ -25,16 +25,17 @@ import yatzy.domain.Record;
  */
 public class RecordDaoTest {
 
-    @Rule
-    public TemporaryFolder dbFolder = new TemporaryFolder();
-
     public RecordDaoTest() {
     }
 
     private RecordDao recordDao;
     private Database database;
     private Record testRecord;
+    private Player testPerson;
     private File dbFile;
+
+    @Rule
+    public TemporaryFolder dbFolder = new TemporaryFolder();
 
     @AfterClass
     public static void tearDownClass() {
@@ -48,7 +49,8 @@ public class RecordDaoTest {
 
         this.recordDao = new RecordDao(database);
 
-        this.testRecord = new Record(new Player("testPerson"), "fakeScorecard", 9, 9, 9, 99);
+        this.testPerson = new Player("testPerson", "fakeScorecard");
+        this.testRecord = new Record(testPerson, testPerson.getScorecard().getType(), 9, 9, 9, 99);
     }
 
     @Test
@@ -88,8 +90,8 @@ public class RecordDaoTest {
     @Test
     public void findsAllInserted() {
         ArrayList<Record> found = new ArrayList<>();
-
-        Record testRecord2 = new Record(new Player("testPerson_2"), "fakeScorecard", 1, 1, 1, 11);
+        Player testPerson2 = new Player("testPerson_2", "fakeScorecard");
+        Record testRecord2 = new Record(testPerson2, testPerson2.getScorecard().getType(), 1, 1, 1, 11);
         try {
             this.recordDao.saveOrUpdate(testRecord);
             this.recordDao.saveOrUpdate(testRecord2);
@@ -104,7 +106,7 @@ public class RecordDaoTest {
 
     @Test
     public void canUpdateRecord() {
-        Record recordUpdate = new Record(new Player("testPerson"), "fakeScorecard", 9, 9, 9, 100);
+        Record recordUpdate = new Record(testPerson, testPerson.getScorecard().getType(), 9, 9, 9, 100);
         try {
             this.recordDao.saveOrUpdate(testRecord);
             assertEquals(99, this.recordDao.findOne(testRecord).getPoints());
@@ -116,8 +118,21 @@ public class RecordDaoTest {
     }
 
     @Test
+    public void doesntUpdateIfWorsePoints() {
+        Record recordUpdate = new Record(testPerson, testPerson.getScorecard().getType(), 9, 9, 9, 90);
+        try {
+            this.recordDao.saveOrUpdate(testRecord);
+            this.recordDao.saveOrUpdate(recordUpdate);
+            assertEquals(99, this.recordDao.findOne(testRecord).getPoints());
+        } catch (SQLException ex) {
+            fail();
+        }
+    }
+
+    @Test
     public void nullReturnTests() {
-        Record fakeRecord = new Record(new Player("fakePerson"), "fakeScorecard", 9, 9, 9, 100);
+        Player fakePerson = new Player("fakePerson", "fakeScorecard");
+        Record fakeRecord = new Record(fakePerson, fakePerson.getScorecard().getType(), 9, 9, 9, 100);
         try {
             assertEquals(null, this.recordDao.findAll());
             assertEquals(null, this.recordDao.findOne(null));

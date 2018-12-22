@@ -11,20 +11,22 @@ import java.util.LinkedHashMap;
 
 /**
  * Abstract super class of scorecards. Provides methods to calculate points for
- * most of the regular combinations.
+ * most of the regular combinationAndBonusNames.
  *
  * @author Riku_L
  */
 public abstract class Scorecard {
 
     protected final LinkedHashMap<String, Integer> scoretable;
-    protected ArrayList<String> combinations;
+    protected ArrayList<String> combinationAndBonusNames;
+    protected ArrayList<String> combinationNames;
     protected final String type;
 
-    public Scorecard(String name) {
+    public Scorecard(String scorecardType) {
         this.scoretable = new LinkedHashMap<>();
-        this.combinations = new ArrayList<>();
-        this.type = name;
+        this.combinationAndBonusNames = new ArrayList<>();
+        this.combinationNames = new ArrayList<>();
+        this.type = scorecardType;
     }
 
     /**
@@ -142,33 +144,38 @@ public abstract class Scorecard {
 
     /**
      * Initialize scorecard's LinkedHashMap with scores of -1 for combinations
-     * and 0 for total. -1 is set to differentiate between zero score and score
-     * not set. Can not be overriden by subclasses.
+     * and 0 for total and bonuses. -1 is set to differentiate between zero
+     * score and score not set. Can not be overriden by subclasses.
      */
     final protected void initializeScoretable() {
-        getCombinations().forEach((combination) -> {
-            this.scoretable.put(combination, -1);
+        getCombinationAndBonusNames().forEach((combinationOrBonusName) -> {
+            if (this.combinationNames.contains(combinationOrBonusName)) {
+                this.scoretable.put(combinationOrBonusName, -1);
+            } else {
+                this.scoretable.put(combinationOrBonusName, 0);
+            }
         });
-        this.combinations.add("Total");
-        this.scoretable.put("Total", 0);
     }
 
     /**
      * Calculates total of points for the scorecard.
      */
     final protected void calculateTotal() {
-        int total = this.scoretable.keySet().stream().mapToInt(key -> {
-            if (this.scoretable.get(key) >= 0 & !key.equals("Total")) {
-                return this.scoretable.get(key);
+        int total = this.combinationAndBonusNames.stream().mapToInt((combination) -> {
+            if (combination.equals("Total")) {
+                return 0;
+            } else if (this.scoretable.get(combination) > 0) {
+                return this.scoretable.get(combination);
+            } else {
+                return 0;
             }
-            return 0;
         }).sum();
 
         this.scoretable.replace("Total", total);
     }
 
     /**
-     * Calculates points for Yatzy (five same).
+     * Calculates points for Yatzy (all same).
      *
      * @param dc DiceCollection of dies.
      * @param pointsToGive Points to give if Yatzy found.
@@ -185,8 +192,20 @@ public abstract class Scorecard {
         return pointsToGive;
     }
 
-    public ArrayList<String> getCombinations() {
-        return this.combinations;
+    /**
+     *
+     * @return ArrayList of combination and bonus names in scorecard.
+     */
+    public ArrayList<String> getCombinationAndBonusNames() {
+        return this.combinationAndBonusNames;
+    }
+
+    /**
+     *
+     * @return ArrayList of combination names in scorecard.
+     */
+    public ArrayList<String> getCombinationNames() {
+        return this.combinationNames;
     }
 
     public String getType() {
